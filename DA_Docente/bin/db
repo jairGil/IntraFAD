@@ -1,0 +1,81 @@
+const mongoose = require("mongoose");
+const dbhelper = {};
+const DatoAcademico = require("../models/datoAcademico");
+
+//Información sobre la base de datos en MongoDB
+const dbuser =  "admin_intraFAD";
+const dbname = "IntraFAD";
+const dbpass = "eqeKVamw3GxLsjhc";
+
+
+const uriDB =  "mongodb://localhost:27017";
+
+// Conexión a la base de datos
+dbhelper.connect = async () => {
+  let conn = {action: "Conectar con BD", value: false, code: 500, msg: "No conectado"};
+  await mongoose.connect(uriDB, {   useNewUrlParser: true, useUnifiedTopology: true }).then(
+    ()=>{
+      conn.value = true;
+      conn.msg = "Conectado a la BD";
+      conn.code = 200;
+    }, error =>{
+      conn.value = false;
+      conn.code = 500;
+      conn.msg = error.code+ " - " + error.codeName;
+    });
+    
+  return conn;
+};
+
+dbhelper.saveDatoAcademico = async (datoAcademico) =>{
+  let resultSave = {action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado"}
+  const auxDatoAcademico = new DatoAcademico(datoAcademico);
+
+  await auxDatoAcademico.save().then(
+    (datoAcademicoSaved) =>{
+      resultSave.value = true;
+      resultSave.code = 200;
+      resultSave.msg = "Dato academico guardado exitosamente.";
+    }, error => {
+      resultSave.value = false;
+      resultSave.code = 500;
+      resultSave.msg = error + " - Error al guardar el dato academico"
+    }
+  );
+
+  return resultSave;
+}
+
+dbhelper.findDatoAcademicoByCP = async (cedula_profesional, action) => {
+  let resultFind = {action: action, value: false, code: 500, msg: "No inicializado"}
+
+  await DatoAcademico.findOne({cedula_profesional:cedula_profesional}).then(
+    (datoAcademico) => {
+      if(datoAcademico){
+        resultFind.value = true;
+        resultFind.code = 200;
+        resultFind.msg = "Cédula profesional registrada en la BD";
+        if(action === "login")
+          resultFind.datoAcademico = datoAcademico;
+      }else{
+        resultFind.value = false;
+        resultFind.code = 400;
+        resultFind.msg = "Cédula profesional no registrada";
+      }
+    }, error => {
+      resultFind.code
+      resultFind.value = false;
+      resultFind.code = 500;
+      resultFind.msg = error + " - Error en la petición";
+    }
+  );
+  
+  return resultFind;
+}
+
+//Desconectar de la base de datos
+dbhelper.disconnect = async () => {
+    await mongoose.disconnect();
+}
+
+module.exports = dbhelper;
