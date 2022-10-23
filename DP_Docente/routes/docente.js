@@ -23,13 +23,12 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-// /*** Login docente ***/
-// router.post("/login", async (req, res) => {
-//   const resultFind = await docenteController.login(req, res);
+/*** Login docente ***/
+router.post("/login", async (req, res) => {
+  const resultFind = await docenteController.login(req, res);
 
-//   res.status(resultFind.code).send(resultFind);
-
-// });
+  res.status(resultFind.code).send(resultFind);
+});
 
 
 module.exports = router;

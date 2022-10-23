@@ -6,6 +6,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const docenteSchema = Schema({
+    img: {
+        type: String,
+        required: true
+    },
     nombre: {
         type: String,
         required: true,
@@ -42,6 +46,17 @@ const docenteSchema = Schema({
         required: false,
         default: "",
         trim: true
+    },
+    contrasena: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    rol: {
+        type: String,
+        requierd: true,
+        default: "BASIC_ROLE",
+        enum: ["BASIC_ROLE", "USER_ROLE", "ADMIN_ROLE", "ROOT_ROLE"]
     },
     no_empleado: {
         type: String,

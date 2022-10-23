@@ -2,7 +2,7 @@
   "name": "dp_docente",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./bin/www"
@@ -13,12 +13,14 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
+    "curp": "^1.2.0",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
     "jwt-simple": "^0.5.6",
     "moment": "^2.29.4",
     "mongoose": "^6.6.5",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "validate-rfc": "^2.0.2"
   }
 }
