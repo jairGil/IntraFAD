@@ -9,7 +9,11 @@ const datoAcademicoSchema = Schema({
         required: true,
         trim: true,
         default: "Licenciatura",
-        enum: ["Licenciatura", "Maestria",  "Doctorado", "Especialidad","Diplomado"]
+        enum: ["Licenciatura", "Maestria", "Doctorado", "Especialidad", "Diplomado"]
+    },
+    doc_grado_acad: {
+        type: String,
+        required: true,
     },
     institucion_emisora: {
         type: String,
@@ -26,7 +30,11 @@ const datoAcademicoSchema = Schema({
         required: true,
         trim: true
     },
-    id_docente:{
+    doc_ced_prof: {
+        type: String,
+        required: true
+    },
+    id_docente: {
         type: String,
         required: true,
         trim: true

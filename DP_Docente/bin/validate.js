@@ -13,9 +13,8 @@ validateHelper.validarDocente = async (req) => {
         .not().isEmpty().withMessage("Elemento vacío")
         .custom(val => {
             str = new String(val);
-            if (str.includes(".jpg") || str.includes(".jpeg")) {
+            if (str.includes(".jpg") || str.includes(".jpeg"))
                 return true;
-            }
             return false;
         }).withMessage("Los formatos de imagen admitidos son jpg y jpeg")
         .escape().run(req);
@@ -68,9 +67,8 @@ validateHelper.validarDocente = async (req) => {
             .isEmail().withMessage("Debe ingresar un correo electrónico")
             .custom(val => {
                 str = new String(val)
-                if (str.includes("uaemex.mx")) {
+                if (str.includes("uaemex.mx"))
                     return false;
-                }
                 return true;
             }).withMessage("Debe ingresar un correo electrónico que NO pertenezca al dominio 'uaemex.mx'")
             .escape().run(req);
@@ -82,9 +80,8 @@ validateHelper.validarDocente = async (req) => {
             .isEmail().withMessage("Debe ingresar un correo electrónico")
             .custom(val => {
                 str = new String(val)
-                if (str.includes("uaemex.mx")) {
+                if (str.includes("uaemex.mx"))
                     return true;
-                }
                 return false;
             }).withMessage("Debe ingresar un correo electrónico que pertenezca al dominio 'uaemex.mx'")
             .escape().run(req);

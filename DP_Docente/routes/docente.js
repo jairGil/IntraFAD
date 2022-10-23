@@ -7,7 +7,6 @@ const validateHelper = require("../bin/validate.js");
 /* GET home page. */
 router.get("/", (req, res, next) => {
   res.status(403).send("Acceso denegado");
-
 });
 
 /* POST add docente. */
