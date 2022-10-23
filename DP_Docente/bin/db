@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const util = require("../util/util")
-const dbhelper = {};
+const util = require("../util/util");
 const Docente = require("../models/docente");
 
 //Información sobre la base de datos en MongoDB
@@ -8,81 +7,64 @@ const dbuser = "admin_intraFAD";
 const dbname = "IntraFAD";
 const dbpass = "eqeKVamw3GxLsjhc";
 
-
 const uriDB = "mongodb://localhost:27017";
 
-// Conexión a la base de datos
-dbhelper.connect = async () => {
-  let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
-  await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
-    () => {
-      // conn.value = true;
-      // conn.msg = "Conectado a la BD";
-      // conn.code = 200;
-      conn = util.setResult(conn, true, 200, "Conectado a la BD");
-    }, error => {
-      // conn.value = false;
-      // conn.code = 500;
-      // conn.msg = error.code + " - " + error.codeName;
-      conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
-    });
+const dbhelper = {
+  // Conexión a la base de datos
+  connect: async () => {
+    let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
+    await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
+      () => {
+        conn = util.setResult(conn, true, 200, "Conectado a la BD");
+      }, error => {
+        conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
+      });
 
-  return conn;
+    return conn;
+  },
+
+  // Guardar un docente
+  saveDocente: async (docente) => {
+    let resultSave = { action: "Guardar docente", value: false, code: 500, msg: "No inicializado" }
+    const auxDocente = new Docente(docente);
+
+    await auxDocente.save().then(
+      () => {
+        resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
+      }, error => {
+        resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+      }
+    );
+
+    return resultSave;
+  },
+
+  // Buscar docente por email
+  findDocenteByEmail: async (correo_institucional, action) => {
+    let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+
+    await Docente.findOne({ correo_institucional: correo_institucional }).then(
+      (docente) => {
+        if (docente) {
+          resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
+          if (action === "login")
+            resultFind.docente = docente;
+        } else {
+          resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
+        }
+      }, error => {
+        resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+      }
+    );
+
+    return resultFind;
+  },
+
+  //Desconectar de la base de datos
+  disconnect: async () => {
+    await mongoose.disconnect();
+  }
 };
 
-dbhelper.saveDocente = async (docente) => {
-  let resultSave = { action: "Guardar docente", value: false, code: 500, msg: "No inicializado" }
-  const auxDocente = new Docente(docente);
-
-  await auxDocente.save().then(
-    (docente) => {
-      // resultSave.value = true;
-      // resultSave.code = 200;
-      // resultSave.msg = "Docente guardado exitosamente.";
-      resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
-    }, error => {
-      // resultSave.value = false;
-      // resultSave.code = 500;
-      // resultSave.msg = error + " - Error al guardar el docente"
-      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
-    }
-  );
-
-  return resultSave;
-}
-
-dbhelper.findDocenteByEmail = async (correo_institucional, action) => {
-  let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
-
-  await Docente.findOne({ correo_institucional: correo_institucional }).then(
-    (docente) => {
-      if (docente) {
-        // resultFind.value = true;
-        // resultFind.code = 200;
-        // resultFind.msg = "Correo electrónico registrado en la BD";
-        resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
-        if (action === "login")
-          resultFind.docente = docente;
-      } else {
-        // resultFind.value = false;
-        // resultFind.code = 400;
-        // resultFind.msg = "Correo electrónico no registrado";
-        resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
-      }
-    }, error => {
-      // resultFind.value = false;
-      // resultFind.code = 500;
-      // resultFind.msg = error + " - Error en la petición";
-      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    }
-  );
-
-  return resultFind;
-}
-
-//Desconectar de la base de datos
-dbhelper.disconnect = async () => {
-  await mongoose.disconnect();
-}
 
 module.exports = dbhelper;

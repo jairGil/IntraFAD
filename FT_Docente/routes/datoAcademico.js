@@ -23,13 +23,5 @@ router.post("/upload", async (req, res, next) => {
   }
 });
 
-// /*** Login docente ***/
-// router.post("/login", async (req, res) => {
-//   const resultFind = await docenteController.login(req, res);
-
-//   res.status(resultFind.code).send(resultFind);
-
-// });
-
 
 module.exports = router;
