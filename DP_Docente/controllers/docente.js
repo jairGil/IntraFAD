@@ -26,7 +26,7 @@ let docenteController = {
         docente.apellido_m = params.apellido_m;
         docente.rol = params.rol;
 
-        if (params.role === "ADMIN_ROLE" || params.role === "USER_ROLE" || params.role === "ROOT_ROLE") {
+        if (params.rol === "ADMIN_ROLE" || params.rol === "USER_ROLE" || params.rol === "ROOT_ROLE") {
           docente.img = params.img;
           docente.direccion = params.direccion;
           docente.telefono = params.telefono;
@@ -36,13 +36,26 @@ let docenteController = {
           docente.rfc = params.rfc;
           docente.curp = params.curp;
 
+          if (!params.doc_rfc) {
+            resultSave = await util.setResult(resultSave, false, 400, "Debe ingresar su documento PDF de su RFC");
+            return resultSave;
+          }
+
+          if (!params.doc_curp) {
+            resultSave = await util.setResult(resultSave, false, 400, "Debe ingresar su documento PDF de su CURP");
+            return resultSave;
+          }
+
+          docente.doc_rfc = params.doc_rfc;
+          docente.doc_curp = params.doc_curp;
+          
           if (params.contrasena == params.confirma_contrasena) {
             //Encriptar contraseña
             const saltRounds = 10;
             docente.contrasena = await new Promise((resolve, reject) => {
               bcrypt.hash(params.contrasena, saltRounds, (error, hash) => {
                 if (error) {
-                  resultSave = util.setResult(resultSave, false, 500, error + " - Error al encriptar la contraseña")
+                  resultSave = util.setResult(resultSave, false, 500, error + " - Error al encriptar la contraseña");
                   resolve(null);
                 } else
                   resolve(hash);
@@ -50,9 +63,9 @@ let docenteController = {
             });
 
             if (docente.contrasena)
-              resultSave = await dbhelper.saveDocente(user);
+              resultSave = await dbhelper.saveDocente(docente);
           } else
-            resultSave = await util.setResult(resultSave, false, 400, error + " - Error las contraseñas no coinciden")
+            resultSave = await util.setResult(resultSave, false, 400, error + " - Error las contraseñas no coinciden");
         } else
           resultSave = await dbhelper.saveDocente(docente);
       }

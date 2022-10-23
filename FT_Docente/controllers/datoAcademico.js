@@ -21,7 +21,7 @@ let datoAcademicoController = {
         resultSave = await util.setResult(resultSave, false, 400, "La cédula profesional ya está registrada");
       } else {
         datoAcademico.grado_academico = params.grado_academico;
-        datoAcademico.doc_grad_acad = params.doc_grad_acad;
+        datoAcademico.doc_grado_acad = params.doc_grado_acad;
         datoAcademico.institucion_emisora = params.institucion_emisora;
         datoAcademico.fecha_obtencion = params.fecha_obtencion;
         datoAcademico.cedula_profesional = params.cedula_profesional;

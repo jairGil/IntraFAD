@@ -8,7 +8,8 @@ const Schema = mongoose.Schema;
 const docenteSchema = Schema({
     img: {
         type: String,
-        required: true
+        required: true,
+        default: "sin_foto.jpg"
     },
     nombre: {
         type: String,
@@ -28,7 +29,8 @@ const docenteSchema = Schema({
     direccion: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "no_inicializado"
     },
     telefono: {
         type: String,
@@ -39,18 +41,21 @@ const docenteSchema = Schema({
     correo_personal: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "no_inicializado@mail.com"
     },
     correo_institucional: {
         type: String,
         required: false,
         default: "",
-        trim: true
+        trim: true,
+        default: "no_inicializado@uaemex.com"
     },
     contrasena: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "No_inicializado"
     },
     rol: {
         type: String,
@@ -60,19 +65,29 @@ const docenteSchema = Schema({
     },
     no_empleado: {
         type: String,
-        required: false,
-        trim: true
+        trim: true,
+        default: "0000000"
     },
     rfc: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+        default: ""
+    },
+    doc_rfc: {
+        type: String,
+        trim: true,
+        default: "no_inicializado.pdf"
     },
     curp: {
         type: String,
-        required: true,
-        trim: true
-    }
+        trim: true,
+        default: ""
+    },
+    doc_curp: {
+        type: String,
+        trim: true,
+        default: "no_inicializado.pdf"
+    },
 });
 
 module.exports = mongoose.model("Docente", docenteSchema);

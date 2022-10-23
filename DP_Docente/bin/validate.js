@@ -110,7 +110,19 @@ validateHelper.validarDocente = async (req) => {
       .custom(val => {
         return validateRfc(val).isValid;
       }).withMessage("Debe ingresar un RFC válido")
-      .escape().run(req)
+      .escape().run(req);
+
+    /*** Validación documento RFC ***/
+    await body("doc_rfc")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .custom(val => {
+      str = new String(val);
+      if (str.includes(".pdf"))
+        return true;
+      return false;
+    }).withMessage("Debe ingresar un documento PDF")
+    .escape().run(req);
 
     /*** Validación CURP ***/
     await body("curp")
@@ -120,7 +132,19 @@ validateHelper.validarDocente = async (req) => {
       .custom(val => {
         return validateCurp.validar(val);
       }).withMessage("Debe ingresar una clave CURP válida")
-      .escape().run(req)
+      .escape().run(req);
+    
+    /*** Validación documento CURP ***/
+    await body("doc_curp")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .custom(val => {
+      str = new String(val);
+      if (str.includes(".pdf"))
+        return true;
+      return false;
+    }).withMessage("Debe ingresar un documento PDF")
+    .escape().run(req);
   }
 
   const result = validationResult(req);

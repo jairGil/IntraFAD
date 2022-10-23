@@ -19,7 +19,7 @@ validateHelper.validarDatoAcademico = async (req) => {
     .escape().run(req);
 
   /*** Validación Documento de grado academico ***/
-  await body("doc_grad_acad")
+  await body("doc_grado_acad")
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .custom(val => {
@@ -44,7 +44,7 @@ validateHelper.validarDatoAcademico = async (req) => {
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 10 }).withMessage("Erro de formato, debe contener mínimo 10 caracteres")
     .custom(val => {
-      return moment.isDate(val);
+      return moment(val, 'YYYY-MM-DD').isValid();
     }).withMessage("Debe ingresar una fecha")
     .escape().run(req);
 

@@ -3,11 +3,11 @@ const DatoAcademico = require("../models/datoAcademico");
 const util = require("../util/util");
 
 //Información sobre la base de datos en MongoDB
-const dbuser = "admin_intraFAD";
+const dbuser = "jgild";
 const dbname = "IntraFAD";
-const dbpass = "eqeKVamw3GxLsjhc";
+const dbpass = "v0EbhL2LprsKYUP1";
 
-const uriDB = "mongodb://localhost:27017";
+const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@cluster0.8awtuou.mongodb.net/test";
 
 
 const dbhelper = {
@@ -30,7 +30,7 @@ const dbhelper = {
     const auxDatoAcademico = new DatoAcademico(datoAcademico);
   
     await auxDatoAcademico.save().then(
-      (datoAcademicoSaved) => {
+      () => {
         resultSave = util.setResult(resultSave, true, 200, "Dato academico guardado exitosamente.");
       }, error => {
         resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
