@@ -10,62 +10,61 @@ const dbpass = "v0EbhL2LprsKYUP1";
 const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@cluster0.8awtuou.mongodb.net/test";
 
 
-const dbhelper = {
-  // Conexión a la base de datos
-  connect: async () => {
-    let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
-    await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
-      () => {
-        conn = util.setResult(conn, true, 200, "Conectado a la BD");
-      }, error => {
-        conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
-      });
-  
-    return conn;
-  },
-  
-  // Guardar datos academicos
-  saveDatoAcademico: async (datoAcademico) => {
-    let resultSave = { action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado" }
-    const auxDatoAcademico = new DatoAcademico(datoAcademico);
-  
-    await auxDatoAcademico.save().then(
-      () => {
-        resultSave = util.setResult(resultSave, true, 200, "Dato academico guardado exitosamente.");
-      }, error => {
-        resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
+const dbhelper = {}
+// Conexión a la base de datos
+dbhelper.connect = async () => {
+  let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
+  await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
+    () => {
+      conn = util.setResult(conn, true, 200, "Conectado a la BD");
+    }, error => {
+      conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
+    });
+
+  return conn;
+}
+
+// Guardar datos academicos
+dbhelper.saveDatoAcademico = async (datoAcademico) => {
+  let resultSave = { action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado" }
+  const auxDatoAcademico = new DatoAcademico(datoAcademico);
+
+  await auxDatoAcademico.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Dato academico guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
+    }
+  );
+
+  return resultSave;
+}
+
+// Buscar datos academicos por Cedula Profesional
+dbhelper.findDatoAcademicoByCP = async (cedula_profesional, action) => {
+  let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+
+  await DatoAcademico.findOne({ cedula_profesional: cedula_profesional }).then(
+    (datoAcademico) => {
+      if (datoAcademico) {
+        resultFind = util.setResult(resultFind, true, 200, "Cédula profesional registrada en la BD");
+        if (action === "login")
+          resultFind.datoAcademico = datoAcademico;
+      } else {
+        resultFind = util.setResult(resultFind, false, 400, "Cédula profesional no registrada")
       }
-    );
-  
-    return resultSave;
-  },
-  
-  // Buscar datos academicos por Cedula Profesional
-  findDatoAcademicoByCP: async (cedula_profesional, action) => {
-    let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
-  
-    await DatoAcademico.findOne({ cedula_profesional: cedula_profesional }).then(
-      (datoAcademico) => {
-        if (datoAcademico) {
-          resultFind = util.setResult(resultFind, true, 200, "Cédula profesional registrada en la BD");
-          if (action === "login")
-            resultFind.datoAcademico = datoAcademico;
-        } else {
-          resultFind = util.setResult(resultFind, false, 400, "Cédula profesional no registrada")
-        }
-      }, error => {
-        resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-      }
-    );
-  
-    return resultFind;
-  },
-  
-  //Desconectar de la base de datos
-  disconnect: async () => {
-    await mongoose.disconnect();
-  }
-};
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    }
+  );
+
+  return resultFind;
+}
+
+//Desconectar de la base de datos
+dbhelper.disconnect = async () => {
+  await mongoose.disconnect();
+}
 
 
 module.exports = dbhelper;

@@ -9,62 +9,61 @@ const dbpass = "v0EbhL2LprsKYUP1";
 
 const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@cluster0.8awtuou.mongodb.net/test";
 
-const dbhelper = {
-  // Conexión a la base de datos
-  connect: async () => {
-    let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
-    await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
-      () => {
-        conn = util.setResult(conn, true, 200, "Conectado a la BD");
-      }, error => {
-        conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
-      });
+const dbhelper = {}
+// Conexión a la base de datos
+dbhelper.connect = async () => {
+  let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
+  await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
+    () => {
+      conn = util.setResult(conn, true, 200, "Conectado a la BD");
+    }, error => {
+      conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
+    });
 
-    return conn;
-  },
+  return conn;
+}
 
-  // Guardar un docente
-  saveDocente: async (docente) => {
-    let resultSave = { action: "Guardar docente", value: false, code: 500, msg: "No inicializado" }
-    const auxDocente = new Docente(docente);
+// Guardar un docente
+dbhelper.saveDocente = async (docente) => {
+  let resultSave = { action: "Guardar docente", value: false, code: 500, msg: "No inicializado" }
+  const auxDocente = new Docente(docente);
 
-    await auxDocente.save().then(
-      () => {
-        resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
-      }, error => {
-        resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+  await auxDocente.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+    }
+  );
+
+  return resultSave;
+}
+
+// Buscar docente por email
+dbhelper.findDocenteByEmail = async (correo_institucional, action) => {
+  let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+
+  await Docente.findOne({ correo_institucional: correo_institucional }).then(
+    (docente) => {
+      if (docente) {
+        resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
+        if (action === "login")
+          resultFind.docente = docente;
+      } else {
+        resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
       }
-    );
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    }
+  );
 
-    return resultSave;
-  },
+  return resultFind;
+}
 
-  // Buscar docente por email
-  findDocenteByEmail: async (correo_institucional, action) => {
-    let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
-
-    await Docente.findOne({ correo_institucional: correo_institucional }).then(
-      (docente) => {
-        if (docente) {
-          resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
-          if (action === "login")
-            resultFind.docente = docente;
-        } else {
-          resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
-        }
-      }, error => {
-        resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-      }
-    );
-
-    return resultFind;
-  },
-
-  //Desconectar de la base de datos
-  disconnect: async () => {
-    await mongoose.disconnect();
-  }
-};
+//Desconectar de la base de datos
+dbhelper.disconnect = async () => {
+  await mongoose.disconnect();
+}
 
 
 module.exports = dbhelper;
