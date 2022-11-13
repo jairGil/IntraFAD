@@ -95,7 +95,7 @@ dbhelper.saveCurso = async (curso) => {
 dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
   let resultFind = { action: "Buscar curso", value: false, code: 500, msg: "No inicializado" }
 
-  await Curso.findOne({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente }).then(
+  await Curso.find({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente }).then(
     (curso) => {
       if (curso) {
         resultFind = util.setResult(resultFind, true, 200, "Curso registrado en la BD");
@@ -132,7 +132,7 @@ dbhelper.saveCertificacion = async (certificacion) => {
 dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
   let resultFind = { action: "Buscar certificación", value: false, code: 500, msg: "No inicializado" }
 
-  await Certificacion.findOne({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente }).then(
+  await Certificacion.find({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente }).then(
     (certificacion) => {
       if (certificacion) {
         resultFind = util.setResult(resultFind, true, 200, "Certificación registrado en la BD");
