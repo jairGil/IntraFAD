@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
-const DatoAcademico = require("../models/datoAcademico");
 const util = require("../util/util");
+
+/*** Modelos ***/
+const DatoAcademico = require("../models/datoAcademico");
+const Curso         = require("../models/curso");
+const Certificacion = require("../models/certificacion");
 
 //Información sobre la base de datos en MongoDB
 const dbuser = "jgild";
@@ -11,6 +15,8 @@ const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@cluster0.8awtuou.mong
 
 
 const dbhelper = {}
+
+/********************************* Base de Datos ********************************/
 // Conexión a la base de datos
 dbhelper.connect = async () => {
   let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
@@ -24,6 +30,14 @@ dbhelper.connect = async () => {
   return conn;
 }
 
+//Desconectar de la base de datos
+dbhelper.disconnect = async () => {
+  await mongoose.disconnect();
+}
+/********************************************************************************/
+
+
+/******************************* Datos academicos *******************************/
 // Guardar datos academicos
 dbhelper.saveDatoAcademico = async (datoAcademico) => {
   let resultSave = { action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado" }
@@ -41,15 +55,13 @@ dbhelper.saveDatoAcademico = async (datoAcademico) => {
 }
 
 // Buscar datos academicos por Cedula Profesional
-dbhelper.findDatoAcademicoByCP = async (cedula_profesional, action) => {
-  let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+dbhelper.findDatoAcademicoByCP = async (cedula_profesional) => {
+  let resultFind = { action: "Buscar dato academico", value: false, code: 500, msg: "No inicializado" }
 
   await DatoAcademico.findOne({ cedula_profesional: cedula_profesional }).then(
     (datoAcademico) => {
       if (datoAcademico) {
         resultFind = util.setResult(resultFind, true, 200, "Cédula profesional registrada en la BD");
-        if (action === "login")
-          resultFind.datoAcademico = datoAcademico;
       } else {
         resultFind = util.setResult(resultFind, false, 400, "Cédula profesional no registrada")
       }
@@ -60,11 +72,81 @@ dbhelper.findDatoAcademicoByCP = async (cedula_profesional, action) => {
 
   return resultFind;
 }
+/********************************************************************************/
 
-//Desconectar de la base de datos
-dbhelper.disconnect = async () => {
-  await mongoose.disconnect();
+
+/************************************ Cursos ************************************/
+// Guardar cursos
+dbhelper.saveCurso = async (curso) => {
+  let resultSave = { action: "Guardar curso", value: false, code: 500, msg: "No inicializado" }
+  const auxCurso = new Curso(curso);
+
+  await auxCurso.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Curso guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el curso");
+    });
+    
+  return resultSave;
 }
+
+// Buscar curso por nombre, fecha_fin, institucion y id del docente
+dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
+  let resultFind = { action: "Buscar curso", value: false, code: 500, msg: "No inicializado" }
+
+  await Curso.findOne({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente }).then(
+    (curso) => {
+      if (curso) {
+        resultFind = util.setResult(resultFind, true, 200, "Curso registrado en la BD");
+      } else {
+        resultFind = util.setResult(resultFind, false, 400, "Curso no registrado")
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    }
+  );
+
+  return resultFind;
+}
+/********************************************************************************/
+
+
+/******************************** Certificaciones *******************************/
+// Guardar certificaciones
+dbhelper.saveCertificacion = async (certificacion) => {
+  let resultSave = { action: "Guardar certificación", value: false, code: 500, msg: "No inicializado" }
+  const auxCertificacion = new Certificacion(certificacion);
+
+  await auxCertificacion.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Certificación guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el certificación");
+    });
+    
+  return resultSave;
+}
+
+// Buscar curso por nombre, fecha, institucion y id del docente
+dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
+  let resultFind = { action: "Buscar certificación", value: false, code: 500, msg: "No inicializado" }
+
+  await Certificacion.findOne({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente }).then(
+    (certificacion) => {
+      if (certificacion) {
+        resultFind = util.setResult(resultFind, true, 200, "Certificación registrado en la BD");
+      } else {
+        resultFind = util.setResult(resultFind, false, 400, "Certificación no registrado")
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    }
+  );
+
+  return resultFind;
+}
+/********************************************************************************/
 
 
 module.exports = dbhelper;
