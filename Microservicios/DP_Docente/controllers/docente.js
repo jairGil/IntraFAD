@@ -83,7 +83,7 @@ docenteController.login = async (req, res) => {
   let resultFind = { action: "login", value: false, code: 500, msg: "No inicializado" };
   if (connected.value) {
     const params = req.body;
-    resultFind = await dbhelper.findDocenteByEmail(params.correo_institucional, "login");
+    resultFind = await dbhelper.findDocenteByEmail(params.correo_institucional, resultFind.action);
     if (resultFind.value) {
       const compare = await bcrypt.compare(params.contrasena, resultFind.docente.contrasena);
       resultFind.value = compare;
