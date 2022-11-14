@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const DatoAcademicoController = require("../controllers/datoAcademico");
+const CertificacionController = require("../controllers/certificacion");
 const validateHelper = require("../bin/validate.js");
 
 /* GET home page. */
@@ -9,13 +9,13 @@ router.get("/", (req, res, next) => {
   res.status(403).send("Acceso denegado");
 });
 
-/* POST add datoAcademico. */
-router.post("/add_datoacad", async (req, res, next) => {
-  const result = await validateHelper.validarDatoAcademico(req);
+/* POST add certificacion. */
+router.post("/add_cert", async (req, res, next) => {
+  const result = await validateHelper.validarCertificacion(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
   }else{
-    await DatoAcademicoController.add(req, res).then(
+    await CertificacionController.add(req, res).then(
       (resultSave) => {
           res.status(resultSave.code).send(resultSave);
       });
