@@ -3,3 +3,24 @@
     width: 100%;
     height: 6px;
 }
+
+.bg-gradient {
+    background: linear-gradient(90deg, rgba(102, 131, 112, 1) 0%, rgba(97, 133, 111, 1) 23%, rgba(103, 126, 109, 1) 100%);
+    color: #E5FDEC;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 4.4%; 
+}  
+
+app-footer {
+    position: absolute;
+    bottom: 10;
+    width: 100%;
+    height: 80px; 
+}
