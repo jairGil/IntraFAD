@@ -1,0 +1,41 @@
+const fs = require('fs');
+const path = require('path');
+const util = require('../util/util');
+const dbhelper = require('../bin/db')
+
+let documentoController = {}
+
+documentoController.cargarImagen = async (req, res) => {
+    const connected = await dbhelper.connect();
+    console.log(connected);
+
+    resultSave = { action: "cargar img", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+
+    if (req.files && connected.value) {
+        const docenteId = req.params.docente_id;
+        const filePath = req.files.image.path;
+        const fileSplit = filePath.split('\\');
+        const fileName = fileSplit[1];
+        const extSplit = fileName.split('.');
+        const fileExt = extSplit[1];
+
+        if (fileExt == 'jpg' || fileExt == 'jpeg') {
+            resultSave = await dbhelper.setImagen(docenteId, fileName);
+        } else {
+            fs.unlink(filePath, (err) => {
+                resultSave = util.setResult(resultSave, false, 500, "Extensión de archivo inválida");
+            });
+        }
+    }
+    return resultSave;
+}
+
+documentoController.getImage = async (req, res) => {
+    const file = req.params.image;
+    const pathFile = './uploads/' + file;
+
+    fs.exists(pathFile, (exists) => {
+        if (exists) return res.sendFile(path.resolve(pathFile));
+        else return res.status(404).send({ message: 'Image doesn\'t exists' });
+    });
+}
