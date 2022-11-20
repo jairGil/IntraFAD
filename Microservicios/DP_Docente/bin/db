@@ -42,13 +42,14 @@ dbhelper.saveDocente = async (docente) => {
 // Buscar docente por email
 dbhelper.findDocenteByEmail = async (correo_institucional, action) => {
   let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+  docenteRes = undefined;
 
   await Docente.findOne({ correo_institucional: correo_institucional }).then(
     (docente) => {
       if (docente) {
         resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
         if (action === "login")
-          resultFind.docente = docente;
+        resultFind = util.setResultFind(resultFind, true, 200, "Docente devuelto", docente); 
       } else {
         resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
       }

@@ -14,19 +14,20 @@ router.post("/register", async (req, res, next) => {
   const result = await validateHelper.validarDocente(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
-  }else{
+  } else {
     await docenteController.add(req, res).then(
       (resultSave) => {
-          res.status(resultSave.code).send(resultSave);
+        res.status(resultSave.code).send(resultSave);
       });
   }
 });
 
 /*** Login docente ***/
 router.post("/login", async (req, res) => {
-  const resultFind = await docenteController.login(req, res);
-
-  res.status(resultFind.code).send(resultFind);
+  await docenteController.login(req, res).then(
+    (resultSave) => {
+      res.status(resultSave.code).send(resultSave);
+    });
 });
 
 

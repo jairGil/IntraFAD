@@ -90,7 +90,7 @@ docenteController.login = async (req, res) => {
       if (compare) {
         resultFind = await util.setResult(resultFind, true, 200, "Login exitoso")
         /* TOKEN */
-        resultFind.token = jwt.createToken(resultFind.user);
+        resultFind.token = jwt.createToken(resultFind.docente);
 
       } else {
         resultFind = await util.setResult(resultFind, false, 400, "Las contraseñas no coinciden")

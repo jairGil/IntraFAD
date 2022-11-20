@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms'
+import { LoginService } from './services/login.service'
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,5 @@ import { FormControl } from '@angular/forms'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Frontend';
+  constructor(public loginService: LoginService) {}
 }
