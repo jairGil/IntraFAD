@@ -8,3 +8,13 @@
     padding-inline: 8%;
     margin-inline-start: 5%;
 }
+
+.register {
+    margin-top: 30px;
+    color: #708090;
+}
+
+.register a {
+    color: #11a547;
+    font-weight: 500;
+}

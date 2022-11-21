@@ -1,0 +1,44 @@
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="nombre">Nombe(s)</label>
+        <input type="text" class="form-control" name="nombre" required [(ngModel)]="nombre">
+    </div>
+    <div class="custom-file align">
+        <label for="img" class="custom-file-label" *ngIf="img">{{img.substring(12, 30)}}</label>
+        <label for="img" class="custom-file-label" *ngIf="!img">Imagen de perfil</label>
+        <input type="file" class="custom-file-input" accept=".jpg, .jpeg, .JPG, .JPEG" id="img" required
+            [(ngModel)]="img">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="apellido_p">Apellido paterno</label>
+        <input type="text" class="form-control" id="apellido_p" required [(ngModel)]="apellido_p">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="apellido_m">Apellido materno</label>
+        <input type="text" class="form-control" id="apellido_m" pattern="[0-9]{10}" required [(ngModel)]="apellido_m">
+    </div>
+</div>
+<div class="form-group">
+    <label for="no_emp">No. de Empleado</label>
+    <input type="text" class="form-control" id="no_emp" required [(ngModel)]="no_empleado">
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="rfc">RFC</label>
+        <input type="text" class="form-control" id="rfc" required [(ngModel)]="rfc">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="curp">CURP</label>
+        <input type="text" class="form-control" id="curp" required [(ngModel)]="curp">
+    </div>
+    <div class="custom-file">
+        <label for="rfcd" class="custom-file-label" *ngIf="doc_rfc">{{doc_rfc.substring(12, 30)}}</label>
+        <label for="rfcd" class="custom-file-label" *ngIf="!doc_rfc">PDF de su RFC</label>
+        <input type="file" class="custom-file-input" accept=".pdf" id="rfcd" required [(ngModel)]="doc_rfc">
+    </div>
+    <div class="custom-file">
+        <label for="curpd" class="custom-file-label" *ngIf="doc_curp">{{doc_curp.substring(12, 30)}}</label>
+        <label for="curpd" class="custom-file-label" *ngIf="!doc_curp">PDF de su CURP</label>
+        <input type="file" class="custom-file-input" accept=".pdf" id="curpd" required [(ngModel)]="doc_curp">
+    </div>
+</div>

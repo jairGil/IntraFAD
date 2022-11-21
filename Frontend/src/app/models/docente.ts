@@ -1,23 +1,20 @@
 export class Docente {
-    private _id!: string;
-    private img!: string;
-    private nombre!: string;
-    private aPaterno!: string;
-    private aMaterno!: string;
-    private direccion!: string;
-    private telefono!: string;
-    private correoPersonal!: string;
-    private correoInstitucional: string;
-    private contrasena: string;
-    private rol!: string;
-    private noEmpleado!: string;
-    private rfc!: string;
-    private docRfc!: string;
-    private curp!: string;
-    private docCurp!: string;
-
-    constructor(correoInstitucional: string, contrasena: string) {
-        this.correoInstitucional = correoInstitucional;
-        this.contrasena = contrasena;
-    }
+    constructor(
+        public img: string,
+        public nombre: string,
+        public apellido_p: string,
+        public apellido_m: string,
+        public direccion: string,
+        public telefono: string,
+        public correo_personal: string,
+        public correo_institucional: string,
+        public contrasena: string,
+        public confirma_contrasena: string,
+        public rol: string,
+        public no_empleado: string,
+        public rfc: string,
+        public doc_rfc: string,
+        public curp: string,
+        public doc_curp: string
+    ) { }
 }

@@ -1,0 +1,29 @@
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="correo_personal">Correo personal</label>
+        <input type="email" class="form-control" id="correo_personal" placeholder="correo@dominio.com" required [(ngModel)]="correo_personal">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="telefono">Número de telefono</label>
+        <input type="tel" class="form-control" id="telefono" placeholder="7224352375" pattern="[0-9]{10}"
+            required>
+    </div>
+</div>
+<div class="form-group">
+    <label for="direccion">Dirección</label>
+    <input type="text" class="form-control" id="direccion" placeholder="123 Paseo universidad" required>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="ciudad">Ciudad</label>
+        <input type="text" class="form-control" id="ciudad" placeholder="Toluca" required>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="Estado">Estado</label>
+        <input id="Estado" class="form-control" placeholder="Estado de México" required>
+    </div>
+    <div class="form-group col-md-2">
+        <label for="codigo_postal">C.P.</label>
+        <input type="text" class="form-control" id="codigo_postal" placeholder="50000" required>
+    </div>
+</div>
