@@ -11,7 +11,9 @@ router.get("/", (req, res, next) => {
 
 /* POST add docente. */
 router.post("/register", async (req, res, next) => {
+  console.log(req.body)
   const result = await validateHelper.validarDocente(req);
+  // console.log(result);
   if (!result.isEmpty()) {
     res.status(400).send(result);
   } else {

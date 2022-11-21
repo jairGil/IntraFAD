@@ -88,20 +88,19 @@ docenteController.login = async (req, res) => {
       const compare = await bcrypt.compare(params.contrasena, resultFind.docente.contrasena);
       resultFind.value = compare;
       if (compare) {
-        resultFind = await util.setResult(resultFind, true, 200, "Login exitoso")
+        resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
         /* TOKEN */
         resultFind.token = jwt.createToken(resultFind.docente);
-
       } else {
-        resultFind = await util.setResult(resultFind, false, 400, "Las contraseñas no coinciden")
+        resultFind = await util.setResult(resultFind, false, 400, "Las contraseñas no coinciden");
       }
       delete resultFind.docente;
     } else {
-      resultFind = await util.setResult(resultFind, false, 400, "El usuario no está registrado")
+      resultFind = await util.setResult(resultFind, false, 400, "El usuario no está registrado");
     }
     dbhelper.disconnect();
   } else {
-    resultFind = await util.setResult(resultFind, false, 500, "Error al conectar con la base de datos")
+    resultFind = await util.setResult(resultFind, false, 500, "Error al conectar con la base de datos");
   }
   console.log(resultFind);
   return resultFind;
