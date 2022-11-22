@@ -24,7 +24,7 @@ validateHelper.validarDocente = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
+    .matches(/[a-zA-Z]*\s*([a-zA-Z]){3,15}/)
     .escape().run(req);
 
   /*** Validación Apellido paterno ***/
@@ -65,12 +65,6 @@ validateHelper.validarDocente = async (req) => {
       .trim()
       .not().isEmpty().withMessage("Elemento vacío")
       .isEmail().withMessage("Debe ingresar un correo electrónico")
-      .custom(val => {
-        str = new String(val)
-        if (str.includes("uaemex.mx"))
-          return false;
-        return true;
-      }).withMessage("Debe ingresar un correo electrónico que NO pertenezca al dominio 'uaemex.mx'")
       .escape().run(req);
 
     /*** Validación correo institucional ***/

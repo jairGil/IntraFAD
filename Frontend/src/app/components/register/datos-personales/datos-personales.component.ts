@@ -1,25 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.component.html',
-  styleUrls: ['./datos-personales.component.scss']
+  styleUrls: ['./datos-personales.component.scss', '../register.component.css']
 })
-export class DatosPersonalesComponent implements OnInit {
+export class DatosPersonalesComponent {
 
-  public img!: string;
-  public nombre!: string;
-  public apellido_p!: string;
-  public apellido_m!: string;
-  public no_empleado!: string;
-  public rfc!: string;
-  public doc_rfc!: string;
-  public curp!: string;
-  public doc_curp!: string;
+  public datos = {
+    img: '',
+    nombre: '',
+    apellido_p: '',
+    apellido_m: '',
+    no_empleado: '',
+    rfc: '',
+    doc_rfc: '',
+    curp: '',
+    doc_curp:'',
+    siguiente: 3
+  }
+  
+  @Output() messageEvent = new EventEmitter<object>();
 
   constructor() { }
 
-  ngOnInit(): void {
+  enviarDatos() {
+    this.messageEvent.emit(this.datos);
   }
 
+  regresar() {
+    this.datos.siguiente = 1;
+  }
 }

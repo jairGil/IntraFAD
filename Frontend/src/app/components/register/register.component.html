@@ -1,19 +1,17 @@
-<div class="register h-100 container">
-    <div class="row">
-      <div class="col">
-        <h3>Crear cuenta</h3>
-        <form action="">
-            <h4>Paso {{this.paso}}</h4>
-            <app-cuenta *ngIf="paso == 1"></app-cuenta>
-            <app-datos-personales *ngIf="paso == 2"></app-datos-personales>
-            <app-datos-contacto *ngIf="paso == 3"></app-datos-contacto>
-            <button *ngIf="paso < 3" class="btn btn-primary" (click)="cambia_pagina()">Siguiente</button>
-            <button *ngIf="paso == 3" type="submit" class="btn btn-primary" (click)="crear_cuenta()">Crear cuenta</button>
-        </form>
-      </div>
-  
-      <div class="col">
-        <img src="../../assets/img/IntraFAD.png" width="auto" height="300px" class="center" alt="">
-      </div>
+<div class="register container">
+  <div class="row">
+    <div class="col">
+      <h3>Crear cuenta</h3>
+      <app-cuenta *ngIf="paso == 1" (messageEvent)=recibirDatos($event)></app-cuenta>
+      <app-datos-personales *ngIf="paso == 2" (messageEvent)=recibirDatos($event)></app-datos-personales>
+      <app-datos-contacto *ngIf="paso == 3" (messageEvent)=recibirDatos($event)></app-datos-contacto>
+      <app-comprobar-datos *ngIf="paso == 4" [docente]="docente" (messageEvent)=recibirDatos($event)>
+      </app-comprobar-datos>
+      <app-exito *ngIf="paso == 5"></app-exito>
+    </div>
+
+    <div class="col">
+      <img src="../../assets/img/IntraFAD.png" width="auto" height="300px" class="center" alt="">
     </div>
   </div>
+</div>

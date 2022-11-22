@@ -1,16 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta.component.html',
-  styleUrls: ['./cuenta.component.scss']
+  styleUrls: ['./cuenta.component.scss', '../register.component.css']
 })
 export class CuentaComponent {
 
-  public correo_institucional!: string;
-  public contrasena!: string;
-  public confirma_contrasena!: string;
+  public datos = {
+    correo_institucional: '',
+    contrasena: '',
+    confirma_contrasena: '',
+    siguiente: 2
+  };
 
-  constructor() { }
+  @Output() messageEvent = new EventEmitter<object>();
 
+  constructor(private router: Router) { }
+
+  enviarDatos() {
+    this.messageEvent.emit(this.datos);
+  }
+
+  regresar() {
+    this.router.navigate(['/login']);
+  }
 }
