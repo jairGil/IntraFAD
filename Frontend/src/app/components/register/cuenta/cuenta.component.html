@@ -1,15 +1,22 @@
-<div class="form-group">
-    <label for="correo">Correo institucional</label>
-    <input type="email" class="form-control" name="correo" aria-describedby="emailHelp"
-        [(ngModel)]="correo_institucional" placeholder="correo@uaemex.mx" required>
-</div>
-<div class="form-group">
-    <label for="contrasena">Contraseña</label>
-    <input type="password" class="form-control" name="contrasena" placeholder="Contraseña"
-        [(ngModel)]="contrasena"  required>
-</div>
-<div class="form-group">
-    <label for="contrasena_conf">Confirmar contraseña</label>
-    <input type="password" class="form-control" name="contrasena_conf" placeholder="Confirmar contraseña"
-        [(ngModel)]="confirma_contrasena" required>
-</div>
+<h5>Paso 1 - Credenciales</h5>
+<form (ngSubmit)="this.enviarDatos()">
+    <div class="form-group">
+        <label for="correo">Correo institucional</label>
+        <input type="email" class="form-control" name="correo" placeholder="correo@uaemex.mx"
+        [(ngModel)]="datos.correo_institucional" required>
+    </div>
+    <div class="form-group">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" class="form-control" name="contrasena" placeholder="Contraseña"
+            [(ngModel)]="datos.contrasena"  required>
+    </div>
+    <div class="form-group">
+        <label for="contrasena_conf">Confirmar contraseña</label>
+        <input type="password" class="form-control" name="contrasena_conf" placeholder="Confirmar contraseña"
+            [(ngModel)]="datos.confirma_contrasena" required>
+    </div>
+    <div class="row">  
+        <button class="btn btn-light col-md-6" (click)="regresar()">Regresar</button>
+        <button class="btn btn-primary col-md-6" type="submit">Siguiente</button>
+    </div>
+</form>

@@ -15,6 +15,8 @@ import { HomeComponent } from './components/home/home.component';
 import { CuentaComponent } from './components/register/cuenta/cuenta.component';
 import { DatosPersonalesComponent } from './components/register/datos-personales/datos-personales.component';
 import { DatosContactoComponent } from './components/register/datos-contacto/datos-contacto.component';
+import { ComprobarDatosComponent } from './components/register/comprobar-datos/comprobar-datos.component';
+import { ExitoComponent } from './components/register/exito/exito.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { DatosContactoComponent } from './components/register/datos-contacto/dat
     HomeComponent,
     CuentaComponent,
     DatosPersonalesComponent,
-    DatosContactoComponent
+    DatosContactoComponent,
+    ComprobarDatosComponent,
+    ExitoComponent
   ],
   imports: [
     BrowserModule,

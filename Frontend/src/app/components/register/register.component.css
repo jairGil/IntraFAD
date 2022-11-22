@@ -1,5 +1,6 @@
 .register {
     padding: 5%;
+    min-height: 500px;
 }
 
 .btn-primary {
