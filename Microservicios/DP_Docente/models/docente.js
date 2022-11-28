@@ -14,29 +14,32 @@ const docenteSchema = Schema({
     nombre: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "No ingresado"
     },
     apellido_p: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "No ingresado"
     },
     apellido_m: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        default: "No ingresado"
     },
     direccion: {
         type: String,
         required: true,
         trim: true,
-        default: "no_inicializado"
+        default: "No ingresado"
     },
     telefono: {
         type: String,
         required: true,
-        default: "0000000000",
-        trim: true
+        trim: true,
+        default: "0000000000"
     },
     correo_personal: {
         type: String,
