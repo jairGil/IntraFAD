@@ -12,7 +12,6 @@ router.get("/", (req, res, next) => {
 /* POST add docente. */
 router.post("/register", async (req, res, next) => {
   const result = await validateHelper.validarDocente(req);
-  console.log(result);
   if (!result.isEmpty()) {
     res.status(400).send(result);
   } else {
@@ -23,9 +22,23 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+router.post('/register-noi', async (req, res, next) => {
+  await docenteController.addNoInstitutional(req, res).then(
+    (resultSave) => {
+      res.status(resultSave.code).send(resultSave);
+    });
+});
+
 /*** Login docente ***/
 router.post("/login", async (req, res) => {
   await docenteController.login(req, res).then(
+    (resultSave) => {
+      res.status(resultSave.code).send(resultSave);
+    });
+});
+
+router.post("/login-noi", async (req, res) => {
+  await docenteController.loginNoInstitutional(req, res).then(
     (resultSave) => {
       res.status(resultSave.code).send(resultSave);
     });

@@ -40,7 +40,27 @@ dbhelper.saveDocente = async (docente) => {
 }
 
 // Buscar docente por email
-dbhelper.findDocenteByEmail = async (correo_institucional, action) => {
+dbhelper.findDocenteByEmail = async (correo_personal, action) => {
+  let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
+
+  await Docente.findOne({ correo_personal: correo_personal }).then(
+    (docente) => {
+      if (docente) {
+        resultFind = util.setResult(resultFind, true, 200, "Correo electrónico registrado en la BD");
+        if (action === "login")
+        resultFind = { action: action, value: true, code: 200, msg: "Docente enviado", docente: docente }
+      } else {
+        resultFind = util.setResult(resultFind, false, 400, "Correo electrónico no registrado");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    }
+  );
+  return resultFind;
+}
+
+// Buscar docente por email institucional
+dbhelper.findDocenteByInstitutionalEmail = async (correo_institucional, action) => {
   let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
 
   await Docente.findOne({ correo_institucional: correo_institucional }).then(

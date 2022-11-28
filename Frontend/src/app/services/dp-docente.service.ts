@@ -14,4 +14,12 @@ export class DpDocenteService {
   register(docente: any) {
     return this.http.post<any>(this.URL + '/register', docente);
   }
+
+  registerNoInstitutional(docente: any) {
+    return this.http.post<any>(this.URL + '/register-noi', docente);
+  }
+
+  searchEmail(email: any) {
+    return this.http.get<any>(this.URL + '/find-email', email);
+  }
 }

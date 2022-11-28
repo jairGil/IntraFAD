@@ -9,69 +9,84 @@ let docenteController = {}
 
 //Agregar un nuevo docente
 docenteController.add = async (req, res) => {
+  const params = req.body;
   const connected = await dbhelper.connect();
+  let resultSave = { action: "signin", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   console.log(connected);
 
-  let resultSave = { action: "signin", value: false, code: 500, msg: "Error al conectar con la base de datos" }
-  if (connected.value) {
-    let docente = {};
-    const params = req.body;
-
-    //Verificar que el correo electónico no está en uso
-    let resultFind = await dbhelper.findDocenteByEmail(params.correo_institucional, "signin");
-    if (resultFind.value) {
-      resultSave = await util.setResult(resultSave, false, 400, "El correo electrónico ya está registrado");
-    } else {
-      docente.nombre = params.nombre;
-      docente.apellido_p = params.apellido_p;
-      docente.apellido_m = params.apellido_m;
-      docente.rol = params.rol;
-
-      if (params.rol === "ADMIN_ROLE" || params.rol === "USER_ROLE" || params.rol === "ROOT_ROLE") {
-        docente.img = params.img;
-        docente.direccion = params.direccion;
-        docente.telefono = params.telefono;
-        docente.correo_personal = params.correo_personal;
-        docente.correo_institucional = params.correo_institucional;
-        docente.no_empleado = params.no_empleado;
-        docente.rfc = params.rfc;
-        docente.curp = params.curp;
-
-        if (!params.doc_rfc) {
-          resultSave = await util.setResult(resultSave, false, 400, "Debe ingresar su documento PDF de su RFC");
-          return resultSave;
-        }
-
-        if (!params.doc_curp) {
-          resultSave = await util.setResult(resultSave, false, 400, "Debe ingresar su documento PDF de su CURP");
-          return resultSave;
-        }
-
-        docente.doc_rfc = params.doc_rfc;
-        docente.doc_curp = params.doc_curp;
-
-        if (params.contrasena == params.confirma_contrasena) {
-          //Encriptar contraseña
-          const saltRounds = 10;
-          docente.contrasena = await new Promise((resolve, reject) => {
-            bcrypt.hash(params.contrasena, saltRounds, (error, hash) => {
-              if (error) {
-                resultSave = util.setResult(resultSave, false, 500, error + " - Error al encriptar la contraseña");
-                resolve(null);
-              } else
-                resolve(hash);
-            });
-          });
-
-          if (docente.contrasena)
-            resultSave = await dbhelper.saveDocente(docente);
-        } else
-          resultSave = await util.setResult(resultSave, false, 400, error + " - Error las contraseñas no coinciden");
-      } else
-        resultSave = await dbhelper.saveDocente(docente);
-    }
-    dbhelper.disconnect();
+  if (!connected.value) {
+    return resultSave;
   }
+
+  let docente = {};
+  let resultFind = await dbhelper.findDocenteByInstitutionalEmail(params.correo_institucional, "signin");
+  //Verificar que el correo electónico no está en uso
+  if (resultFind.value) {
+    return await util.setResult(resultSave, false, 400, "El correo electrónico ya está registrado");
+  }
+
+  // Verificar si las contraseñas coinciden
+  if (!params.contrasena == params.confirma_contrasena) {
+    return await util.setResult(resultSave, false, 400, "Las contraseñas no coinciden");
+  }
+
+  //Encriptar contraseña
+  const saltRounds = 10;
+  docente.contrasena = await new Promise((resolve, reject) => {
+    bcrypt.hash(params.contrasena, saltRounds, (error, hash) => {
+      if (error) {
+        resolve(null);
+        return util.setResult(resultSave, false, 500, error + " - Error al encriptar la contraseña");
+      } else
+        resolve(hash);
+    });
+  });
+
+  docente.correo_institucional = params.correo_institucional;
+  resultSave = await dbhelper.saveDocente(docente);
+  dbhelper.disconnect();
+  console.log(resultSave);
+  return resultSave;
+}
+
+//Agregar un nuevo docente sin correo institucional
+docenteController.addNoInstitutional = async (req, res) => {
+  const params = req.body;
+  const connected = await dbhelper.connect();
+  let resultSave = { action: "signin", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  console.log(connected);
+
+  if (!connected.value) {
+    return resultSave;
+  }
+
+  let docente = {};
+  let resultFind = await dbhelper.findDocenteByEmail(params.correo_personal, "signin");
+  //Verificar que el correo electónico no está en uso
+  if (resultFind.value) {
+    return await util.setResult(resultSave, false, 400, "El correo electrónico ya está registrado");
+  }
+
+  // Verificar si las contraseñas coinciden
+  if (!params.contrasena == params.confirma_contrasena) {
+    return await util.setResult(resultSave, false, 400, "Las contraseñas no coinciden");
+  }
+
+  //Encriptar contraseña
+  const saltRounds = 10;
+  docente.contrasena = await new Promise((resolve, reject) => {
+    bcrypt.hash(params.contrasena, saltRounds, (error, hash) => {
+      if (error) {
+        resolve(null);
+        return util.setResult(resultSave, false, 500, error + " - Error al encriptar la contraseña");
+      } else
+        resolve(hash);
+    });
+  });
+
+  docente.correo_personal = params.correo_personal;
+  resultSave = await dbhelper.saveDocente(docente);
+  dbhelper.disconnect();
   console.log(resultSave);
   return resultSave;
 }
@@ -83,7 +98,7 @@ docenteController.login = async (req, res) => {
   let resultFind = { action: "login", value: false, code: 500, msg: "No inicializado" };
   if (connected.value) {
     const params = req.body;
-    resultFind = await dbhelper.findDocenteByEmail(params.correo_institucional, resultFind.action);
+    resultFind = await dbhelper.findDocenteByInstitutionalEmail(params.correo_institucional, resultFind.action);
     if (resultFind.value) {
       const compare = await bcrypt.compare(params.contrasena, resultFind.docente.contrasena);
       resultFind.value = compare;
@@ -92,11 +107,41 @@ docenteController.login = async (req, res) => {
         /* TOKEN */
         resultFind.token = jwt.createToken(resultFind.docente);
       } else {
-        resultFind = await util.setResult(resultFind, false, 400, "Las contraseñas no coinciden");
+        resultFind = await util.setResult(resultFind, false, 400, "La contraseña es incorrecta");
       }
       delete resultFind.docente;
     } else {
-      resultFind = await util.setResult(resultFind, false, 400, "El usuario no está registrado");
+      resultFind = await util.setResult(resultFind, false, 400, "El correo institucional no está registrado");
+    }
+    dbhelper.disconnect();
+  } else {
+    resultFind = await util.setResult(resultFind, false, 500, "Error al conectar con la base de datos");
+  }
+  console.log(resultFind);
+  return resultFind;
+}
+
+docenteController.loginNoInstitutional = async (req, res) => {
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  let resultFind = { action: "login", value: false, code: 500, msg: "No inicializado" };
+  if (connected.value) {
+    const params = req.body;
+    resultFind = await dbhelper.findDocenteByEmail(params.correo_personal, resultFind.action);
+    if (resultFind.value) {
+      const compare = await bcrypt.compare(params.contrasena, resultFind.docente.contrasena);
+      resultFind.value = compare;
+      if (compare) {
+        resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
+        /* TOKEN */
+        resultFind.token = jwt.createToken(resultFind.docente);
+      } else {
+        resultFind = await util.setResult(resultFind, false, 400, "La contraseña es incorrecta");
+      }
+      delete resultFind.docente;
+    } else {
+      resultFind = await util.setResult(resultFind, false, 400, "El correo personal no está registrado");
     }
     dbhelper.disconnect();
   } else {
