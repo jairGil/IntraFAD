@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth.guard';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -12,11 +12,13 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
-import { CuentaComponent } from './components/register/cuenta/cuenta.component';
-import { DatosPersonalesComponent } from './components/register/datos-personales/datos-personales.component';
-import { DatosContactoComponent } from './components/register/datos-contacto/datos-contacto.component';
-import { ComprobarDatosComponent } from './components/register/comprobar-datos/comprobar-datos.component';
+import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
+import { DatosContactoComponent } from './components/home/datos-contacto/datos-contacto.component';
 import { ExitoComponent } from './components/register/exito/exito.component';
+import { RegisterInstitucionalComponent } from './components/register/institucional/institucional.component';
+import { RegisterNoInstitucionalComponent } from './components/register/no-institucional/no-institucional.component';
+import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
+import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
 
 @NgModule({
   declarations: [
@@ -26,16 +28,19 @@ import { ExitoComponent } from './components/register/exito/exito.component';
     FooterComponent,
     RegisterComponent,
     HomeComponent,
-    CuentaComponent,
     DatosPersonalesComponent,
     DatosContactoComponent,
-    ComprobarDatosComponent,
-    ExitoComponent
+    ExitoComponent,
+    RegisterInstitucionalComponent,
+    RegisterNoInstitucionalComponent,
+    LoginInstitucionalComponent,
+    LoginNoInstitucionalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [

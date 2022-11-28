@@ -9,6 +9,25 @@
     color: #E5FDEC;
 }
 
+.btn-primary {
+    background-color: #3d8557;
+    border: none;
+    padding-inline: 5%;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+button[type="submit"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #3d8557cc;
+    box-shadow: 0 1px 1px #00000013 inset, 0 0 8px #3d8557cc;
+    outline: 0 none;
+}
+
 #page-container {
     position: relative;
     min-height: 100vh;

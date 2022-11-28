@@ -1,17 +1,16 @@
 <div class="register container">
-  <div class="row">
+  <div class="row align-items-center">
     <div class="col">
       <h3>Crear cuenta</h3>
-      <app-cuenta *ngIf="paso == 1" (messageEvent)=recibirDatos($event)></app-cuenta>
-      <app-datos-personales *ngIf="paso == 2" (messageEvent)=recibirDatos($event)></app-datos-personales>
-      <app-datos-contacto *ngIf="paso == 3" (messageEvent)=recibirDatos($event)></app-datos-contacto>
-      <app-comprobar-datos *ngIf="paso == 4" [docente]="docente" (messageEvent)=recibirDatos($event)>
-      </app-comprobar-datos>
-      <app-exito *ngIf="paso == 5"></app-exito>
+      <register-institucional *ngIf="!data?.value && institucional" (messageEvent)=recibirDatos($event)></register-institucional>
+      <register-no-institucional *ngIf="!data?.value && !institucional" (messageEvent)=recibirDatos($event)></register-no-institucional>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional && !data?.value">No cuento con correo institucional</button>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional && !data?.value">Registrarme con correo institucional</button>
+      <app-exito *ngIf="data?.value"></app-exito>
     </div>
 
     <div class="col">
-      <img src="../../assets/img/IntraFAD.png" width="auto" height="300px" class="center" alt="">
+      <img src="../../assets/img/IntraFAD.png" class="img" alt="">
     </div>
   </div>
 </div>
