@@ -1,9 +1,21 @@
 .pnl-izq {
     display: flex;
     flex-direction: column;
+    border-right: 1px solid black;
 }
 
 .main {
     margin-top: 50px;
     display: flex;
+    margin-inline: 5%;
+}
+
+.btn-transparent {
+    background: none;
+    text-align: start;
+    margin-bottom: 5px;
+}
+
+.btn-transparent:hover {
+    color: #28A745;
 }
