@@ -30,7 +30,7 @@ export class LoginInstitucionalComponent {
   ) { }
 
   login() {
-    this.loginService.loginNoInstitutional(this.loginForm.value)
+    this.loginService.login(this.loginForm.value)
       .subscribe(
         (res: any) => {
           this.loginService.setToken(res.token);

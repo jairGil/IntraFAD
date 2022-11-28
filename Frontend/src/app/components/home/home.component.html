@@ -1,1 +1,9 @@
-<p>home works!</p>
+<div class="main">
+  <div class="pnl-izq col-md-2">
+    <button class="btn btn-light" (click)="cambia_pagina(0)">Datos personales</button>
+    <button class="btn btn-light" (click)="cambia_pagina(1)">Datos acedémicos</button>
+  </div>
+  <div class="pnl-der col-md-9">
+    <app-datos-personales *ngIf="pagina == 0"></app-datos-personales>
+  </div>
+</div>
