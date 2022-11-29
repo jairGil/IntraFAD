@@ -57,19 +57,19 @@ documentoController.cargarArchivo = async (req, res) => {
         if (fileExt == 'pdf') {
             //resultSave = await dbhelper.setImagen(docenteId, fileName);
             //definir como guardar en la base de datos
+            
         } else {
             fs.unlink(filePath, (err) => {
-                resultSave = util.setResult(resultSave, false, 500, "Extensión de archivo inválida.");
+                resultSave = util.setResult(resultSave, false, 200, "Extensión de archivo inválida.");
             });
         }
     }
     return resultSave;
   }
 
-  documentoController.getDoc = async (req, res) => {
+  documentoController.getArchivo = async (req, res) => {
     const file = req.params.image;
-    const pathFile = './uploads/imagenes' + file;
-
+    const pathFile = './uploads/documentos' + file;
     fs.exists(pathFile, (exists) => {
         if (exists) return res.sendFile(path.resolve(pathFile));
         else return res.status(404).send({ message: 'No existe el archivo.' });
