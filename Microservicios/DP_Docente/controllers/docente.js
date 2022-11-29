@@ -151,5 +151,16 @@ docenteController.loginNoInstitutional = async (req, res) => {
   return resultFind;
 }
 
+docenteController.updateDatosPersonales = async (req, res) => {
+  const params = req.body;
+  const connected = await dbhelper.connect();
+  let resultSave = { action: "signin", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  console.log(connected);
+
+  if (!connected.value) {
+    return resultSave;
+  }
+}
+
 
 module.exports = docenteController;

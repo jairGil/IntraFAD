@@ -3,7 +3,7 @@ import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss', '../../app.component.css']
 })
 export class HomeComponent {
 
@@ -11,22 +11,28 @@ export class HomeComponent {
   @ViewChild("btnDA") btnDA: ElementRef | undefined;
 
   public pagina = 0;
+  public editar = false;
 
   constructor(private renderer: Renderer2) { }
 
   cambia_pagina(pag: number) {
     switch (pag) {
       case 0:
+        this.editar = false;
         this.renderer.addClass(this.btnDP?.nativeElement, "btn-outline-success");
         this.renderer.removeClass(this.btnDA?.nativeElement, "btn-outline-success");
         break;
       case 1:
+        this.editar = false;
         this.renderer.removeClass(this.btnDP?.nativeElement, "btn-outline-success");
         this.renderer.addClass(this.btnDA?.nativeElement, "btn-outline-success");
         break;
     }
-
     this.pagina = pag;
+  }
+
+  modo_edicion($event: any) {
+    this.editar = $event.edicion;
   }
 
 }

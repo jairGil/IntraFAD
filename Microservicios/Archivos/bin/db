@@ -24,13 +24,22 @@ dbhelper.connect = async () => {
 }
 
 dbhelper.setImagen = async (docenteId, fileName) => {
+  let resultSave = { action: "Set imagen", value: false, code: 500, msg: "No se pudo cargar la imagen1" };
   Docente.findByIdAndUpdate(docenteId, { img: fileName }, { new: true }, (err, docenteUpdated) => {
-    if (err) resultSave = util.setResult(resultSave, false, 500, 'No se pudo cargar la imagen');
+    if (err) {
+      console.log(err);
+      resultSave = util.setResult(resultSave, false, 500, 'No se pudo cargar la imagen');
+    }
 
-    if (!docenteUpdated) resultSave = util.setResult(resultSave, false, 404, "No existe el docente");
+    if (!docenteUpdated) {
+      console.log(docenteUpdated);
+      resultSave = util.setResult(resultSave, false, 404, "No existe el docente");
+    }
 
     resultSave = util.setResult(resultSave, true, 200, "Imagen cargada correctamente");
   });
+
+  return resultSave;
 }
 
 //Desconectar de la base de datos

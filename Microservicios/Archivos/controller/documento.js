@@ -10,23 +10,30 @@ documentoController.cargarImagen = async (req, res) => {
     const connected = await dbhelper.connect();
     console.log(connected);
 
-    resultSave = { action: "cargar img", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+    let resultSave = { action: "cargar img", value: false, code: 500, msg: "Error al conectar con la base de datos" }
 
-    if (req.files && connected.value) {
-        const docenteId = req.params.docente_id;
-        const filePath = req.files.image.path;
-        const fileSplit = filePath.split('\\');
-        const fileName = fileSplit[1];
-        const extSplit = fileName.split('.');
-        const fileExt = extSplit[1];
+    if (!connected.value) { return resultSave; }
 
-        if (fileExt == 'jpg' || fileExt == 'jpeg') {
-            resultSave = await dbhelper.setImagen(docenteId, fileName);
-        } else {
-            fs.unlink(filePath, (err) => {
-                resultSave = util.setResult(resultSave, false, 500, "Extensión de archivo inválida.");
-            });
-        }
+    if (!req.files) {
+        dbhelper.disconnect();
+        return await util.setResult(false, 500, "No ingresó ninguna imagen")
+    }
+
+    console.log(req.params)
+    const docenteId = req.params.docente_id;
+    const filePath = req.files.image.path;
+    const fileSplit = filePath.split('\\');
+    const fileName = fileSplit[2];
+    const extSplit = fileName.split('.');
+    const fileExt = extSplit[1];
+
+    if (fileExt == 'jpg' || fileExt == 'jpeg') {
+        resultSave = await dbhelper.setImagen(docenteId, fileName);
+    } else {
+        fs.unlink(filePath, (err) => {
+            console.log("si entro");
+            resultSave = util.setResult(resultSave, false, 500, "Extensión de archivo inválida.");
+        });
     }
     return resultSave;
 }
@@ -57,17 +64,18 @@ documentoController.cargarArchivo = async (req, res) => {
         if (fileExt == 'pdf') {
             //resultSave = await dbhelper.setImagen(docenteId, fileName);
             //definir como guardar en la base de datos
-            
+
         } else {
             fs.unlink(filePath, (err) => {
+                console.log("si entro");
                 resultSave = util.setResult(resultSave, false, 200, "Extensión de archivo inválida.");
             });
         }
     }
     return resultSave;
-  }
+}
 
-  documentoController.getArchivo = async (req, res) => {
+documentoController.getArchivo = async (req, res) => {
     const file = req.params.image;
     const pathFile = './uploads/documentos' + file;
     fs.exists(pathFile, (exists) => {
@@ -76,4 +84,4 @@ documentoController.cargarArchivo = async (req, res) => {
     });
 }
 
-  module.exports = documentoController;
+module.exports = documentoController;

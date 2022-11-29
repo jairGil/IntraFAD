@@ -39,6 +39,22 @@ dbhelper.saveDocente = async (docente) => {
   return resultSave;
 }
 
+// Actualizar un docente
+dbhelper.updateDocente = async (docente) => {
+  let resultSave = { action: "Actualizar docente", value: false, code: 500, msg: "No inicializado" }
+  const auxDocente = new Docente(docente);
+
+  await auxDocente.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+    }
+  );
+
+  return resultSave;
+}
+
 // Buscar docente por email
 dbhelper.findDocenteByEmail = async (correo_personal, action) => {
   let resultFind = { action: action, value: false, code: 500, msg: "No inicializado" }
