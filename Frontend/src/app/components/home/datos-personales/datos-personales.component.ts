@@ -29,8 +29,12 @@ export class DatosPersonalesComponent {
     municipio: ['', [Validators.required, Validators.minLength(3)]],
     cp: ['', [Validators.required, Validators.minLength(5), Validators.pattern(this.regex_num)]],
     correo_personal: ['', [Validators.required, Validators.pattern(this.regex_personal)]],
-    correo_institucional: ['', [Validators.required, Validators.pattern(this.regex_institucional)]],
+    correo_institucional: ['', [Validators.pattern(this.regex_institucional)]],
     telefono: ['', [Validators.required, Validators.minLength(10), Validators.pattern(this.regex_num)]],
+    rfc: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13)]],
+    doc_rfc: ['', [Validators.required]],
+    curp: ['', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+    doc_curp: ['', [Validators.required]],
   });
 
   constructor(
@@ -48,6 +52,30 @@ export class DatosPersonalesComponent {
     console.log(this.token_data);
   }
 
+  onImageSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.dpForm.get('img')?.setValue(file);
+    }
+    console.log(this.dpForm.get('img')?.value)
+  }
+
+  onRFCSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.dpForm.get('doc_rfc')?.setValue(file);
+    }
+    console.log(this.dpForm.get('doc_rfc')?.value)
+  }
+
+  onCURPSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.dpForm.get('doc_curp')?.setValue(file);
+    }
+    console.log(this.dpForm.get('doc_curp')?.value)
+  }
+
   get nombre() { return this.dpForm.get('nombre'); }
   get apellido_p() { return this.dpForm.get('apellido_p'); }
   get apellido_m() { return this.dpForm.get('apellido_m'); }
@@ -61,4 +89,8 @@ export class DatosPersonalesComponent {
   get correo_personal() { return this.dpForm.get('correo_personal'); }
   get correo_institucional() { return this.dpForm.get('correo_institucional'); }
   get telefono() { return this.dpForm.get('telefono'); }
+  get rfc() { return this.dpForm.get('rfc'); }
+  get doc_rfc() { return this.dpForm.get('doc_rfc'); }
+  get curp() { return this.dpForm.get('curp'); }
+  get doc_curp() { return this.dpForm.get('doc_curp'); }
 }
