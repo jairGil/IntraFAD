@@ -3,7 +3,7 @@ const express = require("express");
 //const fileUpload = require("express-fileupload");
 const router = express.Router();
 
-const documentoController = require("../controllers/documento");
+const documentoController = require("../controller/documento");
 
 var multipart = require('connect-multiparty');
 var multipartMiddlewareImg = multipart({ uploadDir: './uploads/imagenes' });

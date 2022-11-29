@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const util = require("../util/util");
-const Docente = require("../models/docente");
+const Docente = require("../model/docente");
 
 //Información sobre la base de datos en MongoDB
 const dbuser = "jgild";
