@@ -13,7 +13,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
-import { DatosContactoComponent } from './components/home/datos-contacto/datos-contacto.component';
 import { ExitoComponent } from './components/register/exito/exito.component';
 import { RegisterInstitucionalComponent } from './components/register/institucional/institucional.component';
 import { RegisterNoInstitucionalComponent } from './components/register/no-institucional/no-institucional.component';
@@ -29,7 +28,6 @@ import { LoginNoInstitucionalComponent } from './components/login/no-institucion
     RegisterComponent,
     HomeComponent,
     DatosPersonalesComponent,
-    DatosContactoComponent,
     ExitoComponent,
     RegisterInstitucionalComponent,
     RegisterNoInstitucionalComponent,
