@@ -19,7 +19,7 @@ export class DpDocenteService {
     return this.http.post<any>(this.URL + '/register-noi', docente);
   }
 
-  searchEmail(email: any) {
-    return this.http.get<any>(this.URL + '/find-email', email);
+  updateDocente(docente: any) {
+    return this.http.put<any>(this.URL + '/update-dp', docente);
   }
 }

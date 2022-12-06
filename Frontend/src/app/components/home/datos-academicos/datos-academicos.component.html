@@ -1,0 +1,22 @@
+<div class="col-md-7">
+    <div *ngIf="modo_agregar == true">
+        <button class="btn btn-danger" (click)="cambiarModo(2)">Cancelar</button>
+        <button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button>
+    </div>
+    <button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Grado</th>
+                <th>Grado obtenido</th>
+                <th>Institución educativa emisora</th>
+                <th>Fecha de obtención</th>
+                <th>Título</th>
+                <th>Cédula</th>
+                <th>Validado</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+    <button class="btn btn-secondary" (click)="change()">Siguiente</button>
+</div>

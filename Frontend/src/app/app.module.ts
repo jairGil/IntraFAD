@@ -19,6 +19,7 @@ import { RegisterInstitucionalComponent } from './components/register/institucio
 import { RegisterNoInstitucionalComponent } from './components/register/no-institucional/no-institucional.component';
 import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
 import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
+import { DatosAcademicosComponent } from './components/home/datos-academicos/datos-academicos.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { LoginNoInstitucionalComponent } from './components/login/no-institucion
     RegisterInstitucionalComponent,
     RegisterNoInstitucionalComponent,
     LoginInstitucionalComponent,
-    LoginNoInstitucionalComponent
+    LoginNoInstitucionalComponent,
+    DatosAcademicosComponent
   ],
   imports: [
     BrowserModule,

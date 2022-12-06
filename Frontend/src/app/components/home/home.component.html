@@ -4,7 +4,10 @@
     <button class="btn btn-transparent" (click)="cambia_pagina(1)" #btnDA>Datos acedémicos</button>
   </div>
   <div class="pnl-der col-md-12 ml-5">
-    <app-datos-personales *ngIf="pagina == 0 && !editar" (messageEvent)="modo_edicion($event)"></app-datos-personales>
-    <app-datos-personales-edit *ngIf="pagina == 0 && editar" (messageEvent)=modo_edicion($event)></app-datos-personales-edit>
+    <app-datos-personales *ngIf="pagina == 0 && !editar" (messageEvent)="modo_edicion($event)" [token_data]="token_data">
+    </app-datos-personales>
+    <app-datos-personales-edit *ngIf="pagina == 0 && editar" (messageEvent)=modo_edicion($event) [token_data]="token_data">
+    </app-datos-personales-edit>
+    <app-datos-academicos *ngIf="pagina == 1"></app-datos-academicos>
   </div>
 </div>

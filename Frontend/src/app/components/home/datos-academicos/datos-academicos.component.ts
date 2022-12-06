@@ -1,17 +1,29 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
-  selector: 'app-datos-personales',
-  templateUrl: './datos-personales.component.html',
-  styleUrls: ['./datos-personales.component.scss', '../../../app.component.css']
+  selector: 'app-datos-academicos',
+  templateUrl: './datos-academicos.component.html',
+  styleUrls: ['./datos-academicos.component.scss', '../../../app.component.css']
 })
-export class DatosPersonalesComponent implements OnInit {
+export class DatosAcademicosComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<object>();
-  @Input() token_data: any;
+  private jwtHelper = new JwtHelperService();
+  public token_data: any;
+  public modo_agregar = false;
+
+  constructor(
+    private loginService: LoginService
+  ) { }
 
   ngOnInit(): void {
+    this.decodeToken();
     this.cleanToken();
+  }
+
+  decodeToken() {
+    this.token_data = this.jwtHelper.decodeToken(this.loginService.getToken());
   }
 
   cleanToken() {
@@ -48,8 +60,23 @@ export class DatosPersonalesComponent implements OnInit {
     }
   }
 
-  modo_edicion() {
-    this.messageEvent.emit({ edicion: true });
+  cambiarModo(modo: number) {
+    switch (modo) {
+      case 1:
+        console.log("agregar");
+        this.modo_agregar = true;
+        break;
+      case 2:
+        console.log("cancelar");
+        this.modo_agregar = false;
+        break;
+    }
   }
 
+  change() {
+    console.log("go next");
+  }
 }
+
+
+
