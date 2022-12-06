@@ -79,7 +79,7 @@ docenteController.login = async (req, res) => {
   if (!resultFind.value)
     return await util.setResult(resultFind, false, 400, "El correo institucional no está registrado");
 
-  const compare = await util.comparaContrasena(params.contrasena, resultFind.docente.contrasena);
+  const compare = await util.comparaContrasenas(params.contrasena, resultFind.docente.contrasena);
 
   if (!compare)
     return await util.setResult(resultFind, false, 400, "La contraseña es incorrecta");
@@ -99,7 +99,7 @@ docenteController.loginNoInstitutional = async (req, res) => {
   const connected = await dbhelper.connect();
   console.log(connected);
 
-  if (connected.value) return resultFind;
+  if (!connected.value) return resultFind;
 
   const params = req.body;
   resultFind = await dbhelper.findDocenteByEmail(params.correo_personal, resultFind.action);
@@ -107,7 +107,7 @@ docenteController.loginNoInstitutional = async (req, res) => {
   if (!resultFind.value)
     return await util.setResult(resultFind, false, 400, "El correo personal no está registrado");
 
-  const compare = await util.comparaContrasena(params.contrasena, resultFind.docente.contrasena);
+  const compare = await util.comparaContrasenas(params.contrasena, resultFind.docente.contrasena);
 
   if (!compare)
     return await util.setResult(resultFind, false, 400, "La contraseña es incorrecta");
