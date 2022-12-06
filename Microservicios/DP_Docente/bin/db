@@ -84,8 +84,8 @@ dbhelper.updateDocente = async (docente) => {
   let resultSave = { action: "Actualizar docente", value: false, code: 500, msg: "No inicializado" }
 
   await Docente.findByIdAndUpdate(docente._id, docente).then(
-    () => {
-      resultSave = util.setResult(resultSave, true, 200, "Docente guardado exitosamente.");
+    (docente) => {
+      resultSave = { action: "Actualizar docente", value: true, code: 200, msg: "Docente actualizado", docente: docente }
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
     }

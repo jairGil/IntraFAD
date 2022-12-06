@@ -44,7 +44,7 @@ router.post("/login-noi", async (req, res) => {
     });
 });
 
-router.post("/update-dp", async (req, res) => {
+router.put("/update-dp", async (req, res) => {
   await docenteController.updateDatosPersonales(req, res).then(
     (resultSave) => {
       res.status(resultSave.code).send(resultSave);

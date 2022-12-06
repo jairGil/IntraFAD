@@ -136,10 +136,12 @@ docenteController.updateDatosPersonales = async (req, res) => {
   if (!resultSave.value)
     return await util.setResult(resultSave, false, 500, "No se pudieron actualizar los datos personales");
 
+  console.log(resultSave.docente);
   /* TOKEN */
   resultSave.token = jwt.createToken(resultSave.docente);
   resultSave = await util.setResult(resultSave, true, 200, "Datos personales actualizados");
 
+  delete resultSave.docente;
   dbhelper.disconnect();
   console.log(resultSave);
   return resultSave;
