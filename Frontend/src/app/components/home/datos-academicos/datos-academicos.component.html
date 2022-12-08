@@ -1,9 +1,84 @@
 <div class="col-md-7">
-    <div *ngIf="modo_agregar == true">
-        <button class="btn btn-danger" (click)="cambiarModo(2)">Cancelar</button>
-        <button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button>
+    <div *ngIf="modo_agregar == true; else boton_ini">
+        <label for="grado_s" class="title"><b>Datos académicos</b></label>
+        <form (submit)="enviarDatos()" [formGroup]="dpForm">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <select class="form-control" name="grado_s" placeholder="Grado" formControlName="grado_s">
+                                <option class="dropdown-item" value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option class="dropdown-item" value="Maestria">
+                                    Maestria
+                                </option>
+                                <option class="dropdown-item" value="Doctorado">
+                                    Doctorado
+                                </option>
+                                <option class="dropdown-item" value="Especialidad">
+                                    Especialidad
+                                </option>
+                                <option class="dropdown-item" value="Diplomado">
+                                    Diplomado
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" name="grado_t" placeholder="Grado obtenido"
+                                formControlName="grado_t">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <select class="form-control" name="institucion" placeholder="Institución educativa emisora"
+                                formControlName="institucion">
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
+                                formControlName="fecha">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label><b>Comprobante de grado</b></label>
+                            <input type="text" class="form-control plain" name="comprobante_t"
+                                formControlName="comprobante_t">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="btn btn-primary btn-file">
+                                <label class="form-label text-white" for="comprobante">Abrir</label>
+                                <input type="file" class="form-control d-none" id="comprobante" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label><b>Cédula profesional</b></label>
+                            <input type="text" class="form-control plain" name="cedula_t"
+                                formControlName="cedula_t">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="btn btn-primary btn-file">
+                                <label class="form-label text-white" for="comprobante">Abrir</label>
+                                <input type="file" class="form-control d-none" id="ceduka" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-danger" (click)="cambiarModo(2)">Cancelar</button>
+                <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)">Agregar</button>
+            </div>
+        </form>
     </div>
-    <button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button>
+    <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
     <table class="table">
         <thead>
             <tr>

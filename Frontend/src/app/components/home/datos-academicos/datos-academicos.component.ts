@@ -1,25 +1,32 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-datos-academicos',
   templateUrl: './datos-academicos.component.html',
-  styleUrls: ['./datos-academicos.component.scss', '../../../app.component.css']
+  styleUrls: ['../../../app.component.css', './datos-academicos.component.scss']
 })
 export class DatosAcademicosComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<object>();
+
   private jwtHelper = new JwtHelperService();
   public token_data: any;
   public modo_agregar = false;
+  dpForm = this.formBuilder.group({
+
+  });
 
   constructor(
-    private loginService: LoginService
+    private loginService: LoginService,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
     this.decodeToken();
     this.cleanToken();
+    this.modo_agregar = false;
   }
 
   decodeToken() {
@@ -71,6 +78,10 @@ export class DatosAcademicosComponent implements OnInit {
         this.modo_agregar = false;
         break;
     }
+  }
+
+  enviarDatos(){
+
   }
 
   change() {
