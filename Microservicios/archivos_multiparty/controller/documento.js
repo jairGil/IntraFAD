@@ -1,4 +1,3 @@
-//const fs = require('fs');
 const mv = require('mv');
 
 const path = require('path');
@@ -27,7 +26,8 @@ documentoController.cargarDocumento = (req, res) => {
     utilResponse.init(resultUpload, "cargar documento");
     let form = new multiparty.Form();
     let docenteID = req.params.docenteID;
-    let tipo = req.body.tipo;
+    let tipo = req.params.tipo;
+    console.log(tipo);
 
     //Error al cargar documento
     form.on("error", (error) => {
@@ -61,6 +61,9 @@ documentoController.cargarDocumento = (req, res) => {
         if (ext === ".pdf") {
             let tmpPath = file.path;
             let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/' + filename;
+
+            //Crear directorios necesarios
+            utilResponse.createDir(__dirname + '/uploads/', docenteID, tipoArchivo);
 
             mv(tmpPath, targetPath, (err) => {
                 if (err) {

@@ -1,4 +1,4 @@
-//const fs = require('fs');
+const fs = require('fs');
 const mv = require('mv');
 
 const path = require('path');
@@ -46,20 +46,25 @@ imagenController.cargarImagen = (req, res) => {
 
         if (ext === ".jpg" || ext === ".jpeg") {
             let tmpPath = file.path;
-            // let targetPath = __dirname + '/uploads/profilePhotos/' + docenteID + ext;
-            let targetPath = __dirname + '\\uploads\\' + docenteID + '\\profilePhoto\\' + docenteID + ext;
-            console.log("targetPath: " + targetPath);
+            //let targetPath = __dirname + '/uploads/profilePhotos/' + docenteID + ext;
+            let targetPath = __dirname + '/uploads/' + docenteID + '/imagenPerfil/';
+            
+            if (!fs.existsSync(targetPath)){
+                fs.mkdirSync(targetPath);
+            }
+
+            targetPath += docenteID + ext;
 
             mv(tmpPath, targetPath, (err) => {
                 if (err) {
                     console.log(err);
                     utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
                     res.status(resultUpload.code).send(resultUpload);
-                } else {
+                }
                 utilResponse.success(resultUpload, "Imagen guardada");
                 console.log("Imagen guardada");
                 res.status(resultUpload.code).send(resultUpload);
-                }
+                
             });
         } else {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
