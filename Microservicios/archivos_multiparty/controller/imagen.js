@@ -4,6 +4,7 @@ const path = require('path');
 const multiparty = require('multiparty');
 
 const utilResponse = require("../util/util");
+const directorios = require('../util/dir');
 const dbhelper = require('../bin/db');
 
 let imagenController = {}
@@ -49,9 +50,9 @@ imagenController.cargarImagen = (req, res) => {
             res.status(resultUpload.code).send(resultUpload);
         }
 
-        utilResponse.createDir(__dirname + '/uploads/', docenteID, 'Imagen Perfil');
+        directorios.createDir(__dirname + '/uploads/', docenteID, 'Imagen Perfil');
 
-        mv(tmpPath, targetPath, (err) => {
+        mv(tmpPath, targetPath, async (err) => {
             if (err) {
                 console.log(err);
                 utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
@@ -59,6 +60,17 @@ imagenController.cargarImagen = (req, res) => {
             }
             utilResponse.success(resultUpload, "Imagen guardada");
             console.log("Imagen guardada");
+            const connected = await dbhelper.connect();
+            console.log(connected);
+
+            if (!connected.value) {
+                utilResponse.error(resultUpload, "Error al conectar con la base de datos");
+            }
+
+            await dbhelper.setImagen(docenteID, targetPath);
+
+            dbhelper.disconnect();
+            
             res.status(resultUpload.code).send(resultUpload);
         });
     });

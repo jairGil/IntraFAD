@@ -17,6 +17,7 @@ dbhelper.connect = async () => {
     () => {
       conn = util.setResult(conn, true, 200, "Conectado a la BD");
     }, error => {
+      console.log(error);
       conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
     });
 
@@ -24,12 +25,13 @@ dbhelper.connect = async () => {
 }
 
 dbhelper.setImagen = async (docenteId, fileName) => {
+  let resultUpload = {};
   Docente.findByIdAndUpdate(docenteId, { img: fileName }, { new: true }, (err, docenteUpdated) => {
-    if (err) resultSave = util.setResult(resultSave, false, 500, 'No se pudo cargar la imagen');
+    if (err) resultUpload = util.setResult(resultUpload, false, 500, 'No se pudo cargar la imagen');
 
-    if (!docenteUpdated) resultSave = util.setResult(resultSave, false, 404, "No existe el docente");
+    if (!docenteUpdated) resultUpload = util.setResult(resultUpload, false, 404, "No existe el docente");
 
-    resultSave = util.setResult(resultSave, true, 200, "Imagen cargada correctamente");
+    resultUpload = util.setResult(resultUpload, true, 200, "Imagen cargada correctamente");
   });
 }
 
