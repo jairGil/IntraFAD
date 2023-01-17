@@ -67,9 +67,10 @@ imagenController.cargarImagen = (req, res) => {
                 utilResponse.error(resultUpload, "Error al conectar con la base de datos");
             }
 
-            await dbhelper.setImagen(docenteID, targetPath);
+            resultUpload = await dbhelper.setImagen(docenteID, targetPath);
 
             dbhelper.disconnect();
+            console.log(resultUpload);
             
             res.status(resultUpload.code).send(resultUpload);
         });

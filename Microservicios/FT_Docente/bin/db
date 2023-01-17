@@ -11,7 +11,9 @@ const dbuser = "jgild";
 const dbname = "IntraFAD";
 const dbpass = "v0EbhL2LprsKYUP1";
 
-const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@cluster0.8awtuou.mongodb.net/test";
+const uriDB = "mongodb+srv://jgild:" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
+
+// const uriDB = "mongodb://localhost:27017/IntraFAD";
 
 
 const dbhelper = {}

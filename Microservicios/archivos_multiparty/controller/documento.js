@@ -65,8 +65,14 @@ documentoController.cargarDocumento = (req, res) => {
             }
             utilResponse.success(resultUpload, "Documento guardado");
             console.log("Documento guardado");
+
             const connected = await dbhelper.connect();
             console.log(connected);
+
+            await dbhelper.setPDF(docenteID, tipo, targetPath);
+
+            dbhelper.disconnect();
+            console.log(resultUpload);
             
             res.status(resultUpload.code).send(resultUpload);
         });
