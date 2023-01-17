@@ -1,7 +1,5 @@
 "use strict"
 
-const fs = require('fs');
-
 const utility = {
     setResult: (result, value, code, msg) => {
         result.value = value;
@@ -34,19 +32,6 @@ const utility = {
         result.msg = msg;
         result.error = err;
         return result;
-    },
-    createDir: (path, id, tipo) => {
-        path += id + '/';
-        //Crear directorio del docente en caso de no existir
-        if (!fs.existsSync(path)){
-            fs.mkdirSync(path);
-        }
-        
-        path += tipo + '/';
-        //Crear directorio del tipo de documento en caso de no existir
-        if (!fs.existsSync(path)){
-            fs.mkdirSync(path);
-        }
     }
 };
 

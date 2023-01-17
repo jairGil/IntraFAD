@@ -1,8 +1,6 @@
-const fs = require('fs');
 const mv = require('mv');
 
 const path = require('path');
-const util = require('util');
 const multiparty = require('multiparty');
 
 const utilResponse = require("../util/util");
@@ -43,33 +41,26 @@ imagenController.cargarImagen = (req, res) => {
     form.on("file", (name, file) => {
         let filename = file.originalFilename;
         let ext = path.extname(filename);
+        let tmpPath = file.path;
+        let targetPath = __dirname + '/uploads/' + docenteID + '/Imagen Perfil/' + docenteID + ext;
 
-        if (ext === ".jpg" || ext === ".jpeg") {
-            let tmpPath = file.path;
-            //let targetPath = __dirname + '/uploads/profilePhotos/' + docenteID + ext;
-            let targetPath = __dirname + '/uploads/' + docenteID + '/imagenPerfil/';
-            
-            if (!fs.existsSync(targetPath)){
-                fs.mkdirSync(targetPath);
-            }
-
-            targetPath += docenteID + ext;
-
-            mv(tmpPath, targetPath, (err) => {
-                if (err) {
-                    console.log(err);
-                    utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
-                    res.status(resultUpload.code).send(resultUpload);
-                }
-                utilResponse.success(resultUpload, "Imagen guardada");
-                console.log("Imagen guardada");
-                res.status(resultUpload.code).send(resultUpload);
-                
-            });
-        } else {
+        if (!(ext === ".jpg" || ext === ".jpeg")) {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
             res.status(resultUpload.code).send(resultUpload);
         }
+
+        utilResponse.createDir(__dirname + '/uploads/', docenteID, 'Imagen Perfil');
+
+        mv(tmpPath, targetPath, (err) => {
+            if (err) {
+                console.log(err);
+                utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
+                res.status(resultUpload.code).send(resultUpload);
+            }
+            utilResponse.success(resultUpload, "Imagen guardada");
+            console.log("Imagen guardada");
+            res.status(resultUpload.code).send(resultUpload);
+        });
     });
 
 

@@ -1,34 +1,22 @@
 const mv = require('mv');
 
 const path = require('path');
-const util = require('util');
 const multiparty = require('multiparty');
 
 const utilResponse = require("../util/util");
+const directorios = require('../util/dir');
 const dbhelper = require('../bin/db');
-
-const tipos = new Map();
-tipos.set("rfc", "RFC");
-tipos.set("curp", "CURP");
-tipos.set("gradoAcad", "Grado Académico");
-tipos.set("cedulaProf", "Cedula Profesional");
-tipos.set("certificacion", "Certificaciones");
-tipos.set("cursos", "Cursos");
-tipos.set("dominio", "Dominio de Idiomas");
-tipos.set("conocimientosEspec", "Conocimientos Específicos");
-tipos.set("experiencia", "Experiencia Profesional no Docente");
 
 
 let documentoController = {}
 
 documentoController.cargarDocumento = (req, res) => {
     let resultUpload = {};
-    utilResponse.init(resultUpload, "cargar documento");
     let form = new multiparty.Form();
     let docenteID = req.params.docenteID;
     let tipo = req.params.tipo;
-    console.log(tipo);
 
+    utilResponse.init(resultUpload, "cargar documento");
     //Error al cargar documento
     form.on("error", (error) => {
         console.log("error");
@@ -54,31 +42,34 @@ documentoController.cargarDocumento = (req, res) => {
 
     //Guardar el archivo en el disco
     form.on("file", (name, file) => {
-        let tipoArchivo = tipos.get(tipo);
+        let tipoArchivo = directorios.getTipoArchivo(tipo);
         let filename = file.originalFilename;
         let ext = path.extname(filename);
+        let tmpPath = file.path;
+        let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/' + filename;
 
-        if (ext === ".pdf") {
-            let tmpPath = file.path;
-            let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/' + filename;
-
-            //Crear directorios necesarios
-            utilResponse.createDir(__dirname + '/uploads/', docenteID, tipoArchivo);
-
-            mv(tmpPath, targetPath, (err) => {
-                if (err) {
-                    utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
-                    res.status(resultUpload.code).send(resultUpload);
-                } else {
-                    utilResponse.success(resultUpload, "Documento guardado");
-                    console.log("Documento guardado");
-                    res.status(resultUpload.code).send(resultUpload);
-                }
-            });
-        } else {
+        if (!(ext === ".pdf")) {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
             res.status(resultUpload.code).send(resultUpload);
+            return;
         }
+
+        //Crear directorios necesarios
+        directorios.createDir(__dirname + '/uploads/', docenteID, tipoArchivo);
+
+        mv(tmpPath, targetPath, async (err) => {
+            if (err) {
+                utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
+                res.status(resultUpload.code).send(resultUpload);
+                return;
+            }
+            utilResponse.success(resultUpload, "Documento guardado");
+            console.log("Documento guardado");
+            const connected = await dbhelper.connect();
+            console.log(connected);
+            
+            res.status(resultUpload.code).send(resultUpload);
+        });
     });
 
 
