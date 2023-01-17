@@ -70,6 +70,7 @@ documentoController.cargarDocumento = (req, res) => {
             
             res.status(resultUpload.code).send(resultUpload);
         });
+        //.then((res) => {return res});
     });
 
 
