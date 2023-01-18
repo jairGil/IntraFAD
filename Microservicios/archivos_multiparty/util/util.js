@@ -14,13 +14,13 @@ const utility = {
         result.msg = "No incializado";
         return result;
     },
-    success: (result, msg) => {
+    success: async (result, msg) => {
         result.value = true;
         result.code = 200;
         result.msg = msg;
         return result;
     },
-    error: (result, msg) => {
+    error: async (result, msg) => {
         result.value = false;
         result.code = 400;
         result.msg = msg;

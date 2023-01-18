@@ -5,13 +5,13 @@ const fs = require('fs');
 const tipos = new Map();
 tipos.set("rfc", "RFC");
 tipos.set("curp", "CURP");
-tipos.set("gradoAcad", "Grado Académico");
-tipos.set("cedulaProf", "Cedula Profesional");
+tipos.set("gradoAcad", "GradoAcadémico");
+tipos.set("cedulaProf", "CedulaProfesional");
 tipos.set("certificacion", "Certificaciones");
 tipos.set("cursos", "Cursos");
-tipos.set("dominio", "Dominio de Idiomas");
-tipos.set("conocimientosEspec", "Conocimientos Específicos");
-tipos.set("experiencia", "Experiencia Profesional no Docente");
+tipos.set("dominio", "DominioDeIdiomas");
+tipos.set("conocimientosEspec", "ConocimientosEspecíficos");
+tipos.set("experiencia", "ExperienciaProfesionalNoDocente");
 
 
 const dir = {
