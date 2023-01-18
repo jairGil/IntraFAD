@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ArchivosService } from 'src/app/services/archivos.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -10,8 +11,15 @@ export class DatosPersonalesComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<object>();
   @Input() token_data: any;
 
+  public URL_IMG = 'http://localhost:3000/api/imagen/';
+
+  constructor(
+    private archivosService: ArchivosService
+  ) { }
+
   ngOnInit(): void {
     this.cleanToken();
+    this.cargar_imagen();
   }
 
   cleanToken() {
@@ -50,6 +58,17 @@ export class DatosPersonalesComponent implements OnInit {
 
   modo_edicion() {
     this.messageEvent.emit({ edicion: true });
+  }
+
+  cargar_imagen() {
+    this.archivosService.getImage(this.token_data.img).subscribe(
+      (res: any) => {
+        console.log(res);
+        this.token_data.img = res;
+      },
+      (err: any) => {
+        console.log(err);
+      });
   }
 
 }

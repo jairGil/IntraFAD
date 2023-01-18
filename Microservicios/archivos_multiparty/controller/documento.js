@@ -1,4 +1,5 @@
 const mv = require('mv');
+const fs = require('fs');
 
 const path = require('path');
 const multiparty = require('multiparty');
@@ -46,12 +47,18 @@ documentoController.cargarDocumento = (req, res) => {
         let filename = file.originalFilename;
         let ext = path.extname(filename);
         let tmpPath = file.path;
-        let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/' + filename;
+        let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/';
 
         if (!(ext === ".pdf")) {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
             res.status(resultUpload.code).send(resultUpload);
             return;
+        }
+
+        if (tipoArchivo === "RFC" || tipoArchivo === "CURP") {
+            targetPath += docenteID + ext;
+        } else {
+            targetPath += filename;
         }
 
         //Crear directorios necesarios
@@ -69,11 +76,11 @@ documentoController.cargarDocumento = (req, res) => {
             const connected = await dbhelper.connect();
             console.log(connected);
 
-            await dbhelper.setPDF(docenteID, tipo, targetPath);
+            await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("\\", "/"));
 
             dbhelper.disconnect();
             console.log(resultUpload);
-            
+
             res.status(resultUpload.code).send(resultUpload);
         });
         //.then((res) => {return res});
@@ -83,32 +90,21 @@ documentoController.cargarDocumento = (req, res) => {
     form.parse(req);
 };
 
+// Enviar documento al cliente
+documentoController.getDoc = async (req, res) => {
+    const pathFile = req.body.doc;
+    let result = { doc: "" };
+    
+    result = utilResponse.init(result, "get document");
 
-
-
-
-
-
-
-/* documentoController.getImage = async (req, res) => {
-    const file = req.params.image;
-    const pathFile = './uploads/imagenes' + file;
-
-    fs.exists(pathFile, (exists) => {
-        if (exists) return res.sendFile(path.resolve(pathFile));
-        else return res.status(404).send({ message: 'No existe la imagen.' });
-    });
-}; */
-
-
-/*   documentoController.getDoc = async (req, res) => {
-    const file = req.params.image;
-    const pathFile = './uploads/imagenes' + file;
-
-    fs.exists(pathFile, (exists) => {
-        if (exists) return res.sendFile(path.resolve(pathFile));
-        else return res.status(404).send({ message: 'No existe el archivo.' });
-    });
-} */
+    if (fs.existsSync(pathFile)) {
+        utilResponse.success(result, "Documento enviado correctamente");
+        result.doc = pathFile;
+    } else {
+        utilResponse.error(result, "No existe el documento");
+    }
+    
+    return result;
+}
 
 module.exports = documentoController;

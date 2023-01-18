@@ -1,4 +1,4 @@
-
+const path = require('path');
 const express = require("express");
 const router = express.Router();
 
@@ -7,6 +7,16 @@ const documentoController = require("../controller/documento");
 
 router.post('/upload-document/:tipo/:docenteID', documentoController.cargarDocumento);
 
+router.get('/get-document/', async (req, res, next) => {
+  await documentoController.getDoc(req, res).then(
+    (resultFind) => {
+      console.log(resultFind);
+      // res.status(resultFind.code).send(resultFind);
+      if (resultFind.code == 200) {
+        res.sendFile(path.resolve(resultFind.doc));
+      }
+    });
+});
 
 /*
 router.post("/upload-image/:docente_id", multipartMiddlewareImg, async (req, res) => {
