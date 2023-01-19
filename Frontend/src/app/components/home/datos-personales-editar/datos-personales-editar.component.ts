@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
+import { ArchivosService } from 'src/app/services/archivos.service';
 
 @Component({
   selector: 'app-datos-personales-edit',
@@ -16,6 +17,8 @@ export class DatosPersonalesEditarComponent implements OnInit {
   private regex_institucional = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_personal = /([\w\.]+)@([\w\.]+)\.(\w+)/;
   public direccion: any;
+
+  public URL_IMG = 'http://localhost:3000/api/imagen/';
 
   dpForm = this.formBuilder.group({
     img: [''],
@@ -41,14 +44,19 @@ export class DatosPersonalesEditarComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private dpDocenteService: DpDocenteService
+    private dpDocenteService: DpDocenteService,
+    private archivosService: ArchivosService,
   ) { }
 
   ngOnInit(): void {
     this.setData();
   }
-
+  
   enviarDatos() {
+    this.uploadDocument('rfc', 'doc_rfc');
+    this.uploadDocument('curp', 'doc_curp');
+    this.uploadImage();
+
     let docente = {
       _id: this.token_data.id,
       img: this.dpForm.get('img')?.value,
@@ -101,6 +109,7 @@ export class DatosPersonalesEditarComponent implements OnInit {
       this.dpForm.get('telefono')?.setValue(this.token_data.telefono);
     }
 
+    this.dpForm.get('img')?.setValue(this.token_data.img);
     this.dpForm.get('rfc')?.setValue(this.token_data.rfc);
     this.dpForm.get('curp')?.setValue(this.token_data.curp);
   }
@@ -127,23 +136,55 @@ export class DatosPersonalesEditarComponent implements OnInit {
       const file = event.target.files[0];
       this.dpForm.get('img')?.setValue(file);
     }
-    console.log(this.dpForm.get('img')?.value)
   }
 
   onRFCSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.dpForm.get('doc_rfc')?.setValue(file);
+      document.getElementById('nombre_rfc')?.setAttribute('value', file.name);
     }
-    console.log(this.dpForm.get('doc_rfc')?.value)
   }
 
   onCURPSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.dpForm.get('doc_curp')?.setValue(file);
+      document.getElementById('nombre_curp')?.setAttribute('value', file.name);
     }
-    console.log(this.dpForm.get('doc_curp')?.value)
+  }
+
+  uploadImage() {
+    const formData = new FormData();
+
+    formData.append('img', this.dpForm.get('img')?.value!);
+    this.archivosService.setImage(this.token_data.id, formData).subscribe(
+      (res: any) => {
+        this.token_data.img = res.img;
+        this.dpForm.get('img')?.setValue(res.img); 
+      },
+      (err: any) => {
+        console.log(err);
+      });
+  }
+
+  uploadDocument(tipo: string, campo: string) {
+    const formData = new FormData();
+
+    formData.append(tipo, this.dpForm.get(campo)?.value!);
+    this.archivosService.setDoc(tipo, this.token_data.id, formData).subscribe(
+      (res: any) => {
+        if (tipo == 'rfc') this.token_data.doc_rfc = res.doc;
+        if (tipo == 'curp') this.token_data.doc_curp = res.doc;
+        this.dpForm.get(campo)?.setValue(res.doc); 
+      },
+      (err: any) => {
+        console.log(err);
+      });
+  }
+
+  getImage() {
+    return this.URL_IMG + 'get-image/' + this.token_data.img;
   }
 
   salir_edicion() {

@@ -9,7 +9,7 @@ const docenteSchema = Schema({
     img: {
         type: String,
         required: true,
-        default: "sin_foto.jpg"
+        default: "D:-Documentos-SevicioSocial-Proyectos-Microservicios-archivos_multiparty-controller-uploads-default.jpg"
     },
     nombre: {
         type: String,

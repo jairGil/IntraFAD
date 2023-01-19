@@ -5,9 +5,9 @@ const router = express.Router();
 const documentoController = require("../controller/documento");
 
 
-router.post('/upload-document/:tipo/:docenteID', documentoController.cargarDocumento);
+router.put('/upload-document/:tipo/:docenteID', documentoController.cargarDocumento);
 
-router.get('/get-document/', async (req, res, next) => {
+router.get('/get-document/:doc', async (req, res, next) => {
   await documentoController.getDoc(req, res).then(
     (resultFind) => {
       console.log(resultFind);

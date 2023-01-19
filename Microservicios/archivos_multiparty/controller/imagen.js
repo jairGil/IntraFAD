@@ -12,7 +12,7 @@ const dbhelper = require('../bin/db');
 let imageController = {}
 
 imageController.cargarImagen = async (req, res) => {
-    let resultUpload = {};
+    let resultUpload = { img: "D:-Documentos-SevicioSocial-Proyectos-Microservicios-archivos_multiparty-controller-uploads-default.jpg" };
     let form = new multiparty.Form();
     let docenteID = req.params.docenteID;
 
@@ -49,8 +49,8 @@ imageController.cargarImagen = async (req, res) => {
         let targetPath = __dirname + '/uploads/' + docenteID + '/ImagenPerfil/' + docenteID + ext;
 
         if (!(ext === ".jpg" || ext === ".jpeg")) { 
-            errores.setGlobalError(1);
-            console.log(errores.getGlobalError());
+            utilResponse.error(resultUpload, "Tipo de archivo no soportado");
+            res.status(resultUpload.code).send(resultUpload);
             return;
         }
 
@@ -58,43 +58,34 @@ imageController.cargarImagen = async (req, res) => {
 
         mv(tmpPath, targetPath, async (err) => {
             if (err) { 
-                errores.setGlobalError(2);
+                utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
+                res.status(resultUpload.code).send(resultUpload);
                 return;
             }
 
             const connected = await dbhelper.connect();
 
             if (!connected.value) { 
-                errores.setGlobalError(3);
+                utilResponse.innerError(resultUpload, err, "Error al conectar con la base de datos");
+                res.status(resultUpload.code).send(resultUpload);
                 return;
             }
 
-            await dbhelper.setImagen(docenteID, targetPath.replaceAll("\\", "-").replaceAll("/", "-"));
-            console.log("Imagen guardada");
+            targetPath = targetPath.replaceAll("\\", "-").replaceAll("/", "-");
 
+            await dbhelper.setImagen(docenteID, targetPath);
+            
             dbhelper.disconnect();
-        });
 
-        console.log("G1:"+errores.getGlobalError());
-        switch (errores.getGlobalError()) {
-            case 0:
-                resultUpload = utilResponse.success(resultUpload, "Imagen guardada");
-                break;
-            case 1:
-                resultUpload = utilResponse.error(resultUpload, "Tipo de archivo no soportado");
-                break;
-            case 2:
-                resultUpload = utilResponse.error(resultUpload, "Error al cambiar la ruta");
-                break;
-            case 3:
-                resultUpload = utilResponse.error(resultUpload, "Error al conectar con la base de datos");
-                break;
-        }
-        console.log("G2:"+errores.getGlobalError());
+            utilResponse.success(resultUpload, "Imagen guardada correctamente");
+            resultUpload.img = targetPath;
+            console.log("Imagen guardada");
+            console.log(resultUpload);
+            res.status(resultUpload.code).send(resultUpload);
+        });
     });
-    console.log("G3:"+errores.getGlobalError());
+    
     form.parse(req);
-    return resultUpload;
 };
 
 
@@ -103,7 +94,9 @@ imageController.getImage = async (req, res) => {
     const pathFile = req.params.img.replaceAll("-", "/");
     let result = { img: "" };
     result = utilResponse.init(result, "get image");
+    
     console.log(pathFile);
+    
     if (fs.existsSync(pathFile)) {
         utilResponse.success(result, "Imagen enviada correctamente");
         result.img = pathFile;

@@ -7,13 +7,7 @@ const router = express.Router();
 const imagenController = require("../controller/imagen");
 
 
-router.post('/upload-image/:docenteID', async (req, res, next) => {
-  await imagenController.cargarImagen(req, res).then(
-    (resultUpload) => {
-      console.log(resultUpload);
-      res.status(resultUpload.code).send(resultUpload);
-    });
-  });
+router.put('/upload-image/:docenteID', imagenController.cargarImagen);
 
 router.get('/get-image/:img', async (req, res, next) => {
   await imagenController.getImage(req, res).then(

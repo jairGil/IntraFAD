@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ArchivosService } from 'src/app/services/archivos.service';
-import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-datos-personales',
@@ -19,7 +18,6 @@ export class DatosPersonalesComponent implements OnInit {
 
   ngOnInit(): void {
     this.cleanToken();
-    this.cargar_imagen();
   }
 
   cleanToken() {
@@ -50,25 +48,10 @@ export class DatosPersonalesComponent implements OnInit {
     if (this.token_data.telefono == "0000000000") {
       this.token_data.telefono = "";
     }
-
-    if (this.token_data.img == "sin_foto.jpg") {
-      this.token_data.img = "";
-    }
   }
 
   modo_edicion() {
     this.messageEvent.emit({ edicion: true });
-  }
-
-  cargar_imagen() {
-    this.archivosService.getImage(this.token_data.img).subscribe(
-      (res: any) => {
-        console.log(res);
-        this.token_data.img = res;
-      },
-      (err: any) => {
-        console.log(err);
-      });
   }
 
 }

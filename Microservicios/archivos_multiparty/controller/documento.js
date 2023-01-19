@@ -71,19 +71,25 @@ documentoController.cargarDocumento = (req, res) => {
                 return;
             }
             utilResponse.success(resultUpload, "Documento guardado");
-            console.log("Documento guardado");
-
+            
             const connected = await dbhelper.connect();
-            console.log(connected);
-
-            await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("\\", "/"));
-
+            
+            if (!connected.value) { 
+                utilResponse.innerError(resultUpload, err, "Error al conectar con la base de datos");
+                res.status(resultUpload.code).send(resultUpload);
+                return;
+            }
+            
+            await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("\\", "-").replaceAll("/", "-"));
+            
             dbhelper.disconnect();
-            console.log(resultUpload);
 
+            utilResponse.success(resultUpload, "Documento guardado");
+            resultUpload.doc = targetPath;
+            console.log(utilResponse);
+            console.log("Documento guardado");
             res.status(resultUpload.code).send(resultUpload);
         });
-        //.then((res) => {return res});
     });
 
 
@@ -92,7 +98,7 @@ documentoController.cargarDocumento = (req, res) => {
 
 // Enviar documento al cliente
 documentoController.getDoc = async (req, res) => {
-    const pathFile = req.body.doc;
+    const pathFile = req.params.doc.replaceAll("-", "/");
     let result = { doc: "" };
     
     result = utilResponse.init(result, "get document");

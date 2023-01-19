@@ -1,4 +1,4 @@
-<div class="col-md-7">
+<!-- <div class="col-md-7">
     <img src="{{ URL_IMG + 'get-image/' + this.token_data.img }}" alt="Imagen de perfil">
     
     <label><b>Nombre completo</b></label> <br>
@@ -16,4 +16,30 @@
     <label>RFC: {{ token_data?.rfc }}</label> <br>
     <label>CURP: {{ token_data?.curp }}</label> <br>
     <button class="btn btn-primary" (click)="modo_edicion()">Editar</button>
+</div> -->
+
+<!-- create two columns in a div with class row -->
+<div class="row">
+    <div class="col-md-6">
+        <label><b>Nombre completo</b></label> <br>
+        <label>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</label> <br>
+        
+        <label><b>Dirección</b></label> <br>
+        <label>{{ token_data?.direccion }}</label> <br>
+        
+        <label><b>Datos de contacto</b></label> <br>
+        <label>Correo personal: {{ token_data?.correo_personal }}</label> <br>
+        <label>Correo institucional: {{ token_data?.correo_institucional }}</label> <br>
+        <label>Teléfono: {{ token_data?.telefono }}</label> <br>
+        
+        <label><b>Documentos de identidad</b></label> <br>
+        <label>RFC: {{ token_data?.rfc }}</label> <br>
+        <label>CURP: {{ token_data?.curp }}</label> <br>
+        <button class="btn btn-primary" (click)="modo_edicion()">Editar</button>
+    </div>
+    
+    <div class="col-md-6">
+        <img src="{{ URL_IMG + 'get-image/' + this.token_data.img }}" class="perfil" alt="Imagen de perfil"
+            id="perfil"/>
+    </div>
 </div>
