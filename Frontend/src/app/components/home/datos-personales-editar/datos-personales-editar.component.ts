@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
@@ -50,6 +50,7 @@ export class DatosPersonalesEditarComponent implements OnInit {
 
   ngOnInit(): void {
     this.setData();
+    this.setDomicilio(this.token_data.direccion);
   }
   
   enviarDatos() {
@@ -59,7 +60,7 @@ export class DatosPersonalesEditarComponent implements OnInit {
 
     let docente = {
       _id: this.token_data.id,
-      img: this.dpForm.get('img')?.value,
+      // img: this.dpForm.get('img')?.value,
       nombre: this.dpForm.get('nombre')?.value,
       apellido_p: this.dpForm.get('apellido_p')?.value,
       apellido_m: this.dpForm.get('apellido_m')?.value,
@@ -68,9 +69,9 @@ export class DatosPersonalesEditarComponent implements OnInit {
       correo_institucional: this.dpForm.get('correo_institucional')?.value,
       telefono: this.dpForm.get('telefono')?.value,
       rfc: this.dpForm.get('rfc')?.value,
-      doc_rfc: this.dpForm.get('doc_rfc')?.value,
+      // doc_rfc: this.dpForm.get('doc_rfc')?.value,
       curp: this.dpForm.get('curp')?.value,
-      doc_curp: this.dpForm.get('doc_curp')?.value,
+      // doc_curp: this.dpForm.get('doc_curp')?.value,
       rol: 'USER_ROLE'
     }
 
@@ -117,19 +118,20 @@ export class DatosPersonalesEditarComponent implements OnInit {
   getDireccion() {
     return this.dpForm.get('calle')?.value + ", " + this.dpForm.get('no_ext')?.value + ", "
       + this.dpForm.get('no_int')?.value + ", " + this.dpForm.get('colonia')?.value + ", "
-      + this.dpForm.get('estado')?.value + ", " + this.dpForm.get('municipio')?.value + ", "
+      + this.dpForm.get('municipio')?.value + ", " + this.dpForm.get('estado')?.value + ", " 
       + this.dpForm.get('cp')?.value;
   }
-  // setDomicilio(direccion: any) {
-  //   this.direccion = direccion;
-  //   this.dpForm.get('calle')?.setValue(direccion.calle);
-  //   this.dpForm.get('no_ext')?.setValue(direccion.no_ext);
-  //   this.dpForm.get('no_int')?.setValue(direccion.no_int);
-  //   this.dpForm.get('colonia')?.setValue(direccion.colonia);
-  //   this.dpForm.get('estado')?.setValue(direccion.estado);
-  //   this.dpForm.get('municipio')?.setValue(direccion.municipio);
-  //   this.dpForm.get('cp')?.setValue(direccion.cp);
-  // }
+
+  setDomicilio(direccion: any) {
+    direccion = direccion.split(", ");
+    this.dpForm.get('calle')?.setValue(direccion[0]);
+    this.dpForm.get('no_ext')?.setValue(direccion[1]);
+    this.dpForm.get('no_int')?.setValue(direccion[2]);
+    this.dpForm.get('colonia')?.setValue(direccion[3]);
+    this.dpForm.get('estado')?.setValue(direccion[4]);
+    this.dpForm.get('municipio')?.setValue(direccion[5]);
+    this.dpForm.get('cp')?.setValue(direccion[6]);
+  }
 
   onImageSelect(event: any) {
     if (event.target.files.length > 0) {

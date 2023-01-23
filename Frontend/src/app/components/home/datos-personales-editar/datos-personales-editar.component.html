@@ -107,20 +107,6 @@
 
       <div class="form-row">
         <div class="form-group  col-md-4">
-          <input type="text" class="form-control" name="estado" placeholder="Estado" formControlName="estado">
-          <div class="mt-2 mb-2">
-            <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger" role="alert">
-              <div *ngIf="estado?.errors?.['required']">
-                El campo <b>estado</b> es obligatorio.
-              </div>
-              <div *ngIf="estado?.errors?.['minlength']">
-                La longitud mínima es de 3 caracteres.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group  col-md-4">
           <input type="text" class="form-control" name="municipio" placeholder="Municipio" formControlName="municipio">
           <div class="mt-2 mb-2">
             <div *ngIf="municipio?.invalid && (municipio?.dirty || municipio?.touched)" class="alert alert-danger"
@@ -134,6 +120,21 @@
             </div>
           </div>
         </div>
+        
+        <div class="form-group  col-md-4">
+          <input type="text" class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+          <div class="mt-2 mb-2">
+            <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger" role="alert">
+              <div *ngIf="estado?.errors?.['required']">
+                El campo <b>estado</b> es obligatorio.
+              </div>
+              <div *ngIf="estado?.errors?.['minlength']">
+                La longitud mínima es de 3 caracteres.
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         <div class="form-group  col-md-4">
           <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp">
