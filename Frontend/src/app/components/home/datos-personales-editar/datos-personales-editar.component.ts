@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
 import { ArchivosService } from 'src/app/services/archivos.service';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-datos-personales-edit',
@@ -46,6 +47,7 @@ export class DatosPersonalesEditarComponent implements OnInit {
     private loginService: LoginService,
     private dpDocenteService: DpDocenteService,
     private archivosService: ArchivosService,
+    private refreshService: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -83,6 +85,10 @@ export class DatosPersonalesEditarComponent implements OnInit {
         console.log(err);
       }
     );
+    
+    console.log("antes:");
+    console.log(this.token_data);
+    this.refreshService.sendUpdate(this.token_data);
   }
 
   setData() {

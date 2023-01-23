@@ -1,3 +1,7 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
 .contraste {
     background: linear-gradient(90deg, rgba(102, 131, 112, 1) 0%, rgba(97, 133, 111, 1) 23%, rgba(103, 126, 109, 1) 100%);
     width: 100%;
@@ -15,6 +19,13 @@
     padding-inline: 5%;
     width: 100%;
     margin-bottom: 15px;
+}
+
+.is-required:after {
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
 }
 
 input[type="text"]:focus,

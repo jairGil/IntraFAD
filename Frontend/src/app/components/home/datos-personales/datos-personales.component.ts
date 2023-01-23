@@ -1,23 +1,37 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { ArchivosService } from 'src/app/services/archivos.service';
+import { CommonService } from 'src/app/services/common.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.component.html',
   styleUrls: ['./datos-personales.component.scss', '../../../app.component.css']
 })
-export class DatosPersonalesComponent implements OnInit {
+export class DatosPersonalesComponent implements OnInit, OnDestroy {
   @Output() messageEvent = new EventEmitter<object>();
   @Input() token_data: any;
 
   public URL_IMG = 'http://localhost:3000/api/imagen/';
+  messageReceived: any;
+  private refreshSub: Subscription;
 
   constructor(
-    private archivosService: ArchivosService
-  ) { }
+    private archivosService: ArchivosService,
+    private refreshService: CommonService
+  ) {
+    this.refreshSub = this.refreshService.getUpdate().subscribe
+    (datos => {
+      this.messageReceived = datos;
+      console.log("datos recibidos");
+      console.log(this.messageReceived);
+    });
+  }
 
   ngOnInit(): void {
     this.cleanToken();
+    console.log("aqui:");
+    console.log(this.messageReceived);
   }
 
   cleanToken() {
@@ -54,4 +68,7 @@ export class DatosPersonalesComponent implements OnInit {
     this.messageEvent.emit({ edicion: true });
   }
 
+  ngOnDestroy() {
+    this.refreshSub.unsubscribe();
+}
 }
