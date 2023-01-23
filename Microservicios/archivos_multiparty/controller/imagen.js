@@ -6,8 +6,8 @@ const multiparty = require('multiparty');
 
 const utilResponse = require("../util/util");
 const directorios = require('../util/dir');
-const errores = require('../util/errors');
 const dbhelper = require('../bin/db');
+const config = require('../bin/config');
 
 let imageController = {}
 
@@ -46,7 +46,7 @@ imageController.cargarImagen = async (req, res) => {
         let filename = file.originalFilename;
         let ext = path.extname(filename);
         let tmpPath = file.path;
-        let targetPath = __dirname + '/uploads/' + docenteID + '/ImagenPerfil/' + docenteID + ext;
+        let targetPath = config.routes.files + docenteID + '/ImagenPerfil/' + docenteID + ext;
 
         if (!(ext === ".jpg" || ext === ".jpeg")) { 
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
@@ -54,7 +54,7 @@ imageController.cargarImagen = async (req, res) => {
             return;
         }
 
-        directorios.createDir(__dirname + '/uploads/', docenteID, 'ImagenPerfil');
+        directorios.createDir(config.routes.files, docenteID, 'ImagenPerfil');
 
         mv(tmpPath, targetPath, async (err) => {
             if (err) { 
@@ -71,9 +71,7 @@ imageController.cargarImagen = async (req, res) => {
                 return;
             }
 
-            targetPath = targetPath.replaceAll("\\", "-").replaceAll("/", "-");
-
-            await dbhelper.setImagen(docenteID, targetPath);
+            await dbhelper.setImagen(docenteID, targetPath.replaceAll("/", "-"));
             
             dbhelper.disconnect();
 
@@ -101,7 +99,7 @@ imageController.getImage = async (req, res) => {
         utilResponse.success(result, "Imagen enviada correctamente");
         result.img = pathFile;
     } else {
-        result.img = __dirname.replaceAll("\\", "/") + '/uploads/default.jpg';
+        result.img = config.routes.files + 'default.jpg';
         utilResponse.error(result, "No existe la imagen");
     }
     

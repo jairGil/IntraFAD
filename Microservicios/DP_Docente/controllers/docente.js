@@ -132,6 +132,7 @@ docenteController.updateDatosPersonales = async (req, res) => {
 
   const params = req.body;
   resultSave = await dbhelper.updateDocente(params);
+  console.log(resultSave);
 
   if (!resultSave.value)
     return await util.setResult(resultSave, false, 500, "No se pudieron actualizar los datos personales");

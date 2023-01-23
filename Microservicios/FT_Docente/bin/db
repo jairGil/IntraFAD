@@ -1,19 +1,11 @@
-const mongoose = require("mongoose");
-const util = require("../util/util");
+const mongoose  = require("mongoose");
+const util      = require("../util/util");
+const config    = require("./config");
 
 /*** Modelos ***/
 const DatoAcademico = require("../models/datoAcademico");
 const Curso         = require("../models/curso");
 const Certificacion = require("../models/certificacion");
-
-//Información sobre la base de datos en MongoDB
-const dbuser = "jgild";
-const dbname = "IntraFAD";
-const dbpass = "v0EbhL2LprsKYUP1";
-
-const uriDB = "mongodb+srv://jgild:" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
-
-// const uriDB = "mongodb://localhost:27017/IntraFAD";
 
 
 const dbhelper = {}
@@ -22,7 +14,7 @@ const dbhelper = {}
 // Conexión a la base de datos
 dbhelper.connect = async () => {
   let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
-  await mongoose.connect(uriDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(
+  await mongoose.connect(config.db.uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(
     () => {
       conn = util.setResult(conn, true, 200, "Conectado a la BD");
     }, error => {

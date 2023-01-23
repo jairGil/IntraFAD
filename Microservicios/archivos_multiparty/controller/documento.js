@@ -7,6 +7,7 @@ const multiparty = require('multiparty');
 const utilResponse = require("../util/util");
 const directorios = require('../util/dir');
 const dbhelper = require('../bin/db');
+const config = require('../bin/config');
 
 
 let documentoController = {}
@@ -47,7 +48,7 @@ documentoController.cargarDocumento = (req, res) => {
         let filename = file.originalFilename;
         let ext = path.extname(filename);
         let tmpPath = file.path;
-        let targetPath = __dirname + '/uploads/' + docenteID + '/' + tipoArchivo + '/';
+        let targetPath = config.routes.files + docenteID + '/' + tipoArchivo + '/';
 
         if (!(ext === ".pdf")) {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
@@ -62,7 +63,7 @@ documentoController.cargarDocumento = (req, res) => {
         }
 
         //Crear directorios necesarios
-        directorios.createDir(__dirname + '/uploads/', docenteID, tipoArchivo);
+        directorios.createDir(config.routes.files, docenteID, tipoArchivo);
 
         mv(tmpPath, targetPath, async (err) => {
             if (err) {
@@ -80,13 +81,13 @@ documentoController.cargarDocumento = (req, res) => {
                 return;
             }
             
-            await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("\\", "-").replaceAll("/", "-"));
+            await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("/", "-"));
             
             dbhelper.disconnect();
 
             utilResponse.success(resultUpload, "Documento guardado");
             resultUpload.doc = targetPath;
-            console.log(utilResponse);
+            console.log(resultUpload);
             console.log("Documento guardado");
             res.status(resultUpload.code).send(resultUpload);
         });

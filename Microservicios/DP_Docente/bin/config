@@ -1,0 +1,19 @@
+//Información sobre la base de datos en MongoDB
+const dbuser = "jgild";
+const dbname = "IntraFAD";
+const dbpass = "v0EbhL2LprsKYUP1";
+const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
+
+
+const config = {
+    port: 3001,
+    db: {
+        user: dbuser,
+        name: dbname,
+        pass: dbpass,
+        uri: uriDB
+    },
+}
+
+
+module.exports = config;
