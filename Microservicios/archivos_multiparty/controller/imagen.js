@@ -71,7 +71,9 @@ imageController.cargarImagen = async (req, res) => {
                 return;
             }
 
-            await dbhelper.setImagen(docenteID, targetPath.replaceAll("/", "-"));
+            targetPath = targetPath.replaceAll("/", "-");
+
+            await dbhelper.setImagen(docenteID, targetPath);
             
             dbhelper.disconnect();
 

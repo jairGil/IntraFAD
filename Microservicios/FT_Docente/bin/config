@@ -4,7 +4,7 @@ const dbname = "IntraFAD";
 const dbpass = "v0EbhL2LprsKYUP1";
 const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
 
-a
+
 const config = {
     port: 3002,
     db: {
@@ -12,7 +12,7 @@ const config = {
         name: dbname,
         pass: dbpass,
         uri: uriDB
-    },
+    }
 }
 
 

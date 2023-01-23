@@ -34,7 +34,7 @@ dbhelper.disconnect = async () => {
 /******************************* Datos academicos *******************************/
 // Guardar datos academicos
 dbhelper.saveDatoAcademico = async (datoAcademico) => {
-  let resultSave = { action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado" }
+  let resultSave = { action: "Guardar dato academico", value: false, code: 500, msg: "No inicializado" };
   const auxDatoAcademico = new DatoAcademico(datoAcademico);
 
   await auxDatoAcademico.save().then(
@@ -42,8 +42,7 @@ dbhelper.saveDatoAcademico = async (datoAcademico) => {
       resultSave = util.setResult(resultSave, true, 200, "Dato academico guardado exitosamente.");
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
-    }
-  );
+    });
 
   return resultSave;
 }
@@ -57,14 +56,46 @@ dbhelper.findDatoAcademicoByCP = async (cedula_profesional) => {
       if (datoAcademico) {
         resultFind = util.setResult(resultFind, true, 200, "Cédula profesional registrada en la BD");
       } else {
-        resultFind = util.setResult(resultFind, false, 400, "Cédula profesional no registrada")
+        resultFind = util.setResult(resultFind, false, 400, "Cédula profesional no registrada");
       }
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    }
-  );
+    });
 
   return resultFind;
+}
+
+
+/* GET datoAcademico by id_docente. */
+dbhelper.findDatoAcademicoByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar dato academico", value: false, code: 500, msg: "No inicializado" };
+
+  await DatoAcademico.find({ id_docente: id_docente }).then(
+    (datoAcademico) => {
+      if (datoAcademico) {
+        resultFind = util.setResult(resultFind, true, 200, "Datos academicos obtenidos");
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin datos academicos");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Actualizar un dato academico
+dbhelper.updateDatoAcademico = async (dato) => {
+  let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "No inicializado" };
+
+  await DatoAcademico.findByIdAndUpdate(dato._id, dato).then(
+    (datoAcademico) => {
+      resultSave = util.setResult(resultSave, true, 200, "Dato academico actualizado");
+      resultSave.datoAcademico = datoAcademico;
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+    });
+  return resultSave;
 }
 /********************************************************************************/
 
@@ -72,7 +103,7 @@ dbhelper.findDatoAcademicoByCP = async (cedula_profesional) => {
 /************************************ Cursos ************************************/
 // Guardar cursos
 dbhelper.saveCurso = async (curso) => {
-  let resultSave = { action: "Guardar curso", value: false, code: 500, msg: "No inicializado" }
+  let resultSave = { action: "Guardar curso", value: false, code: 500, msg: "No inicializado" };
   const auxCurso = new Curso(curso);
 
   await auxCurso.save().then(
@@ -87,7 +118,7 @@ dbhelper.saveCurso = async (curso) => {
 
 // Buscar curso por nombre, fecha_fin, institucion y id del docente
 dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
-  let resultFind = { action: "Buscar curso", value: false, code: 500, msg: "No inicializado" }
+  let resultFind = { action: "Buscar curso", value: false, code: 500, msg: "No inicializado" };
 
   await Curso.find({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente }).then(
     (curso) => {
@@ -98,8 +129,7 @@ dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
       }
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    }
-  );
+    });
 
   return resultFind;
 }
@@ -109,7 +139,7 @@ dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
 /******************************** Certificaciones *******************************/
 // Guardar certificaciones
 dbhelper.saveCertificacion = async (certificacion) => {
-  let resultSave = { action: "Guardar certificación", value: false, code: 500, msg: "No inicializado" }
+  let resultSave = { action: "Guardar certificación", value: false, code: 500, msg: "No inicializado" };
   const auxCertificacion = new Certificacion(certificacion);
 
   await auxCertificacion.save().then(
@@ -124,19 +154,18 @@ dbhelper.saveCertificacion = async (certificacion) => {
 
 // Buscar curso por nombre, fecha, institucion y id del docente
 dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
-  let resultFind = { action: "Buscar certificación", value: false, code: 500, msg: "No inicializado" }
+  let resultFind = { action: "Buscar certificación", value: false, code: 500, msg: "No inicializado" };
 
   await Certificacion.find({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente }).then(
     (certificacion) => {
       if (certificacion) {
         resultFind = util.setResult(resultFind, true, 200, "Certificación registrado en la BD");
       } else {
-        resultFind = util.setResult(resultFind, false, 400, "Certificación no registrado")
+        resultFind = util.setResult(resultFind, false, 400, "Certificación no registrado");
       }
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    }
-  );
+    });
 
   return resultFind;
 }

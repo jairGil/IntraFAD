@@ -14,12 +14,33 @@ router.post("/add_datoacad", async (req, res, next) => {
   const result = await validateHelper.validarDatoAcademico(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
-  }else{
+  } else {
     await DatoAcademicoController.add(req, res).then(
       (resultSave) => {
-          res.status(resultSave.code).send(resultSave);
+        res.status(resultSave.code).send(resultSave);
       });
   }
+});
+
+/* PUT update datoAcademico. */
+router.put("/update_datoacad", async (req, res, next) => {
+  const result = await validateHelper.validarDatoAcademico(req);
+  if (!result.isEmpty()) {
+    res.status(400).send(result);
+  } else {
+    await DatoAcademicoController.update(req, res).then(
+      (resultSave) => {
+        res.status(resultSave.code).send(resultSave);
+      });
+  }
+});
+
+/* GET datoAcademico by id_docente. */
+router.get("/get_datoacad/:id_docente", async (req, res, next) => {
+  await DatoAcademicoController.getDatoAcademicoByIdDocente(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
 });
 
 
