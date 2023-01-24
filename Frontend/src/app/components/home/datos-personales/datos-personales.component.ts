@@ -23,15 +23,13 @@ export class DatosPersonalesComponent implements OnInit, OnDestroy {
     this.refreshSub = this.refreshService.getUpdate().subscribe
     (datos => {
       this.messageReceived = datos;
-      console.log("datos recibidos");
-      console.log(this.messageReceived);
+      //console.log("datos recibidos");
+      //console.log(this.messageReceived);
     });
   }
 
   ngOnInit(): void {
     this.cleanToken();
-    console.log("aqui:");
-    console.log(this.messageReceived);
   }
 
   cleanToken() {

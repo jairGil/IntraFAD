@@ -73,7 +73,7 @@ dbhelper.findDatoAcademicoByIdDocente = async (id_docente) => {
   await DatoAcademico.find({ id_docente: id_docente }).then(
     (datoAcademico) => {
       if (datoAcademico) {
-        resultFind = util.setResult(resultFind, true, 200, "Datos academicos obtenidos");
+        resultFind = { action: "Buscar dato academico", value: true, code: 200, msg: "Datos academicos obtenidos", datoAcademico: datoAcademico }
       } else {
         resultFind = util.setResult(resultFind, true, 200, "Sin datos academicos");
       }
@@ -96,6 +96,20 @@ dbhelper.updateDatoAcademico = async (dato) => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
     });
   return resultSave;
+}
+
+// Eliminar un dato académico
+dbhelper.deleteDatoAcademicoById = async (id_datoacad) => {
+  let resultFind = { action: "Eliminar dato academico", value: false, code: 500, msg: "No inicializado" };
+
+  await DatoAcademico.findByIdAndDelete(id_datoacad).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Dato academico eliminado");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar el dato academico");
+    }
+  );
+  return resultFind;
 }
 /********************************************************************************/
 

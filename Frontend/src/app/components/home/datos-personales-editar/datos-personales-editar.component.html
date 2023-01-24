@@ -215,14 +215,25 @@
         <div class="col-md-4">
           <input type="text" class="form-control" name="rfc" formControlName="rfc">
         </div>
-        <div class="col-md-2">
-          <input id="nombre_rfc" type="text" class="form-control plain" disabled/>
-        </div>
+        
         <div class="col-md-2">
           <div class="btn btn-primary btn-file">
             <label class="form-label text-white" for="doc_rfc">Cargar RFC</label>
             <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)" accept=".pdf"/>
           </div>
+        </div>
+        
+        <div class="col-md-2">
+          <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
+          <div *ngIf="this.token_data.doc_rfc != 'no_inicializado.pdf'; else noPDF1">
+            <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>Abrir</span>
+            </a>
+          </div>
+          <ng-template #noPDF1>
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          </ng-template>
         </div>
       </div>
 
@@ -231,34 +242,47 @@
         <div class="col-md-4">
           <input type="text" class="form-control" name="curp" formControlName="curp">
         </div>
-        <div class="col-md-2">
-          <input id="nombre_curp" type="text" class="form-control plain"/>
-        </div>
+
         <div class="col-md-2">
           <div class="btn btn-primary btn-file">
             <label class="form-label text-white" for="doc_curp">Cargar CURP</label>
             <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)" accept=".pdf"/>
           </div>
         </div>
+
+        <div class="col-md-2">
+          <!-- <input id="nombre_curp" type="text" class="form-control plain" disabled/> -->
+          <div *ngIf="this.token_data.doc_curp != 'no_inicializado.pdf'; else noPDF2">
+            <a href="{{ URL_DOC + this.token_data.doc_curp }}" target="_blank">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>Abrir</span>
+            </a>
+          </div>
+          <ng-template #noPDF2>
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          </ng-template>
+        </div>
+        <!--  -->
+
       </div>
 
-      <button class="btn btn-primary" type="submit">Guardar cambios</button>
-      <button class="btn btn-light btn-salir" (click)="salir_edicion()">Salir</button>
+      <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>
+      <button class="btn btn-danger btn-salir" (click)="salir_edicion()">Salir</button>
     </div>
 
     <div class="col-md-2">
       <div>
         <div class="d-flex justify-content-center mb-4">
-          <!-- <img src="{{ URL_IMG + 'get-image/' + this.token_data.img }}" class="rounded-circle" alt="Imagen de perfil"
-            style="width: 150px; height: auto;" /> -->
             <img [src]="getImage()" alt="" class="rounded-circle perfil">
         </div>
+
         <div class="justify-content-center">
           <div class="btn btn-primary">
             <label class="form-label text-white m-1" for="img">Cambiar imagen</label>
-            <input type="file" class="form-control d-none" id="img" (change)="onImageSelect($event)" />
+            <input type="file" class="form-control d-none" id="img" (change)="onImageSelect($event)" accept=".jpg, .jpeg"/>
           </div>
         </div>
+
       </div>
     </div>
   </div>

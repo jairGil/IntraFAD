@@ -37,7 +37,15 @@ router.put("/update_datoacad", async (req, res, next) => {
 
 /* GET datoAcademico by id_docente. */
 router.get("/get_datoacad/:id_docente", async (req, res, next) => {
-  await DatoAcademicoController.getDatoAcademicoByIdDocente(req, res).then(
+  await DatoAcademicoController.get(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
+/* DELETE datoAcademico by id. */
+router.delete("/delete_datoacad/:id", async (req, res, next) => {
+  await DatoAcademicoController.delete(req, res).then(
     (result) => {
       res.status(result.code).send(result);
     });

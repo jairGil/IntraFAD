@@ -8,6 +8,6 @@
     </app-datos-personales>
     <app-datos-personales-edit *ngIf="pagina == 0 && editar" (messageEvent)=modo_edicion($event) [token_data]="token_data">
     </app-datos-personales-edit>
-    <app-datos-academicos *ngIf="pagina == 1"></app-datos-academicos>
+    <app-datos-academicos *ngIf="pagina == 1" [token_data]="token_data"></app-datos-academicos>
   </div>
 </div>

@@ -11,6 +11,11 @@ const datoAcademicoSchema = Schema({
         default: "Licenciatura",
         enum: ["Licenciatura", "Maestria", "Doctorado", "Especialidad", "Diplomado"]
     },
+    grado_obtenido: {
+        type: String,
+        required: true,
+        trim: true
+    },
     doc_grado_acad: {
         type: String,
         required: true,
@@ -38,6 +43,11 @@ const datoAcademicoSchema = Schema({
         type: String,
         required: true,
         trim: true
+    },
+    validado: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

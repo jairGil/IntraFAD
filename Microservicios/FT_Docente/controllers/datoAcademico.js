@@ -8,7 +8,7 @@ let datoAcademicoController = {}
 
 //Agregar un nuevo dato academico
 datoAcademicoController.add = async (req, res) => {
-  let resultSave = { action: "agregar", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  let resultSave = { action: "Agregar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   const connected = await dbhelper.connect();
   console.log(connected);
 
@@ -29,12 +29,14 @@ datoAcademicoController.add = async (req, res) => {
   }
 
   datoAcademico.grado_academico = params.grado_academico;
+  datoAcademico.grado_obtenido = params.grado_obtenido;
   datoAcademico.doc_grado_acad = params.doc_grado_acad;
   datoAcademico.institucion_emisora = params.institucion_emisora;
   datoAcademico.fecha_obtencion = params.fecha_obtencion;
   datoAcademico.cedula_profesional = params.cedula_profesional;
   datoAcademico.doc_ced_prof = params.doc_ced_prof;
   datoAcademico.id_docente = params.id_docente;
+  datoAcademico.validado = false;
 
   resultSave = await dbhelper.saveDatoAcademico(datoAcademico);
 
@@ -45,7 +47,7 @@ datoAcademicoController.add = async (req, res) => {
 }
 
 datoAcademicoController.update = async (req, res) => {
-  let resultSave = { action: "actualizar", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   const connected = await dbhelper.connect();
   console.log(connected);
 
@@ -65,10 +67,12 @@ datoAcademicoController.update = async (req, res) => {
   }
 
   datoAcademico.grado_academico = params.grado_academico;
+  datoAcademico.grado_obtenido = params.grado_obtenido;
   datoAcademico.institucion_emisora = params.institucion_emisora;
   datoAcademico.fecha_obtencion = params.fecha_obtencion;
   datoAcademico.cedula_profesional = params.cedula_profesional;
   datoAcademico.id_docente = params.id_docente;
+  datoAcademico.validado = params.validado;
   
   resultSave = await dbhelper.updateDatoAcademico(datoAcademico);
 
@@ -80,8 +84,8 @@ datoAcademicoController.update = async (req, res) => {
 
 
 /* GET datoAcademico by id_docente. */
-datoAcademicoController.getDatoAcademicoByIdDocente = async (req, res) => {
-  let result = { action: "getDatoAcademicoByIdDocente", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+datoAcademicoController.get = async (req, res) => {
+  let result = { action: "Obtener datos academicos del docente", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   const connected = await dbhelper.connect();
   console.log(connected);
 
@@ -92,6 +96,26 @@ datoAcademicoController.getDatoAcademicoByIdDocente = async (req, res) => {
   const id_docente = req.params.id_docente;
 
   result = await dbhelper.findDatoAcademicoByIdDocente(id_docente);
+
+  dbhelper.disconnect();
+
+  console.log(result);
+  return result;
+}
+
+/* DELETE datoAcademico by id. */
+datoAcademicoController.delete = async (req, res) => {
+  let result = { action: "Eliminar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.params.id;
+
+  result = await dbhelper.deleteDatoAcademicoById(id);
 
   dbhelper.disconnect();
 

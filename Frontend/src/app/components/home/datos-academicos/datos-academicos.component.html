@@ -1,101 +1,171 @@
-<div class="col-md-9">
+<div class="col-md-10">
   <div *ngIf="modo_agregar == true; else boton_ini">
     <label for="grado_s" class="title"><b>Datos académicos</b></label>
     <form (submit)="enviarDatos()" [formGroup]="daForm">
-      <div class="row">
-        <div class="col-md-10">
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="grado_s" class="col-form-label is-required">Grado academico</label>
-              <select class="form-control" name="grado_s" placeholder="Grado" formControlName="grado_s">
-                <option class="dropdown-item" value="Licenciatura">
-                  Licenciatura
-                </option>
-                <option class="dropdown-item" value="Maestria">
-                  Maestria
-                </option>
-                <option class="dropdown-item" value="Doctorado">
-                  Doctorado
-                </option>
-                <option class="dropdown-item" value="Especialidad">
-                  Especialidad
-                </option>
-                <option class="dropdown-item" value="Diplomado">
-                  Diplomado
-                </option>
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="grado_t" class="col-form-label is-required">Grado obtenido</label>
-              <input type="text" class="form-control" name="grado_t" placeholder="Grado obtenido"
-                formControlName="grado_t">
-            </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="grado_academico" class="col-form-label is-required">Grado academico</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="grado_obtenido" class="col-form-label is-required">Grado obtenido</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="institucion_emisora" class="col-form-label is-required">Institución educativa emisora</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="doc_ced_prof" class="col-form-label is-required"><b>Documento de grado academico</b></label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <select class="form-control" name="grado_s" placeholder="Grado" formControlName="grado_academico">
+            <option class="dropdown-item" value="Licenciatura">
+              Licenciatura
+            </option>
+            <option class="dropdown-item" value="Maestria">
+              Maestria
+            </option>
+            <option class="dropdown-item" value="Doctorado">
+              Doctorado
+            </option>
+            <option class="dropdown-item" value="Especialidad">
+              Especialidad
+            </option>
+            <option class="dropdown-item" value="Diplomado">
+              Diplomado
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="grado_obtenido" placeholder="Grado obtenido"
+            formControlName="grado_obtenido">
+        </div>
+        <div class="form-group col-md-3">
+          <select class="form-control" name="institucion" placeholder="Institución educativa emisora"
+            formControlName="institucion_emisora">
+          </select>
+        </div>
+        <div class="form-grup col-md-2">
+          <div class="btn btn-primary btn-file">
+            <label class="form-label text-white" for="doc_grad">Cargar PDF</label>
+            <input type="file" class="form-control d-none" id="doc_grad" (change)="onGradoAcadSelect($event)"
+              accept=".pdf" />
           </div>
         </div>
-        <div class="col-md-10">
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
-              <select class="form-control" name="institucion" placeholder="Institución educativa emisora"
-                formControlName="institucion">
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="fecha" class="col-form-label is-required">Fecha de obtención</label>
-              <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
-                formControlName="fecha">
-            </div>
+        <div class="col-md-1">
+          <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
+          <div *ngIf="this.docGradAcad; else noPDF1">
+            <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+            </a>
+          </div>
+          <ng-template #noPDF1>
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="fecha_obtencion" class="col-form-label is-required">Fecha de obtención</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
+            formControlName="fecha_obtencion">
+        </div>
+      </div>
+
+      <div class="col-md-10">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="cedula_profesional" class="col-form-label is-required">Cedula profesional</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="doc_ced_prof" class="col-form-label is-required"><b>Documento cedula profesional</b></label>
           </div>
         </div>
-        <div class="col-md-10">
-          <div class="form-row">
-            <div class="form-group col-md-8">
-              <label for="comprobante_t" class="col-form-label is-required"><b>Comprobante de grado</b></label>
-              <input type="text" class="form-control plain" name="comprobante_t" formControlName="comprobante_t">
-            </div>
-            <div class="form-group col-md-3">
-              <div class="btn btn-primary btn-file">
-                <label class="form-label text-white" for="comprobante">Abrir</label>
-                <input type="file" class="form-control d-none" id="comprobante" />
-              </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <input type="text" class="form-control" name="cedula_profesional" placeholder="Cedula profesional"
+              formControlName="cedula_profesional">
+          </div>
+          <!-- <input type="text" class="form-control plain" name="doc_ced_prof" formControlName="doc_ced_prof"> -->
+          <div class="col-md-3">
+            <div class="btn btn-primary btn-file">
+              <label class="form-label text-white" for="doc_grad">Cargar PDF</label>
+              <input type="file" class="form-control d-none" id="doc_grad" (change)="onGradoAcadSelect($event)"
+                accept=".pdf" />
             </div>
           </div>
-        </div>
-        <div class="col-md-10">
-          <div class="form-row">
-            <div class="form-group col-md-8">
-              <label for="cedula_t" class="col-form-label is-required"><b>Cedula profesional</b></label>
-              <input type="text" class="form-control plain" name="cedula_t" formControlName="cedula_t">
+          <div class="col-md-2">
+            <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
+            <div *ngIf="this.docGradAcad; else noPDF1">
+              <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+                <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icono">
+              </a>
             </div>
-            <div class="form-group col-md-3">
-              <div class="btn btn-primary btn-file">
-                <label class="form-label text-white" for="comprobante">Abrir</label>
-                <input type="file" class="form-control d-none" id="ceduka" />
-              </div>
-            </div>
+            <ng-template #noPDF1>
+              <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icono">
+            </ng-template>
           </div>
         </div>
-        <button class="btn btn-danger" (click)="cambiarModo(2)">Cancelar</button>
+
         <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)">Agregar</button>
+        <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
       </div>
     </form>
   </div>
-  <ng-template #boton_ini class="col-md-10"><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+  <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
 
 
   <table class="table">
-    <thead>
+    <thead class="content-center">
       <tr>
-        <th>Grado</th>
-        <th>Grado obtenido</th>
+        <th>Grado academico</th>
+        <th>Documento grado academico</th>
         <th>Institución educativa emisora</th>
         <th>Fecha de obtención</th>
-        <th>Título</th>
-        <th>Cédula</th>
+        <th>Cedula profesional</th>
+        <th>Documento cedula profesional</th>
         <th>Validado</th>
         <th></th>
       </tr>
     </thead>
+    <tbody>
+      <tr *ngFor="let daDocente of this.datosAcademicos" class="content-center">
+        <td>{{ daDocente.grado_academico }}</td>
+        <td>
+          <a href="{{ URL_DOC + this.daDocente.doc_grado_acad }}" target="_blank">
+            <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          </a>
+        </td>
+        <td>{{ daDocente.institucion_emisora }}</td>
+        <td>{{ daDocente.fecha_obtencion.slice(0,10) }}</td>
+        <td>{{ daDocente.cedula_profesional }}</td>
+        <td>
+          <a href="{{ URL_DOC + this.daDocente.doc_ced_prof }}" target="_blank">
+            <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          </a>
+        </td>
+        <td>
+          <div>
+            <div *ngIf="this.daDocente.validado; else noValidado">
+              <img src="../../../../assets/img/checked.png" alt="" class="pdf-icon">
+            </div>
+            <ng-template #noValidado>
+              <img src="../../../../assets/img/cancel.png" alt="" class="pdf-icon">
+            </ng-template>
+          </div>
+        </td>
+        <td>
+          <button class="btn btn-outline-danger" (click)="deleteDA(daDocente._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
   </table>
-  <button class="btn btn-secondary" (click)="change()">Siguiente</button>
+
 </div>

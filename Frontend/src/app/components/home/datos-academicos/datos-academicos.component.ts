@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { LoginService } from 'src/app/services/login.service';
+import { ArchivosService } from 'src/app/services/archivos.service';
+import { DaDocenteService } from 'src/app/services/da-docente.service';
 
 @Component({
   selector: 'app-datos-academicos',
@@ -10,37 +10,57 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class DatosAcademicosComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<object>();
+  @Input() token_data: any;
 
-  private jwtHelper = new JwtHelperService();
-  public token_data: any;
   public modo_agregar = false;
+  public datosAcademicos: any;
+  public URL_DOC = 'http://localhost:3000/api/documento/get-document/';
+
+  public docGradAcad: boolean = false;
+  public docCedProf: boolean = false;
 
   daForm = this.formBuilder.group({
-    grado_s: ['', Validators.required],
-    grado_t: ['', Validators.required],
-    institucion: ['', Validators.required],
-    fecha: ['', Validators.required],
-    comprobante_t: ['', Validators.required],
-    cedula_t: ['', Validators.required]
+    grado_academico: ['', Validators.required],
+    grado_obtenido: ['', Validators.required],
+    doc_grado_acad: ['', Validators.required],
+    institucion_emisora: ['', Validators.required],
+    fecha_obtencion: ['', Validators.required],
+    cedula_profesional: ['', Validators.required],
+    doc_ced_prof: ['', Validators.required]
   });
 
   constructor(
-    private loginService: LoginService,
+    private daService: DaDocenteService,
+    private archivosService: ArchivosService,
     private formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
-    this.decodeToken();
-    this.cleanToken();
+    this.getDA();
     this.modo_agregar = false;
   }
 
-  decodeToken() {
-    this.token_data = this.jwtHelper.decodeToken(this.loginService.getToken());
+
+  getDA() {
+    this.daService.getDatosAcademicos(this.token_data.id).subscribe(
+      (res: any) => {
+        this.datosAcademicos = res.datoAcademico;
+      },
+      (err: any) => {
+        console.log(err);
+      }
+    );
   }
 
-  cleanToken() {
-    
+  deleteDA(id: string) {
+    this.daService.deleteDatoAcademico(id).subscribe(
+      (res: any) => {
+        this.getDA();
+      },
+      (err: any) => {
+        console.log(err);
+      }
+    );
   }
 
   cambiarModo(modo: number) {
@@ -56,14 +76,57 @@ export class DatosAcademicosComponent implements OnInit {
     }
   }
 
-  enviarDatos(){
+  enviarDatos() {
+    this.uploadDocument('gradoAcad', 'comprobante_t');
+
+
+    console.log(this.daForm.value);
+    this.daService.addDatoAcademico(this.daForm.value).subscribe(
+      (res: any) => {
+        console.log(res);
+      },
+      (err: any) => {
+        console.log(err);
+      }
+    );
 
   }
 
-  change() {
-    console.log("go next");
+  onGradoAcadSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.daForm.get('doc_grado_acad')?.setValue(file);
+      this.docGradAcad = true;
+    }
   }
+
+  onCedProfSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.daForm.get('doc_ced_prof')?.setValue(file);
+      this.docCedProf = true;
+    }
+  }
+
+  uploadDocument(tipo: string, campo: string) {
+    const formData = new FormData();
+
+    formData.append(tipo, this.daForm.get(campo)?.value!);
+    this.archivosService.setDoc(tipo, this.token_data.id, formData).subscribe(
+      (res: any) => {
+        console.log(res);
+      },
+      (err: any) => {
+        console.log(err);
+      });
+  }
+
+  get grado_academico() { return this.daForm.get('grado_academico'); }
+  get grado_obtenido() { return this.daForm.get('grado_obtenido'); }
+  get doc_grado_acad() { return this.daForm.get('doc_grado_acad'); }
+  get institucion_emisora() { return this.daForm.get('institucion_emisora'); }
+  get fecha_obtencion() { return this.daForm.get('fecha_obtencion'); }
+  get cedula_profesional() { return this.daForm.get('cedula_profesional'); }
+  get doc_ced_prof() { return this.daForm.get('doc_ced_prof'); }
 }
-
-
 

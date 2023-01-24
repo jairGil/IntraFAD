@@ -4,6 +4,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
 import { ArchivosService } from 'src/app/services/archivos.service';
 import { CommonService } from 'src/app/services/common.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-personales-edit',
@@ -20,6 +21,7 @@ export class DatosPersonalesEditarComponent implements OnInit {
   public direccion: any;
 
   public URL_IMG = 'http://localhost:3000/api/imagen/';
+  public URL_DOC = 'http://localhost:3000/api/documento/get-document/';
 
   dpForm = this.formBuilder.group({
     img: [''],
@@ -47,7 +49,8 @@ export class DatosPersonalesEditarComponent implements OnInit {
     private loginService: LoginService,
     private dpDocenteService: DpDocenteService,
     private archivosService: ArchivosService,
-    private refreshService: CommonService
+    private refreshService: CommonService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -56,13 +59,18 @@ export class DatosPersonalesEditarComponent implements OnInit {
   }
   
   enviarDatos() {
-    this.uploadDocument('rfc', 'doc_rfc');
-    this.uploadDocument('curp', 'doc_curp');
     this.uploadImage();
+    
+    if (this.token_data.doc_rfc != "no_inicializado.pdf") {
+      this.uploadDocument('rfc', 'doc_rfc');
+    }
 
+    if (this.token_data.doc_curp != "no_inicializado.pdf") {
+      this.uploadDocument('curp', 'doc_curp');
+    }
+    
     let docente = {
       _id: this.token_data.id,
-      // img: this.dpForm.get('img')?.value,
       nombre: this.dpForm.get('nombre')?.value,
       apellido_p: this.dpForm.get('apellido_p')?.value,
       apellido_m: this.dpForm.get('apellido_m')?.value,
@@ -71,23 +79,20 @@ export class DatosPersonalesEditarComponent implements OnInit {
       correo_institucional: this.dpForm.get('correo_institucional')?.value,
       telefono: this.dpForm.get('telefono')?.value,
       rfc: this.dpForm.get('rfc')?.value,
-      // doc_rfc: this.dpForm.get('doc_rfc')?.value,
       curp: this.dpForm.get('curp')?.value,
-      // doc_curp: this.dpForm.get('doc_curp')?.value,
       rol: 'USER_ROLE'
     }
 
     this.dpDocenteService.updateDocente(docente).subscribe(
       res => {
         this.loginService.setToken(res.token);
+        this.router.navigate(['/home']);
         this.messageEvent.emit({ edicion: false });
       }, err => {
         console.log(err);
       }
     );
     
-    console.log("antes:");
-    console.log(this.token_data);
     this.refreshService.sendUpdate(this.token_data);
   }
 
@@ -119,6 +124,8 @@ export class DatosPersonalesEditarComponent implements OnInit {
     this.dpForm.get('img')?.setValue(this.token_data.img);
     this.dpForm.get('rfc')?.setValue(this.token_data.rfc);
     this.dpForm.get('curp')?.setValue(this.token_data.curp);
+    this.dpForm.get('doc_rfc')?.setValue(this.token_data.doc_rfc);
+    this.dpForm.get('doc_curp')?.setValue(this.token_data.doc_curp);
   }
 
   getDireccion() {
@@ -150,7 +157,6 @@ export class DatosPersonalesEditarComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.dpForm.get('doc_rfc')?.setValue(file);
-      document.getElementById('nombre_rfc')?.setAttribute('value', file.name);
     }
   }
 
@@ -158,7 +164,6 @@ export class DatosPersonalesEditarComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.dpForm.get('doc_curp')?.setValue(file);
-      document.getElementById('nombre_curp')?.setAttribute('value', file.name);
     }
   }
 
