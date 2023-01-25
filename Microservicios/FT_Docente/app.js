@@ -5,6 +5,9 @@ let logger = require("morgan");
 let cors = require("cors");
 
 let datoAcademicoRouter = require("./routes/datoAcademico");
+let certificacionRouter = require("./routes/certificacion");
+let cursoRouter = require("./routes/curso");
+//ruta de idioma aquí
 
 let app = express();
 
@@ -17,5 +20,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //app.use("/", indexRouter);
 app.use("/api/dato_academico", datoAcademicoRouter);
+app.use("/api/certificacion", certificacionRouter);
+app.use("/api/curso", cursoRouter);
+//idioma aquí
 
 module.exports = app;

@@ -17,7 +17,8 @@ export class HomeComponent {
   public token_data: any;
   private jwtHelper = new JwtHelperService();
 
-  constructor(private renderer: Renderer2,
+  constructor(
+    private renderer: Renderer2,
     private loginService: LoginService
   ) {
     this.decodeToken();

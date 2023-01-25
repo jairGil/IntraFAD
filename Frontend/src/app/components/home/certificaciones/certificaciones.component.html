@@ -1,0 +1,108 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+    <label for="grado_s" class="title"><b>Nuevo dato académico</b></label>
+    <form (submit)="enviarDatos()" [formGroup]="certForm">
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="nombre" class="col-form-label is-required">Nombre de la certificación</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="nombre" placeholder="Certificación"
+            formControlName="nombre">
+        </div>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
+              formControlName="institucion">
+          </div>
+      </div>
+    
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="fecha_obtencion" class="col-form-label is-required">Fecha de obtención</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
+            formControlName="fecha_obtencion">
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="constancia" class="col-form-label is-required"><b>Documento de certificacion</b></label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="col-md-3">
+          <div class="btn btn-primary btn-file">
+            <label class="form-label text-white" for="constancia">Cargar PDF</label>
+            <input type="file" class="form-control d-none" id="constancia" (change)="onCertificacionSelect($event)"
+              accept=".pdf" />
+          </div>
+        </div>
+        <div class="col-md">
+          <div *ngIf="this.docCert; else noPDF1">
+            <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icono" placeholder="">
+          </div>
+          <ng-template #noPDF1>
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icono">
+          </ng-template>
+        </div>
+      </div>
+  
+      <div class="form-row mt-3 justify-content-end">
+        <div class="form-group col-md-2">
+          <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+        </div>
+        <div class="form-group col-md-2">
+          <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+  
+  <div *ngIf="modo_agregar == false">
+    <label for="grado_s" class="title"><b>Mis certificaciones</b></label>
+    <table class="table content-center">
+      <thead>
+        <tr>
+          <th>Certificación</th>
+          <th>Institución certificadora</th>
+          <th>Fecha de obtención</th>
+          <th>Cedula profesional</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let certificacion of this.certificaciones">
+          <td>
+            <a href="{{ URL_DOC + this.certificacion.constancia }}" target="_blank">
+              {{ certificacion.nombre }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
+                <path fill-rule="evenodd"
+                  d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
+              </svg>
+            </a>
+          </td>
+          <td>{{ certificacion.institucion }}</td>
+          <td>{{ certificacion.fecha.slice(0,10) }}</td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="deleteCert(certificacion._id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

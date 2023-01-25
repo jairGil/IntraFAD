@@ -12,12 +12,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./datos-personales-editar.component.scss', '../../../app.component.css']
 })
 export class DatosPersonalesEditarComponent implements OnInit {
-  @Output() messageEvent = new EventEmitter<object>();
   @Input() token_data: any;
 
   private regex_num = /^([0-9])*$/;
   private regex_institucional = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_personal = /([\w\.]+)@([\w\.]+)\.(\w+)/;
+  
+  public edicion = false;
   public direccion: any;
 
   public URL_IMG = 'http://localhost:3000/api/imagen/';
@@ -54,8 +55,54 @@ export class DatosPersonalesEditarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.cleanToken();
     this.setData();
-    this.setDomicilio(this.token_data.direccion);
+    this.setDomicilio();
+    this.getDocente();
+  }
+
+  getDocente() {
+    this.dpDocenteService.getDocente(this.token_data.id).subscribe(
+      res => {
+        this.token_data = res.docente;
+        this.token_data.id = res.docente._id;
+        this.cleanToken();
+        this.setData();
+        this.setDomicilio();
+        console.log(this.token_data);
+      },
+      err => console.log(err)
+    );
+  }
+
+  cleanToken() {
+    if (this.token_data.nombre == "No ingresado") {
+      this.token_data.nombre = "";
+    }
+
+    if (this.token_data.apellido_p == "No ingresado") {
+      this.token_data.apellido_p = "";
+    }
+
+    if (this.token_data.apellido_m == "No ingresado") {
+      this.token_data.apellido_m = "";
+    }
+
+    if (this.token_data.direccion == "No ingresado") {
+      this.token_data.direccion = "";
+    }
+
+    if (this.token_data.correo_personal == "no_inicializado@mail.com") {
+      this.token_data.correo_personal = "";
+    }
+
+    if (this.token_data.correo_institucional == "no_inicializado@uaemex.com") {
+      this.token_data.correo_institucional = "";
+    }
+
+    if (this.token_data.telefono == "0000000000") {
+      this.token_data.telefono = "";
+    }
   }
   
   enviarDatos() {
@@ -85,9 +132,9 @@ export class DatosPersonalesEditarComponent implements OnInit {
 
     this.dpDocenteService.updateDocente(docente).subscribe(
       res => {
+        this.edicion = false;
         this.loginService.setToken(res.token);
         this.router.navigate(['/home']);
-        this.messageEvent.emit({ edicion: false });
       }, err => {
         console.log(err);
       }
@@ -135,15 +182,15 @@ export class DatosPersonalesEditarComponent implements OnInit {
       + this.dpForm.get('cp')?.value;
   }
 
-  setDomicilio(direccion: any) {
-    direccion = direccion.split(", ");
-    this.dpForm.get('calle')?.setValue(direccion[0]);
-    this.dpForm.get('no_ext')?.setValue(direccion[1]);
-    this.dpForm.get('no_int')?.setValue(direccion[2]);
-    this.dpForm.get('colonia')?.setValue(direccion[3]);
-    this.dpForm.get('estado')?.setValue(direccion[4]);
-    this.dpForm.get('municipio')?.setValue(direccion[5]);
-    this.dpForm.get('cp')?.setValue(direccion[6]);
+  setDomicilio() {
+    this.direccion = this.token_data.direccion.split(", ");
+    this.dpForm.get('calle')?.setValue(this.direccion[0]);
+    this.dpForm.get('no_ext')?.setValue(this.direccion[1]);
+    this.dpForm.get('no_int')?.setValue(this.direccion[2]);
+    this.dpForm.get('colonia')?.setValue(this.direccion[3]);
+    this.dpForm.get('estado')?.setValue(this.direccion[4]);
+    this.dpForm.get('municipio')?.setValue(this.direccion[5]);
+    this.dpForm.get('cp')?.setValue(this.direccion[6]);
   }
 
   onImageSelect(event: any) {
@@ -200,8 +247,15 @@ export class DatosPersonalesEditarComponent implements OnInit {
     return this.URL_IMG + 'get-image/' + this.token_data.img;
   }
 
-  salir_edicion() {
-    this.messageEvent.emit({ edicion: false });
+  cambiar_modo(modo: number) {
+    switch (modo) {
+      case 1:
+        this.edicion = false;
+        break;
+      case 2:
+        this.edicion = true;
+        break;
+    }
   }
 
   get nombre() { return this.dpForm.get('nombre'); }

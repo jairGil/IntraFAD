@@ -66,11 +66,9 @@ export class DatosAcademicosComponent implements OnInit {
   cambiarModo(modo: number) {
     switch (modo) {
       case 1:
-        console.log("agregar");
         this.modo_agregar = true;
         break;
       case 2:
-        console.log("cancelar");
         this.modo_agregar = false;
         break;
     }

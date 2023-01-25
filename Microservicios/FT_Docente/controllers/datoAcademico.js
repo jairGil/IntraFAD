@@ -99,7 +99,6 @@ datoAcademicoController.get = async (req, res) => {
 
   dbhelper.disconnect();
 
-  console.log(result);
   return result;
 }
 

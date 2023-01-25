@@ -20,6 +20,10 @@ import { RegisterNoInstitucionalComponent } from './components/register/no-insti
 import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
 import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
 import { DatosAcademicosComponent } from './components/home/datos-academicos/datos-academicos.component';
+import { FichaTecnicaComponent } from './components/home/ficha-tecnica/ficha-tecnica.component';
+import { CursosComponent } from './components/home/cursos/cursos.component';
+import { CertificacionesComponent } from './components/home/certificaciones/certificaciones.component';
+import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,11 @@ import { DatosAcademicosComponent } from './components/home/datos-academicos/dat
     RegisterNoInstitucionalComponent,
     LoginInstitucionalComponent,
     LoginNoInstitucionalComponent,
-    DatosAcademicosComponent
+    DatosAcademicosComponent,
+    FichaTecnicaComponent,
+    CursosComponent,
+    CertificacionesComponent,
+    IdiomasComponent
   ],
   imports: [
     BrowserModule,

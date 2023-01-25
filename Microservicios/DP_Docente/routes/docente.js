@@ -9,6 +9,14 @@ router.get("/", (req, res, next) => {
   res.status(403).send("Acceso denegado");
 });
 
+/* GET docente by id. */
+router.get("/get-docente/:id_docente", async (req, res, next) => {
+  await docenteController.getDocente(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
 /* POST add docente. */
 router.post("/register", async (req, res, next) => {
   const result = await validateHelper.validarDocente(req);
@@ -45,10 +53,15 @@ router.post("/login-noi", async (req, res) => {
 });
 
 router.put("/update-dp", async (req, res) => {
-  await docenteController.updateDatosPersonales(req, res).then(
-    (resultSave) => {
-      res.status(resultSave.code).send(resultSave);
-    });
+  // const result = await validateHelper.validarDocente(req);
+  // if (!result.isEmpty()) {
+  //   res.status(400).send(result);
+  // } else {
+    await docenteController.updateDatosPersonales(req, res).then(
+      (resultSave) => {
+        res.status(resultSave.code).send(resultSave);
+      });
+  // }
 });
 
 module.exports = router;

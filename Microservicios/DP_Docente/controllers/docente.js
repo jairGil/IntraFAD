@@ -148,5 +148,24 @@ docenteController.updateDatosPersonales = async (req, res) => {
   return resultSave;
 }
 
+docenteController.getDocente = async (req, res) => {
+  let resultFind = { action: "getDocente", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) return resultFind;
+
+  const id_docente = req.params.id_docente;
+  resultFind = await dbhelper.findDocenteById(id_docente, resultFind.action);
+
+  if (!resultFind.value)
+    return await util.setResult(resultFind, false, 400, "El docente no existe");
+
+  resultFind = await util.setResult(resultFind, true, 200, "Docente encontrado");
+  dbhelper.disconnect();
+  console.log(resultFind);
+  return resultFind;
+}
+
 
 module.exports = docenteController;

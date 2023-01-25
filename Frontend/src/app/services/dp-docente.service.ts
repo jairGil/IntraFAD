@@ -19,6 +19,10 @@ export class DpDocenteService {
     return this.http.post<any>(this.URL + '/register-noi', docente);
   }
 
+  getDocente(id_docente: string) {
+    return this.http.get<any>(this.URL + '/get-docente/' + id_docente);
+  }
+
   updateDocente(docente: any) {
     return this.http.put<any>(this.URL + '/update-dp', docente);
   }

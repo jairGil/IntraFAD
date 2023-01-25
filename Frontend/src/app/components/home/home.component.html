@@ -1,13 +1,12 @@
 <div class="main">
   <div class="pnl-izq col-md-2">
     <button class="btn btn-transparent btn-outline-success" (click)="cambia_pagina(0)" #btnDP>Datos personales</button>
-    <button class="btn btn-transparent" (click)="cambia_pagina(1)" #btnDA>Datos acedémicos</button>
+    <button class="btn btn-transparent" (click)="cambia_pagina(1)" #btnDA>Ficha técnica</button>
   </div>
   <div class="pnl-der col-md-12 ml-5">
-    <app-datos-personales *ngIf="pagina == 0 && !editar" (messageEvent)="modo_edicion($event)" [token_data]="token_data">
-    </app-datos-personales>
-    <app-datos-personales-edit *ngIf="pagina == 0 && editar" (messageEvent)=modo_edicion($event) [token_data]="token_data">
+    <app-datos-personales-edit *ngIf="pagina == 0" (messageEvent)=modo_edicion($event) [token_data]="token_data">
     </app-datos-personales-edit>
-    <app-datos-academicos *ngIf="pagina == 1" [token_data]="token_data"></app-datos-academicos>
+    <!-- <app-datos-academicos *ngIf="pagina == 1" [token_data]="token_data"></app-datos-academicos> -->
+    <app-ficha-tecnica *ngIf="pagina == 1" [token_data]="token_data"></app-ficha-tecnica>
   </div>
 </div>
