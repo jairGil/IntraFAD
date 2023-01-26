@@ -171,6 +171,55 @@ validateHelper.validarCurso = async (req) => {
       return validator.validaPDF(val)
     }).withMessage("Debe ingresar un archivo en formato PDF")
     .escape().run(req);
+    
+    const result = validationResult(req);
+    return result;
+  }
+
+/*** Validaciones de idiomas ***/
+validateHelper.validarIdioma = async (req) => {
+
+  /*** Validación nombre ***/
+  await body("nombre")   
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El nombre de la certificación debe tener por lo menos 3 letras")
+    .isAlpha().withMessage("Debe ingresar solo letras")
+    .escape().run(req);
+    
+  /*** Validación nivel ***/
+  await body("nivel")   
+  .trim()
+  .not().isEmpty().withMessage("Elemento vacío")
+  .isLength({ min: 2 }).withMessage("El nivel de idioma debe tener por lo menos 2 letras")
+  .escape().run(req);
+
+  /*** Validación fecha ***/
+  await body("fecha")   
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 10 }).withMessage("Error de formato de fecha, debe contener mínimo 10 caracteres")
+    .custom(val => {
+      return moment(val, 'YYYY-MM-DD').isValid();
+    }).withMessage("Debe ingresar una fecha válida")
+    .escape().run(req);
+
+  /*** Validación institucion ***/
+  await body("institucion")   
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El nombre de la institución debe tener por lo menos 3 letras")
+    .isAlpha().withMessage("Debe ingresar solo letras")
+    .escape().run(req);
+    
+  /*** Validación constancia ***/
+  await body("constancia")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .custom(val => {
+      return validator.validaPDF(val)
+    }).withMessage("Debe ingresar un archivo en formato PDF")
+    .escape().run(req);
 
   const result = validationResult(req);
   return result;

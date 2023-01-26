@@ -75,7 +75,7 @@ export class DatosAcademicosComponent implements OnInit {
   }
 
   enviarDatos() {
-    this.uploadDocument('gradoAcad', 'comprobante_t');
+    this.uploadDocument('gradoAcad', 'doc_grad');
 
 
     console.log(this.daForm.value);

@@ -6,6 +6,7 @@ const config    = require("./config");
 const DatoAcademico = require("../models/datoAcademico");
 const Curso         = require("../models/curso");
 const Certificacion = require("../models/certificacion");
+const Idioma        = require("../models/idioma");
 
 
 const dbhelper = {}
@@ -185,5 +186,20 @@ dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
 }
 /********************************************************************************/
 
+/******************************** Idiomas *******************************/
+// Guardar idomas
+dbhelper.saveIdioma = async (idioma) => {
+  let resultSave = { action: "Guardar idioma", value: false, code: 500, msg: "No inicializado" };
+  const auxIdioma = new Idioma(idioma);
+
+  await auxIdioma.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Idioma guardado exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el idioma");
+    });
+    
+  return resultSave;
+}
 
 module.exports = dbhelper;

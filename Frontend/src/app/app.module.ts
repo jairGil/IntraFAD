@@ -12,7 +12,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
-import { DatosPersonalesEditarComponent } from './components/home/datos-personales-editar/datos-personales-editar.component';
 import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
 import { ExitoComponent } from './components/register/exito/exito.component';
 import { RegisterInstitucionalComponent } from './components/register/institucional/institucional.component';
@@ -34,7 +33,6 @@ import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
     RegisterComponent,
     HomeComponent,
     DatosPersonalesComponent,
-    DatosPersonalesEditarComponent,
     ExitoComponent,
     RegisterInstitucionalComponent,
     RegisterNoInstitucionalComponent,
@@ -44,7 +42,7 @@ import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
     FichaTecnicaComponent,
     CursosComponent,
     CertificacionesComponent,
-    IdiomasComponent
+    IdiomasComponent,
   ],
   imports: [
     BrowserModule,

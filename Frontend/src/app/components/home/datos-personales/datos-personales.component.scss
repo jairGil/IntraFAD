@@ -1,7 +1,24 @@
+.custom-file {
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+    margin-inline: 5px;
+}
+
+.align {
+    margin-top: 32px;
+}
+
+.btn-file {
+    height: 38px;
+}
+
+.btn-salir {
+    width: 100%;
+}
+
 .perfil {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
-    border-radius: 50%;
-    filter: drop-shadow(0 0 0.5rem #000);
+    border-radius: 10px;
 }

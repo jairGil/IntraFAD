@@ -1,5 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { JwtHelperService } from "@auth0/angular-jwt";
+import { Component, ElementRef, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -15,17 +14,14 @@ export class HomeComponent {
   public pagina = 0;
   public editar = false;
   public token_data: any;
-  private jwtHelper = new JwtHelperService();
 
   constructor(
     private renderer: Renderer2,
     private loginService: LoginService
-  ) {
-    this.decodeToken();
-  }
+  ) { }
 
-  decodeToken() {
-    this.token_data = this.jwtHelper.decodeToken(this.loginService.getToken());
+  ngOnInit(): void {
+    this.token_data = this.loginService.decodeToken();
   }
 
   cambia_pagina(pag: number) {
@@ -43,13 +39,4 @@ export class HomeComponent {
     }
     this.pagina = pag;
   }
-
-  modo_edicion($event: any) {
-    this.editar = $event.edicion;
-    if (!$event.edicion) {
-      this.decodeToken();
-      console.log(this.token_data);
-    }
-  }
-
 }

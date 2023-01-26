@@ -6,7 +6,7 @@ import { CertificacionesService } from 'src/app/services/certificaciones.service
 @Component({
   selector: 'app-certificaciones',
   templateUrl: './certificaciones.component.html',
-  styleUrls: ['./certificaciones.component.scss']
+  styleUrls: ['../../../app.component.css','./certificaciones.component.scss']
 })
 export class CertificacionesComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<object>();
@@ -70,7 +70,7 @@ export class CertificacionesComponent implements OnInit {
   }
 
   enviarDatos() {
-    this.uploadDocument('cedulaProf', 'comprobante_t');
+    this.uploadDocument('certificacion', 'constancia_f');
 
 
     console.log(this.certForm.value);

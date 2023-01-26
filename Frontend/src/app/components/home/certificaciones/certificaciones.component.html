@@ -1,5 +1,5 @@
 <div *ngIf="modo_agregar == true; else boton_ini">
-    <label for="grado_s" class="title"><b>Nuevo dato académico</b></label>
+    <label for="grado_s" class="title"><b>Nueva certificación</b></label>
     <form (submit)="enviarDatos()" [formGroup]="certForm">
   
       <div class="form-row">
@@ -42,19 +42,19 @@
       </div>
   
       <div class="form-row">
-        <div class="col-md-3">
+        <div class="form-grup col-md-2">
           <div class="btn btn-primary btn-file">
-            <label class="form-label text-white" for="constancia">Cargar PDF</label>
-            <input type="file" class="form-control d-none" id="constancia" (change)="onCertificacionSelect($event)"
+            <label class="form-label text-white" for="doc_cert">Cargar PDF</label>
+            <input type="file" class="form-control d-none" id="doc_cert" (change)="onCertificacionSelect($event)"
               accept=".pdf" />
           </div>
         </div>
         <div class="col-md">
           <div *ngIf="this.docCert; else noPDF1">
-            <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icono" placeholder="">
+            <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
           </div>
           <ng-template #noPDF1>
-            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icono">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
           </ng-template>
         </div>
       </div>
@@ -79,7 +79,6 @@
           <th>Certificación</th>
           <th>Institución certificadora</th>
           <th>Fecha de obtención</th>
-          <th>Cedula profesional</th>
           <th></th>
         </tr>
       </thead>

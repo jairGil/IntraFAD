@@ -1,45 +1,331 @@
-<!-- <div class="col-md-7">
-    <img src="{{ URL_IMG + 'get-image/' + this.token_data.img }}" alt="Imagen de perfil">
-    
-    <label><b>Nombre completo</b></label> <br>
-    <label>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</label> <br>
-    
+<div class="row" *ngIf="this.edicion == false; else modoEdicion">
+  <div class="col-md-6">
+    <div class="row">
+      <img [src]="imgSrc || getImage()" class="perfil ml-3" alt="Imagen de perfil" id="perfil"/>
+      <div class="col-md-8 align-self-center">
+        <label><b>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</b></label> <br>
+      </div>
+    </div>
+
     <label><b>Dirección</b></label> <br>
-    <label>{{ token_data?.direccion }}</label> <br>
-    
-    <label><b>Datos de contacto</b></label> <br>
+    <label>Calle: {{ direccion[0] }}</label> <br>
+    <label>No. ext.: {{ direccion[1] }}</label> <br>
+    <label>No. int.: {{ direccion[2] != '' ? direccion[2] : 'S/N' }}</label> <br>
+    <label>Colonia: {{ direccion[3] }}</label> <br>
+    <label>Municipio: {{ direccion[4] }}</label> <br>
+    <label>Estado: {{ direccion[5] }}</label> <br>
+    <label>C.P.: {{ direccion[6] }}</label> <br>
+
+    <label><b>Contacto</b></label> <br>
     <label>Correo personal: {{ token_data?.correo_personal }}</label> <br>
     <label>Correo institucional: {{ token_data?.correo_institucional }}</label> <br>
     <label>Teléfono: {{ token_data?.telefono }}</label> <br>
-    
-    <label><b>Documentos de identidad</b></label> <br>
+
+    <label><b>Identidad</b></label> <br>
     <label>RFC: {{ token_data?.rfc }}</label> <br>
     <label>CURP: {{ token_data?.curp }}</label> <br>
-    <button class="btn btn-primary" (click)="modo_edicion()">Editar</button>
-</div> -->
+    <button class="btn btn-primary" (click)="cambiar_modo(2)">Editar</button>
+  </div>
 
-<!-- create two columns in a div with class row -->
-<div class="row">
-    <div class="col-md-6">
-        <label><b>Nombre completo</b></label> <br>
-        <label>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</label> <br>
-        
-        <label><b>Dirección</b></label> <br>
-        <label>{{ token_data?.direccion }}</label> <br>
-        
-        <label><b>Datos de contacto</b></label> <br>
-        <label>Correo personal: {{ token_data?.correo_personal }}</label> <br>
-        <label>Correo institucional: {{ token_data?.correo_institucional }}</label> <br>
-        <label>Teléfono: {{ token_data?.telefono }}</label> <br>
-        
-        <label><b>Documentos de identidad</b></label> <br>
-        <label>RFC: {{ token_data?.rfc }}</label> <br>
-        <label>CURP: {{ token_data?.curp }}</label> <br>
-        <button class="btn btn-primary" (click)="modo_edicion()">Editar</button>
-    </div>
-    
-    <div class="col-md-6">
-        <img src="{{ URL_IMG + 'get-image/' + this.token_data.img }}" class="perfil" alt="Imagen de perfil"
-            id="perfil"/>
-    </div>
 </div>
+
+
+
+<ng-template #modoEdicion>
+  <form (submit)="enviarDatos()" [formGroup]="dpForm">
+    <div class="row">
+      <div class="col-md-7">
+        <label for="nombre"><b>Nombre completo</b></label>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre(s)" formControlName="nombre">
+            <div class="mt-2 mb-2">
+              <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="nombre?.errors?.['required']">
+                  El campo <b>nombre</b> es obligatorio.
+                </div>
+                <div *ngIf="nombre?.errors?.['minlength']">
+                  La longitud mínima del nombre es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_p" placeholder="Apellido paterno"
+              formControlName="apellido_p">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_p?.invalid && (apellido_p?.dirty || apellido_p?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_p?.errors?.['required']">
+                  El campo <b>apellido paterno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_p?.errors?.['minlength']">
+                  La longitud mínima del apellido paterno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_m" placeholder="Apellido materno"
+              formControlName="apellido_m">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_m?.invalid && (apellido_m?.dirty || apellido_m?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_m?.errors?.['required']">
+                  El campo <b>apellido materno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_m?.errors?.['minlength']">
+                  La longitud mínima del apellido materno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label for="nombre"><b>Dirección</b></label>
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="apellido_m" placeholder="Calle" formControlName="calle">
+            <div class="mt-2 mb-2">
+              <div *ngIf="calle?.invalid && (calle?.dirty || calle?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="calle?.errors?.['required']">
+                  El campo <b>calle</b> es obligatorio.
+                </div>
+                <div *ngIf="calle?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_ext" placeholder="No. ext." formControlName="no_ext">
+            <div class="mt-2 mb-2">
+              <div *ngIf="no_ext?.invalid && (no_ext?.dirty || no_ext?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="no_ext?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_int" placeholder="No. int." formControlName="no_int">
+            <div class="mt-2 mb-2">
+              <div *ngIf="no_int?.invalid && (no_int?.dirty || no_int?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="no_int?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="colonia" placeholder="Colonia" formControlName="colonia">
+            <div class="mt-2 mb-2">
+              <div *ngIf="colonia?.invalid && (colonia?.dirty || colonia?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="colonia?.errors?.['required']">
+                  El campo <b>colonia</b> es obligatorio.
+                </div>
+                <div *ngIf="colonia?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="municipio" placeholder="Municipio"
+              formControlName="municipio">
+            <div class="mt-2 mb-2">
+              <div *ngIf="municipio?.invalid && (municipio?.dirty || municipio?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="municipio?.errors?.['required']">
+                  El campo <b>colonia</b> es obligatorio.
+                </div>
+                <div *ngIf="municipio?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+            <div class="mt-2 mb-2">
+              <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="estado?.errors?.['required']">
+                  El campo <b>estado</b> es obligatorio.
+                </div>
+                <div *ngIf="estado?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp">
+            <div class="mt-2 mb-2">
+              <div *ngIf="cp?.invalid && (cp?.dirty || cp?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="cp?.errors?.['required']">
+                  El campo <b>C.P.</b> es obligatorio.
+                </div>
+                <div *ngIf="cp?.errors?.['minlength']">
+                  La longitud mínima es de 5 números.
+                </div>
+                <div *ngIf="cp?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label for="nombre"><b>Datos de contacto</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">Correo personal</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_personal" placeholder="mail@google.com"
+              formControlName="correo_personal">
+          </div>
+        </div>
+        <div *ngIf="correo_personal?.invalid && (correo_personal?.dirty || correo_personal?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_personal?.errors?.['required']">
+            El campo <b>correo personal</b> es obligatorio.
+          </div>
+          <div *ngIf="correo_personal?.errors?.['minlength']">
+            La longitud mínima es de 3 caracteres.
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">Correo institucional</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_institucional" placeholder="mail@uaemex.mx"
+              formControlName="correo_institucional">
+          </div>
+        </div>
+        <div *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_institucional?.errors?.['pattern']">
+            El correo institucional debe tener los siguientes formatos
+            <ul>
+              <li>mail@uaemex.mx</li>
+              <li>mail@profesor.uaemex.mx</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">Teléfono</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="telefono" placeholder="xxxxxxxxxx" formControlName="telefono">
+          </div>
+        </div>
+        <div *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)" class="alert alert-danger col-md-12"
+          role="alert">
+          <div *ngIf="telefono?.errors?.['required']">
+            El campo <b>teléfono</b> es obligatorio.
+          </div>
+          <div *ngIf="telefono?.errors?.['minlength']">
+            La longitud mínima es de 10 caracteres.
+          </div>
+          <div *ngIf="telefono?.errors?.['pattern']">
+            Debe ingresar solo números.
+          </div>
+        </div>
+
+        <label for="nombre"><b>Documentos de identidad</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">RFC</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="rfc" formControlName="rfc">
+          </div>
+
+          <div class="col-md-2">
+            <div class="btn btn-primary btn-file">
+              <label class="form-label text-white" for="doc_rfc">Cargar RFC</label>
+              <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
+            <div *ngIf="this.token_data.doc_rfc != 'no_inicializado.pdf'; else noPDF1">
+              <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+                <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                <span>Abrir</span>
+              </a>
+            </div>
+            <ng-template #noPDF1>
+              <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="curp" class="col-md-4 col-form-label">Curp</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="curp" formControlName="curp">
+          </div>
+
+          <div class="col-md-2">
+            <div class="btn btn-primary btn-file">
+              <label class="form-label text-white" for="doc_curp">Cargar CURP</label>
+              <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <!-- <input id="nombre_curp" type="text" class="form-control plain" disabled/> -->
+            <div *ngIf="this.token_data.doc_curp != 'no_inicializado.pdf'; else noPDF2">
+              <a href="{{ URL_DOC + this.token_data.doc_curp }}" target="_blank">
+                <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                <span>Abrir</span>
+              </a>
+            </div>
+            <ng-template #noPDF2>
+              <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            </ng-template>
+          </div>
+          <!--  -->
+
+        </div>
+
+        <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>
+        <button class="btn btn-danger btn-salir" (click)="cambiar_modo(1)">Salir</button>
+      </div>
+
+      <div class="col-md-2">
+        <div>
+          <div class="d-flex justify-content-center mb-4">
+            <img [src]="imgSrc || getImage()" alt="" class="perfil">
+          </div>
+
+          <div class="justify-content-center">
+            <div class="btn btn-primary">
+              <label class="form-label text-white m-1" for="img">Cambiar imagen</label>
+              <input type="file" class="form-control d-none" id="img" (change)="onImageSelect($event)"
+                accept=".jpg, .jpeg"/>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

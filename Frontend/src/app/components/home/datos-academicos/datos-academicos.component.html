@@ -39,7 +39,7 @@
 
     <div class="form-row">
       <div class="form-group col-md-3">
-        <label for="doc_ced_prof" class="col-form-label is-required"><b>Documento de grado academico</b></label>
+        <label for="doc_grad" class="col-form-label is-required"><b>Documento de grado academico</b></label>
       </div>
     </div>
 
@@ -105,10 +105,10 @@
       </div>
       <div class="col-md">
         <div *ngIf="this.docCedProf; else noPDF1">
-          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icono" placeholder="">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon" placeholder="">
         </div>
         <ng-template #noPDF1>
-          <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icono">
+          <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
         </ng-template>
       </div>
     </div>
