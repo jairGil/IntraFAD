@@ -40,7 +40,7 @@ datoAcademicoController.add = async (req, res) => {
 
   resultSave = await dbhelper.saveDatoAcademico(datoAcademico);
 
-  dbhelper.disconnect();
+  console.log(dbhelper.disconnect());
 
   console.log(resultSave);
   return resultSave;
@@ -76,7 +76,7 @@ datoAcademicoController.update = async (req, res) => {
   
   resultSave = await dbhelper.updateDatoAcademico(datoAcademico);
 
-  dbhelper.disconnect();
+  console.log(dbhelper.disconnect());
   
   console.log(resultSave);
   return resultSave;
@@ -97,7 +97,7 @@ datoAcademicoController.get = async (req, res) => {
 
   result = await dbhelper.findDatoAcademicoByIdDocente(id_docente);
 
-  dbhelper.disconnect();
+  console.log(dbhelper.disconnect());
 
   return result;
 }
@@ -116,7 +116,7 @@ datoAcademicoController.delete = async (req, res) => {
 
   result = await dbhelper.deleteDatoAcademicoById(id);
 
-  dbhelper.disconnect();
+  console.log(dbhelper.disconnect());
 
   console.log(result);
   return result;

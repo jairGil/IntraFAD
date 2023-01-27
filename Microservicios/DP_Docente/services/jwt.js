@@ -20,6 +20,10 @@ exports.createToken = (docente) => {
         curp: docente.curp,
         doc_rfc: docente.doc_rfc,
         doc_curp: docente.doc_curp,
+        ldg: docente.ldg,
+        ldi: docente.ldi,
+        arq: docente.arq,
+        apou: docente.apou,
         ait: moment().unix(),
         exp: moment().add(1, "days").unix()
     }

@@ -31,8 +31,8 @@ docenteController.add = async (req, res) => {
   docente.correo_institucional = params.correo_institucional;
 
   resultSave = await dbhelper.saveDocente(docente);
-  dbhelper.disconnect();
-  console.log(resultSave);
+  console.log(dbhelper.disconnect());
+  // console.log(resultSave);
   return resultSave;
 }
 
@@ -61,8 +61,8 @@ docenteController.addNoInstitutional = async (req, res) => {
   docente.correo_personal = params.correo_personal;
 
   resultSave = await dbhelper.saveDocente(docente);
-  dbhelper.disconnect();
-  console.log(resultSave);
+  console.log(dbhelper.disconnect());
+  // console.log(resultSave);
   return resultSave;
 }
 
@@ -89,8 +89,8 @@ docenteController.login = async (req, res) => {
   resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
 
   delete resultFind.docente;
-  dbhelper.disconnect();
-  console.log(resultFind);
+  console.log(dbhelper.disconnect());
+  // console.log(resultFind);
   return resultFind;
 }
 
@@ -117,8 +117,8 @@ docenteController.loginNoInstitutional = async (req, res) => {
   resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
 
   delete resultFind.docente;
-  dbhelper.disconnect();
-  console.log(resultFind);
+  console.log(dbhelper.disconnect());
+  // console.log(resultFind);
   return resultFind;
 }
 
@@ -143,8 +143,8 @@ docenteController.updateDatosPersonales = async (req, res) => {
   resultSave = await util.setResult(resultSave, true, 200, "Datos personales actualizados");
 
   delete resultSave.docente;
-  dbhelper.disconnect();
-  console.log(resultSave);
+  console.log(dbhelper.disconnect());
+  // console.log(resultSave);
   return resultSave;
 }
 
@@ -162,8 +162,8 @@ docenteController.getDocente = async (req, res) => {
     return await util.setResult(resultFind, false, 400, "El docente no existe");
 
   resultFind = await util.setResult(resultFind, true, 200, "Docente encontrado");
-  dbhelper.disconnect();
-  console.log(resultFind);
+  console.log(dbhelper.disconnect());
+  // console.log(resultFind);
   return resultFind;
 }
 

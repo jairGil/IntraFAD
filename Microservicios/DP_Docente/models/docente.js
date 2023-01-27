@@ -4,12 +4,13 @@
 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const cfg = require("../bin/config");
 
 const docenteSchema = Schema({
     img: {
         type: String,
         required: true,
-        default: "D:-Documentos-SevicioSocial-Proyectos-Microservicios-archivos_multiparty-controller-uploads-default.jpg"
+        default: cfg.routes.files.replaceAll("/", "-")
     },
     nombre: {
         type: String,
@@ -73,23 +74,43 @@ const docenteSchema = Schema({
     },
     rfc: {
         type: String,
+        requierd: true,
         trim: true,
-        default: ""
+        default: "ABCD123456789"
     },
     doc_rfc: {
         type: String,
+        requierd: true,
         trim: true,
         default: "no_inicializado.pdf"
     },
     curp: {
         type: String,
+        requierd: true,
         trim: true,
-        default: ""
+        default: "ABCD123456EFGHIJK0"
     },
     doc_curp: {
         type: String,
+        requierd: true,
         trim: true,
         default: "no_inicializado.pdf"
+    },
+    ldg: {
+        type: Boolean,
+        default: false
+    },
+    ldi: {
+        type: Boolean,
+        default: false
+    },
+    arq: {
+        type: Boolean,
+        default: false
+    },
+    apou: {
+        type: Boolean,
+        default: false
     },
 });
 

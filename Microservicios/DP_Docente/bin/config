@@ -13,6 +13,9 @@ const config = {
         pass: dbpass,
         uri: uriDB
     },
+    routes: {
+        files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos_multiparty/controller/uploads/",
+    }
 }
 
 

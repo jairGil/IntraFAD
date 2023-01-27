@@ -1,5 +1,5 @@
 <div class="row" *ngIf="this.edicion == false; else modoEdicion">
-  <div class="col-md-6">
+  <div class="col-md-9">
     <div class="row">
       <img [src]="imgSrc || getImage()" class="perfil ml-3" alt="Imagen de perfil" id="perfil"/>
       <div class="col-md-8 align-self-center">
@@ -7,26 +7,52 @@
       </div>
     </div>
 
+    <hr class="hr"/>
     <label><b>Dirección</b></label> <br>
     <label>Calle: {{ direccion[0] }}</label> <br>
-    <label>No. ext.: {{ direccion[1] }}</label> <br>
-    <label>No. int.: {{ direccion[2] != '' ? direccion[2] : 'S/N' }}</label> <br>
+    <label>No. ext.: {{ direccion[1] != '' && direccion[1] != null ? direccion[1] : 'SN' }}</label> <br>
+    <label>No. int.: {{ direccion[2] != '' && direccion[2] != null ? direccion[2] : 'SN' }}</label> <br>
     <label>Colonia: {{ direccion[3] }}</label> <br>
     <label>Municipio: {{ direccion[4] }}</label> <br>
     <label>Estado: {{ direccion[5] }}</label> <br>
     <label>C.P.: {{ direccion[6] }}</label> <br>
 
+    <hr class="hr"/>
     <label><b>Contacto</b></label> <br>
     <label>Correo personal: {{ token_data?.correo_personal }}</label> <br>
     <label>Correo institucional: {{ token_data?.correo_institucional }}</label> <br>
     <label>Teléfono: {{ token_data?.telefono }}</label> <br>
 
+    <hr class="hr"/>
     <label><b>Identidad</b></label> <br>
     <label>RFC: {{ token_data?.rfc }}</label> <br>
     <label>CURP: {{ token_data?.curp }}</label> <br>
+    <label>No. de Empleado: {{ token_data?.no_empleado }}</label> <br>
+
+    <hr class="hr"/>
+    <label><b>Licenciaturas donde imparto clase</b></label> <br>
+    <div class="row" *ngIf="token_data.ldg == true" >
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura ldg">Licenciatura en Diseño Gráfico <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.ldi == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura ldi">Licenciatura en Diseño Industrial <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.arq == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura arq">Licenciatura en Arquitectura <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.apou == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura apou">Licenciatura en Administración y Promoción de la Obra Urbana <br></label> <br>
+      </div>
+    </div>
     <button class="btn btn-primary" (click)="cambiar_modo(2)">Editar</button>
   </div>
-
 </div>
 
 
@@ -36,6 +62,17 @@
     <div class="row">
       <div class="col-md-7">
         <label for="nombre"><b>Nombre completo</b></label>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="nombre" class="col-form-label is-required">Nombre</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_p" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_m" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group col-md-4">
             <input type="text" class="form-control" name="nombre" placeholder="Nombre(s)" formControlName="nombre">
@@ -85,10 +122,25 @@
           </div>
         </div>
 
+        <hr class="hr"/>
         <label for="nombre"><b>Dirección</b></label>
         <div class="form-row">
+          <div class="col-md-4">
+            <label for="calle" class="col-form-label is-required">Calle</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_ext">No. Ext.</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_int">No. Int.</label>
+          </div>
+          <div class="col-md-4">
+            <label for="no_ext" class="col-form-label is-required">Colonia</label>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group  col-md-4">
-            <input type="text" class="form-control" name="apellido_m" placeholder="Calle" formControlName="calle">
+            <input type="text" class="form-control" name="calle" placeholder="Calle" formControlName="calle">
             <div class="mt-2 mb-2">
               <div *ngIf="calle?.invalid && (calle?.dirty || calle?.touched)" class="alert alert-danger" role="alert">
                 <div *ngIf="calle?.errors?.['required']">
@@ -102,27 +154,11 @@
           </div>
 
           <div class="form-group  col-md-2">
-            <input type="text" class="form-control" name="no_ext" placeholder="No. ext." formControlName="no_ext">
-            <div class="mt-2 mb-2">
-              <div *ngIf="no_ext?.invalid && (no_ext?.dirty || no_ext?.touched)" class="alert alert-danger"
-                role="alert">
-                <div *ngIf="no_ext?.errors?.['pattern']">
-                  Debe ingresar solo números.
-                </div>
-              </div>
-            </div>
+            <input type="text" class="form-control" name="no_ext" placeholder="No. ext." formControlName="no_ext" maxlength="5">
           </div>
 
           <div class="form-group  col-md-2">
-            <input type="text" class="form-control" name="no_int" placeholder="No. int." formControlName="no_int">
-            <div class="mt-2 mb-2">
-              <div *ngIf="no_int?.invalid && (no_int?.dirty || no_int?.touched)" class="alert alert-danger"
-                role="alert">
-                <div *ngIf="no_int?.errors?.['pattern']">
-                  Debe ingresar solo números.
-                </div>
-              </div>
-            </div>
+            <input type="text" class="form-control" name="no_int" placeholder="No. int." formControlName="no_int" maxlength="5">
           </div>
 
           <div class="form-group  col-md-4">
@@ -142,6 +178,17 @@
         </div>
 
         <div class="form-row">
+          <div class="col-md-4">
+            <label for="municipio" class="col-form-label is-required">Municipio</label>
+          </div>
+          <div class="col-md-4">
+            <label for="estado" class="col-form-label is-required">Estado</label>
+          </div>
+          <div class="col-md-2" class="col-form-label is-required">
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group  col-md-4">
             <input type="text" class="form-control" name="municipio" placeholder="Municipio"
               formControlName="municipio">
@@ -149,7 +196,7 @@
               <div *ngIf="municipio?.invalid && (municipio?.dirty || municipio?.touched)" class="alert alert-danger"
                 role="alert">
                 <div *ngIf="municipio?.errors?.['required']">
-                  El campo <b>colonia</b> es obligatorio.
+                  El campo <b>municipio</b> es obligatorio.
                 </div>
                 <div *ngIf="municipio?.errors?.['minlength']">
                   La longitud mínima es de 3 caracteres.
@@ -159,7 +206,13 @@
           </div>
 
           <div class="form-group  col-md-4">
-            <input type="text" class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+            <select class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+              <option class="dropdown-item" placeholder="Seleccionar..." value="">
+              </option>
+              <option *ngFor="let estado of listaEstados" class="dropdown-item" value="{{ estado }}">
+                {{ estado }}
+              </option>
+            </select>
             <div class="mt-2 mb-2">
               <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger"
                 role="alert">
@@ -175,7 +228,7 @@
 
 
           <div class="form-group  col-md-4">
-            <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp">
+            <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp" maxlength="5">  
             <div class="mt-2 mb-2">
               <div *ngIf="cp?.invalid && (cp?.dirty || cp?.touched)" class="alert alert-danger" role="alert">
                 <div *ngIf="cp?.errors?.['required']">
@@ -192,9 +245,10 @@
           </div>
         </div>
 
+        <hr class="hr"/>
         <label for="nombre"><b>Datos de contacto</b></label>
         <div class="form-row mb-3">
-          <label for="staticEmail" class="col-md-4 col-form-label">Correo personal</label>
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Correo personal</label>
           <div class="col-md-4">
             <input type="email" class="form-control" name="correo_personal" placeholder="mail@google.com"
               formControlName="correo_personal">
@@ -229,9 +283,10 @@
         </div>
 
         <div class="form-row mb-3">
-          <label for="staticEmail" class="col-md-4 col-form-label">Teléfono</label>
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Teléfono</label>
           <div class="col-md-4">
-            <input type="text" class="form-control" name="telefono" placeholder="xxxxxxxxxx" formControlName="telefono">
+            <input type="text" class="form-control" name="telefono" placeholder="xxxxxxxxxx" 
+              maxlength="10" formControlName="telefono">
           </div>
         </div>
         <div *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)" class="alert alert-danger col-md-12"
@@ -247,64 +302,119 @@
           </div>
         </div>
 
+        <hr class="hr"/>
         <label for="nombre"><b>Documentos de identidad</b></label>
         <div class="form-row mb-3">
-          <label for="staticEmail" class="col-md-4 col-form-label">RFC</label>
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">RFC</label>
           <div class="col-md-4">
-            <input type="text" class="form-control" name="rfc" formControlName="rfc">
+            <input type="text" class="form-control" name="rfc" 
+              maxlength="13" style="text-transform:uppercase" formControlName="rfc">
           </div>
 
           <div class="col-md-2">
             <div class="btn btn-primary btn-file">
-              <label class="form-label text-white" for="doc_rfc">Cargar RFC</label>
+              <label *ngIf="this.rfcFilename == 'no_inicializado.pdf'; else RFCinibtn" class="form-label text-white" for="doc_rfc">Cargar RFC</label>
+              <ng-template #RFCinibtn>
+                <label class="form-label text-white" for="doc_rfc">Cambiar RFC</label>
+              </ng-template>
               <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)"
                 accept=".pdf" />
             </div>
           </div>
-
-          <div class="col-md-2">
-            <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
-            <div *ngIf="this.token_data.doc_rfc != 'no_inicializado.pdf'; else noPDF1">
-              <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
-                <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-                <span>Abrir</span>
-              </a>
-            </div>
-            <ng-template #noPDF1>
-              <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
-            </ng-template>
-          </div>
         </div>
-
-        <div class="form-row mb-3">
-          <label for="curp" class="col-md-4 col-form-label">Curp</label>
+        <div class="form-row mb-4" >
+          <div class="col-md-4"></div>
           <div class="col-md-4">
-            <input type="text" class="form-control" name="curp" formControlName="curp">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.rfcFilename == 'no_inicializado.pdf'; else RFCini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #RFCini>
+            <div *ngIf="this.dpForm.get('doc_rfc')?.value != this.token_data.doc_rfc; else RFCinilbl" class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.rfcFilename }}</span>
+            </div>
+            <ng-template #RFCinilbl>
+              <div class="col-md-2">
+                  <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+                    <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                    <span>Ver RFC</span>
+                  </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+        <div class="form-row mb-3">
+          <label for="curp" class="col-md-4 col-form-label is-required">Curp</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="curp" 
+              maxlength="18" style="text-transform:uppercase" formControlName="curp">
           </div>
 
           <div class="col-md-2">
             <div class="btn btn-primary btn-file">
-              <label class="form-label text-white" for="doc_curp">Cargar CURP</label>
+              <label *ngIf="this.curpFilename == 'no_inicializado.pdf'; else CURPinibtn" class="form-label text-white" for="doc_curp">Cargar CURP</label>
+              <ng-template #CURPinibtn>
+                <label class="form-label text-white" for="doc_curp">Cambiar CURP</label>
+              </ng-template>
               <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)"
                 accept=".pdf" />
             </div>
           </div>
-
-          <div class="col-md-2">
-            <!-- <input id="nombre_curp" type="text" class="form-control plain" disabled/> -->
-            <div *ngIf="this.token_data.doc_curp != 'no_inicializado.pdf'; else noPDF2">
-              <a href="{{ URL_DOC + this.token_data.doc_curp }}" target="_blank">
-                <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-                <span>Abrir</span>
-              </a>
-            </div>
-            <ng-template #noPDF2>
-              <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
-            </ng-template>
-          </div>
-          <!--  -->
-
         </div>
+        <div class="form-row mb-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.curpFilename == 'no_inicializado.pdf'; else CURPini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #CURPini>
+            <div *ngIf="this.dpForm.get('doc_curp')?.value != this.token_data.doc_curp; else CURPinilbl" class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.curpFilename }}</span>
+            </div>
+            <ng-template #CURPinilbl>
+              <div class="col-md-2">
+                  <a href="{{ URL_DOC + this.token_data.doc_curp }}" target="_blank">
+                    <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                    <span>Ver CURP</span>
+                  </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="no_emp" class="col-md-4 col-form-label">No. de Empleado</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" formControlName="no_empleado">
+          </div>
+        </div>
+
+        <hr class="hr"/>
+        <label><b>Seleccione las licenciaturas donde imparte clase</b></label>
+        <div class="form-check licenciatura ldg">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.ldg}}" id="ldg" formControlName="ldg"/>
+          <label class="form-check-label label-lic" for="ldg">Licenciatura en Diseño Gráfico</label>
+        </div>
+        <div class="form-check licenciatura ldi">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.ldi}}" id="ldi" formControlName="ldi"/>
+          <label class="form-check-label label-lic" for="ldi">Licenciatura en Diseño Industrial</label>
+        </div>
+        <div class="form-check licenciatura arq">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.arq}}" id="arq" formControlName="arq"/>
+          <label class="form-check-label label-lic" for="arq">Licenciatura en Arquitectura</label>
+        </div>
+        <div class="form-check licenciatura apou">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.apou}}" id="apou" formControlName="apou"/>
+          <label class="form-check-label label-lic" for="apou">Licenciatura en  Administración y Promoción de la Obra Urbana</label>
+        </div>
+
 
         <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>
         <button class="btn btn-danger btn-salir" (click)="cambiar_modo(1)">Salir</button>

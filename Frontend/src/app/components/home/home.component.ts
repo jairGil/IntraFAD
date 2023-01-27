@@ -22,6 +22,7 @@ export class HomeComponent {
 
   ngOnInit(): void {
     this.token_data = this.loginService.decodeToken();
+    console.log(this.token_data);
   }
 
   cambia_pagina(pag: number) {

@@ -99,7 +99,7 @@ dbhelper.findDocenteById = async (id_docente, action) => {
 dbhelper.updateDocente = async (docente) => {
   let resultSave = { action: "Actualizar docente", value: false, code: 500, msg: "No inicializado" }
 
-  await Docente.findByIdAndUpdate(docente._id, docente).then(
+  await Docente.findByIdAndUpdate(docente._id, docente, { new: true }).then(
     (docente) => {
       resultSave = { action: "Actualizar docente", value: true, code: 200, msg: "Docente actualizado", docente: docente }
     }, error => {
@@ -111,7 +111,13 @@ dbhelper.updateDocente = async (docente) => {
 
 //Desconectar de la base de datos
 dbhelper.disconnect = async () => {
-  await mongoose.disconnect();
+  let resultDisconnect = { action: "Desconectar de la BD", value: false, code: 500, msg: "No desconectado" };
+  await mongoose.disconnect().then(
+    () => {
+      resultDisconnect = util.setResult(resultDisconnect, true, 200, "Desconectado de la BD");
+    }, error => {
+      resultDisconnect = util.setResult(resultDisconnect, false, 500, error.code + " - " + error.codeName);
+    });
 }
 
 

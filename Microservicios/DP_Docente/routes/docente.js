@@ -13,6 +13,7 @@ router.get("/", (req, res, next) => {
 router.get("/get-docente/:id_docente", async (req, res, next) => {
   await docenteController.getDocente(req, res).then(
     (result) => {
+      console.log(result);
       res.status(result.code).send(result);
     });
 });
@@ -25,6 +26,7 @@ router.post("/register", async (req, res, next) => {
   } else {
     await docenteController.add(req, res).then(
       (resultSave) => {
+        console.log(resultSave);
         res.status(resultSave.code).send(resultSave);
       });
   }
@@ -33,6 +35,7 @@ router.post("/register", async (req, res, next) => {
 router.post('/register-noi', async (req, res, next) => {
   await docenteController.addNoInstitutional(req, res).then(
     (resultSave) => {
+      console.log(resultSave);
       res.status(resultSave.code).send(resultSave);
     });
 });
@@ -41,6 +44,7 @@ router.post('/register-noi', async (req, res, next) => {
 router.post("/login", async (req, res) => {
   await docenteController.login(req, res).then(
     (resultSave) => {
+      console.log(resultSave);
       res.status(resultSave.code).send(resultSave);
     });
 });
@@ -48,20 +52,17 @@ router.post("/login", async (req, res) => {
 router.post("/login-noi", async (req, res) => {
   await docenteController.loginNoInstitutional(req, res).then(
     (resultSave) => {
+      console.log(resultSave);
       res.status(resultSave.code).send(resultSave);
     });
 });
 
 router.put("/update-dp", async (req, res) => {
-  // const result = await validateHelper.validarDocente(req);
-  // if (!result.isEmpty()) {
-  //   res.status(400).send(result);
-  // } else {
-    await docenteController.updateDatosPersonales(req, res).then(
-      (resultSave) => {
-        res.status(resultSave.code).send(resultSave);
-      });
-  // }
+  await docenteController.updateDatosPersonales(req, res).then(
+    (resultSave) => {
+      console.log(resultSave);
+      res.status(resultSave.code).send(resultSave);
+    });
 });
 
 module.exports = router;
