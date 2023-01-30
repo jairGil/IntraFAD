@@ -12,6 +12,7 @@ router.get("/", (req, res, next) => {
 /* POST add datoAcademico. */
 router.post("/add_datoacad", async (req, res, next) => {
   const result = await validateHelper.validarDatoAcademico(req);
+  console.log(result);
   if (!result.isEmpty()) {
     res.status(400).send(result);
   } else {

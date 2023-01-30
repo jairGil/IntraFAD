@@ -1,0 +1,18 @@
+<div class="login h-100 container">
+  <div class="row">
+    <div class="col">
+      <h3>Bienvenido</h3>
+      <login-institucional *ngIf="institucional"></login-institucional>
+      <login-no-institucional *ngIf="!institucional"></login-no-institucional>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional">Iniciar sesión con un correo personal</button>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional">Iniciar sesión con un correo institucional</button>
+      <div class="register">
+        <span>¿No tiene una cuenta? <a href="/register">Crear cuenta</a></span>
+      </div>
+    </div>
+
+    <div class="col">
+      <img src="../../assets/img/IntraFAD.png" width="auto" height="300px" alt="">
+    </div>
+  </div>
+</div>

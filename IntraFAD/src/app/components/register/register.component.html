@@ -1,0 +1,16 @@
+<div class="register container">
+  <div class="row align-items-center">
+    <div class="col">
+      <h3>Crear cuenta</h3>
+      <register-institucional *ngIf="!data?.value && institucional" (messageEvent)=recibirDatos($event)></register-institucional>
+      <register-no-institucional *ngIf="!data?.value && !institucional" (messageEvent)=recibirDatos($event)></register-no-institucional>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional && !data?.value">No cuento con correo institucional</button>
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional && !data?.value">Registrarme con correo institucional</button>
+      <app-exito *ngIf="data?.value"></app-exito>
+    </div>
+
+    <div class="col">
+      <img src="../../assets/img/IntraFAD.png" class="img" alt="">
+    </div>
+  </div>
+</div>

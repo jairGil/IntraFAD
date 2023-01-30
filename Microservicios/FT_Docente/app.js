@@ -7,7 +7,7 @@ let cors = require("cors");
 let datoAcademicoRouter = require("./routes/datoAcademico");
 let certificacionRouter = require("./routes/certificacion");
 let cursoRouter = require("./routes/curso");
-//ruta de idioma aquí
+let idiomaRouter = require("./routes/idioma");
 
 let app = express();
 
@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/dato_academico", datoAcademicoRouter);
 app.use("/api/certificacion", certificacionRouter);
 app.use("/api/curso", cursoRouter);
+app.use("/api/idioma", idiomaRouter);
 //idioma aquí
 
 module.exports = app;
