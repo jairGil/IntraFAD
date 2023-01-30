@@ -13,7 +13,7 @@ export class CertificacionesService {
   ) { }
 
   getCertificaciones(id_docente: string) {
-    return this.http.get<any>(this.URL + '/get_cert/' + id_docente);
+    return this.http.get<any>(this.URL + '/get_certs/' + id_docente);
   }
 
   addCertificacion(certificacion: any) {

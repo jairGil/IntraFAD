@@ -37,5 +37,44 @@ cursoController.add = async (req, res) => {
   return resultSave;
 }
 
+/* GET cursos by id_docente. */
+cursoController.get = async (req, res) => {
+  let result = { action: "Obtener cursos del docente", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id_docente = req.params.id_docente;
+
+  result = await dbhelper.findCursoByIdDocente(id_docente);
+
+  console.log(dbhelper.disconnect());
+
+  return result;
+}
+
+/* DELETE certificacion by id. */
+cursoController.delete = async (req, res) => {
+  let result = { action: "Eliminar Curso", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.params.id;
+
+  result = await dbhelper.deleteCursoById(id);
+
+  console.log(dbhelper.disconnect());
+
+  console.log(result);
+  return result;
+}
+
 
 module.exports = cursoController;

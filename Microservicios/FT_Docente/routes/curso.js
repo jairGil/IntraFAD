@@ -22,5 +22,21 @@ router.post("/add_curso", async (req, res, next) => {
   }
 });
 
+/* GET curso by id_docente. */
+router.get("/get_cursos/:id_docente", async (req, res, next) => {
+  await CursoController.get(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
+/* DELETE curso by id. */
+router.delete("/delete_curso/:id", async (req, res, next) => {
+  await CursoController.delete(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
 
 module.exports = router;

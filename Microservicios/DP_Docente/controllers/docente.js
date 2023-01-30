@@ -31,7 +31,8 @@ docenteController.add = async (req, res) => {
   docente.correo_institucional = params.correo_institucional;
 
   resultSave = await dbhelper.saveDocente(docente);
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultSave);
   return resultSave;
 }
@@ -61,7 +62,8 @@ docenteController.addNoInstitutional = async (req, res) => {
   docente.correo_personal = params.correo_personal;
 
   resultSave = await dbhelper.saveDocente(docente);
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultSave);
   return resultSave;
 }
@@ -89,7 +91,8 @@ docenteController.login = async (req, res) => {
   resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
 
   delete resultFind.docente;
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultFind);
   return resultFind;
 }
@@ -117,7 +120,8 @@ docenteController.loginNoInstitutional = async (req, res) => {
   resultFind = await util.setResult(resultFind, true, 200, "Login exitoso");
 
   delete resultFind.docente;
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultFind);
   return resultFind;
 }
@@ -143,7 +147,8 @@ docenteController.updateDatosPersonales = async (req, res) => {
   resultSave = await util.setResult(resultSave, true, 200, "Datos personales actualizados");
 
   delete resultSave.docente;
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultSave);
   return resultSave;
 }
@@ -162,7 +167,8 @@ docenteController.getDocente = async (req, res) => {
     return await util.setResult(resultFind, false, 400, "El docente no existe");
 
   resultFind = await util.setResult(resultFind, true, 200, "Docente encontrado");
-  console.log(dbhelper.disconnect());
+  dbhelper.disconnect()
+  // console.log(await dbhelper.disconnect()); No imprime la desconexión xd
   // console.log(resultFind);
   return resultFind;
 }

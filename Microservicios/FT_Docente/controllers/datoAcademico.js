@@ -46,7 +46,7 @@ datoAcademicoController.add = async (req, res) => {
   return resultSave;
 }
 
-datoAcademicoController.update = async (req, res) => {
+/*datoAcademicoController.update = async (req, res) => {
   let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   const connected = await dbhelper.connect();
   console.log(connected);
@@ -80,7 +80,7 @@ datoAcademicoController.update = async (req, res) => {
   
   console.log(resultSave);
   return resultSave;
-}
+}*/
 
 
 /* GET datoAcademico by id_docente. */

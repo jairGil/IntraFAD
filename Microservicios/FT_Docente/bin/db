@@ -85,7 +85,7 @@ dbhelper.findDatoAcademicoByIdDocente = async (id_docente) => {
   return resultFind;
 }
 
-// Actualizar un dato academico
+/* Actualizar un dato academico
 dbhelper.updateDatoAcademico = async (dato) => {
   let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "No inicializado" };
 
@@ -97,7 +97,7 @@ dbhelper.updateDatoAcademico = async (dato) => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
     });
   return resultSave;
-}
+} */
 
 // Eliminar un dato académico
 dbhelper.deleteDatoAcademicoById = async (id_datoacad) => {
@@ -112,6 +112,7 @@ dbhelper.deleteDatoAcademicoById = async (id_datoacad) => {
   );
   return resultFind;
 }
+
 /********************************************************************************/
 
 
@@ -148,6 +149,39 @@ dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
 
   return resultFind;
 }
+
+// Buscar cursos por id del docente
+dbhelper.findCursosByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar cursos", value: false, code: 500, msg: "No inicializado" };
+  
+  await Curso.find({ id_docente: id_docente }).then(
+    (cursos) => {
+      if (cursos) {
+        resultFind = { action: "Buscar cursos", value: true, code: 200, msg: "Cursos obtenidos", cursos: cursos }
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin cursos");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Eliminar un curso
+dbhelper.deleteCursoById = async (id_curso) => {
+  let resultFind = { action: "Eliminar curso", value: false, code: 500, msg: "No inicializado" };
+  
+  await Curso.findByIdAndDelete(id_curso).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Curso eliminado");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar el curso");
+    });
+    
+  return resultFind;
+}
+
 /********************************************************************************/
 
 
@@ -184,6 +218,39 @@ dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
 
   return resultFind;
 }
+
+/* GET datoAcademico by id_docente. */
+dbhelper.findCertificacionByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar certificaciones", value: false, code: 500, msg: "No inicializado" };
+
+  await Certificacion.find({ id_docente: id_docente }).then(
+    (certificacion) => {
+      if (certificacion) {
+        resultFind = { action: "Buscar certificaciones", value: true, code: 200, msg: "Certificaciones obtenidas", datoAcademico: datoAcademico }
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin certificaciones");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Eliminar una certificaciones
+dbhelper.deleteCertificacionById = async (id_cert) => {
+  let resultFind = { action: "Eliminar certificación", value: false, code: 500, msg: "No inicializado" };
+
+  await Certificacion.findByIdAndDelete(id_cert).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Certificación eliminada");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar la certificación");
+    }
+  );
+  return resultFind;
+}
+
 /********************************************************************************/
 
 /******************************** Idiomas *******************************/
@@ -200,6 +267,38 @@ dbhelper.saveIdioma = async (idioma) => {
     });
     
   return resultSave;
+}
+
+// Buscar idiomas por id del docente
+dbhelper.findIdiomaByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar idiomas", value: false, code: 500, msg: "No inicializado" };
+
+  await Idioma.find({ id_docente: id_docente }).then(
+    (idiomas) => {
+      if (idiomas) {
+        resultFind = { action: "Buscar idiomas", value: true, code: 200, msg: "Idiomas obtenidos", idiomas: idiomas }
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin idiomas");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Eliminar un idioma
+dbhelper.deleteIdiomaById = async (id_idioma) => {
+  let resultFind = { action: "Eliminar idioma", value: false, code: 500, msg: "No inicializado" };
+
+  await Idioma.findByIdAndDelete(id_idioma).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Idioma eliminado");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar el idioma");
+    });
+    
+  return resultFind;
 }
 
 module.exports = dbhelper;

@@ -23,7 +23,7 @@ router.post("/add_datoacad", async (req, res, next) => {
   }
 });
 
-/* PUT update datoAcademico. */
+/* PUT update datoAcademico.
 router.put("/update_datoacad", async (req, res, next) => {
   const result = await validateHelper.validarDatoAcademico(req);
   if (!result.isEmpty()) {
@@ -34,7 +34,7 @@ router.put("/update_datoacad", async (req, res, next) => {
         res.status(resultSave.code).send(resultSave);
       });
   }
-});
+}); */
 
 /* GET datoAcademico by id_docente. */
 router.get("/get_datoacad/:id_docente", async (req, res, next) => {

@@ -13,7 +13,7 @@ export class CursosService {
   ) { }
 
   getCursos(id_docente: string) {
-    return this.http.get<any>(this.URL + '/get_curso/' + id_docente);
+    return this.http.get<any>(this.URL + '/get_cursos/' + id_docente);
   }
 
   addCurso(curso: any) {

@@ -22,5 +22,21 @@ router.post("/add_idioma", async (req, res, next) => {
   }
 });
 
+/* GET idioma by id_docente. */
+router.get("/get_idiomas/:id_docente", async (req, res, next) => {
+  await IdiomaController.get(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
+/* DELETE idioma by id. */
+router.delete("/delete_idioma/:id", async (req, res, next) => {
+  await IdiomaController.delete(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
 
 module.exports = router;

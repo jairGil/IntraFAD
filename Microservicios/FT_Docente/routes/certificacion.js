@@ -22,5 +22,21 @@ router.post("/add_cert", async (req, res, next) => {
   }
 });
 
+/* GET certificacion by id_docente. */
+router.get("/get_certs/:id_docente", async (req, res, next) => {
+  await CertificacionController.get(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
+/* DELETE certificacion by id. */
+router.delete("/delete_cert/:id", async (req, res, next) => {
+  await CertificacionController.delete(req, res).then(
+    (result) => {
+      res.status(result.code).send(result);
+    });
+});
+
 
 module.exports = router;

@@ -13,7 +13,7 @@ export class IdiomasService {
   ) { }
 
   getIdiomas(id_docente: string) {
-    return this.http.get<any>(this.URL + '/get_idioma/' + id_docente);
+    return this.http.get<any>(this.URL + '/get_idiomas/' + id_docente);
   }
 
   addIdioma(idioma: any) {
