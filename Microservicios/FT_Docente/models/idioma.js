@@ -16,11 +16,11 @@ const idiomaSchema = Schema({
         type: String,
         required: true
     },
-    fecha: {
+    fecha_fin: {
         type: Date,
         required: true
     },
-    constancia: {
+    certificado: {
         type: String,
         required: true
     },

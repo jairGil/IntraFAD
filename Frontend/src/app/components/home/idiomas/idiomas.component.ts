@@ -16,14 +16,14 @@ export class IdiomasComponent implements OnInit {
   public idiomas: any;
   public URL_DOC = 'http://localhost:3000/api/documento/get-document/';
 
-  public docCur: boolean = false;
+  public docIdioma: boolean = false;
 
   idioForm = this.formBuilder.group({
     nombre: ['', Validators.required],
     nivel: ['', Validators.required],
     fecha_fin: ['', Validators.required],
     institucion: ['', Validators.required],
-    constancia: ['', Validators.required]
+    certificado: ['', Validators.required]
   });
 
   constructor(
@@ -89,8 +89,8 @@ export class IdiomasComponent implements OnInit {
   onIdiomaSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.idioForm.get('constancia')?.setValue(file);
-      this.docCur = true;
+      this.idioForm.get('certificado')?.setValue(file);
+      this.docIdioma = true;
     }
   }
 
@@ -111,6 +111,6 @@ export class IdiomasComponent implements OnInit {
   get nivel() { return this.idioForm.get('nivel'); }
   get fecha_fin() { return this.idioForm.get('fecha_fin'); }
   get institucion() { return this.idioForm.get('institucion'); }
-  get constancia() { return this.idioForm.get('constancia'); }
+  get certificado() { return this.idioForm.get('certificado'); }
 
 }

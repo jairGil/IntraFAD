@@ -25,7 +25,7 @@ idiomaController.add = async (req, res) => {
       idioma.nivel       = params.nivel;
       idioma.fecha_fin   = params.fecha_fin;
       idioma.institucion = params.institucion;
-      idioma.constancia  = params.constancia;
+      idioma.certificado  = params.certificado;
       idioma.id_docente  = params.id_docente;
 
       resultSave = await dbhelper.saveIdioma(idioma);
