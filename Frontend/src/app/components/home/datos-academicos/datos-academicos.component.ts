@@ -75,8 +75,8 @@ export class DatosAcademicosComponent implements OnInit {
   }
 
   enviarDatos() {
-    this.uploadDocument('gradoAcad', 'doc_grad');
-
+    this.uploadDocument('gradoAcad', 'doc_grado_acad');
+    this.uploadDocument('cedulaProf', 'doc_ced_prof');
 
     console.log(this.daForm.value);
     this.daService.addDatoAcademico(this.daForm.value).subscribe(
