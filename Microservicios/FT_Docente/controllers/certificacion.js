@@ -29,9 +29,9 @@ certificacionController.add = async (req, res) => {
 
       resultSave = await dbhelper.saveCurso(certificacion);
     }
-    dbhelper.disconnect();
+    console.log(await dbhelper.disconnect());
   }
-  console.log(resultSave);
+
   return resultSave;
 }
 
@@ -46,10 +46,8 @@ certificacionController.get = async (req, res) => {
   }
 
   const id_docente = req.params.id_docente;
-
   result = await dbhelper.findCertificacionByIdDocente(id_docente);
-
-  console.log(dbhelper.disconnect());
+  console.log(await dbhelper.disconnect());
 
   return result;
 }
@@ -65,12 +63,9 @@ certificacionController.delete = async (req, res) => {
   }
 
   const id = req.params.id;
-
   result = await dbhelper.deleteCertificacionById(id);
+  console.log(await dbhelper.disconnect());
 
-  console.log(dbhelper.disconnect());
-
-  console.log(result);
   return result;
 }
 

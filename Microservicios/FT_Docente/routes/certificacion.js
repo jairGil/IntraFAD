@@ -14,10 +14,11 @@ router.post("/add_cert", async (req, res, next) => {
   const result = await validateHelper.validarCertificacion(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
-  }else{
+  } else {
     await CertificacionController.add(req, res).then(
       (resultSave) => {
-          res.status(resultSave.code).send(resultSave);
+        console.log(resultSave);
+        res.status(resultSave.code).send(resultSave);
       });
   }
 });
@@ -26,6 +27,7 @@ router.post("/add_cert", async (req, res, next) => {
 router.get("/get_certs/:id_docente", async (req, res, next) => {
   await CertificacionController.get(req, res).then(
     (result) => {
+      console.log(result);
       res.status(result.code).send(result);
     });
 });
@@ -34,6 +36,7 @@ router.get("/get_certs/:id_docente", async (req, res, next) => {
 router.delete("/delete_cert/:id", async (req, res, next) => {
   await CertificacionController.delete(req, res).then(
     (result) => {
+      console.log(result);
       res.status(result.code).send(result);
     });
 });

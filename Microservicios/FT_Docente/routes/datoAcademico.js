@@ -18,28 +18,17 @@ router.post("/add_datoacad", async (req, res, next) => {
   } else {
     await DatoAcademicoController.add(req, res).then(
       (resultSave) => {
+        console.log(resultSave);
         res.status(resultSave.code).send(resultSave);
       });
   }
 });
 
-/* PUT update datoAcademico.
-router.put("/update_datoacad", async (req, res, next) => {
-  const result = await validateHelper.validarDatoAcademico(req);
-  if (!result.isEmpty()) {
-    res.status(400).send(result);
-  } else {
-    await DatoAcademicoController.update(req, res).then(
-      (resultSave) => {
-        res.status(resultSave.code).send(resultSave);
-      });
-  }
-}); */
-
 /* GET datoAcademico by id_docente. */
 router.get("/get_datoacad/:id_docente", async (req, res, next) => {
   await DatoAcademicoController.get(req, res).then(
     (result) => {
+      console.log(result);
       res.status(result.code).send(result);
     });
 });
@@ -48,6 +37,7 @@ router.get("/get_datoacad/:id_docente", async (req, res, next) => {
 router.delete("/delete_datoacad/:id", async (req, res, next) => {
   await DatoAcademicoController.delete(req, res).then(
     (result) => {
+      console.log(result);
       res.status(result.code).send(result);
     });
 });

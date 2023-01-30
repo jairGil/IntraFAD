@@ -30,9 +30,9 @@ idiomaController.add = async (req, res) => {
 
       resultSave = await dbhelper.saveIdioma(idioma);
     }
-    dbhelper.disconnect();
+    console.log(await dbhelper.disconnect());
   }
-  console.log(resultSave);
+  
   return resultSave;
 }
 
@@ -46,9 +46,9 @@ idiomaController.get = async (req, res) => {
   let resultGet = { action: "Obtener todos los idiomas", value: false, code: 500, msg: "Error al conectar con la base de datos" }
   if (connected.value) {
     resultGet = await dbhelper.findIdiomaByIdDocente(id_docente);
-    dbhelper.disconnect();
+    console.log(await dbhelper.disconnect());
   }
-  console.log(resultGet);
+  
   return resultGet;
 }
 
@@ -62,9 +62,9 @@ idiomaController.delete = async (req, res) => {
   if (connected.value) {
     const id = req.params.id;
     resultDelete = await dbhelper.deleteIdiomaById(id);
-    dbhelper.disconnect();
+    console.log(await dbhelper.disconnect());
   }
-  console.log(resultDelete);
+  
   return resultDelete;
 }
 

@@ -39,49 +39,10 @@ datoAcademicoController.add = async (req, res) => {
   datoAcademico.validado = false;
 
   resultSave = await dbhelper.saveDatoAcademico(datoAcademico);
+  console.log(await dbhelper.disconnect());
 
-  console.log(dbhelper.disconnect());
-
-  console.log(resultSave);
   return resultSave;
 }
-
-/*datoAcademicoController.update = async (req, res) => {
-  let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" }
-  const connected = await dbhelper.connect();
-  console.log(connected);
-
-  if (!connected.value) {
-    return resultSave;
-  }
-
-  let datoAcademico = {};
-  const params = req.body;
-
-  //Verificar que la cédula profesional esté registrada
-  let resultFind = await dbhelper.findDatoAcademicoByCP(params.cedula_profesional);
-
-  if (!resultFind.value) {
-    resultSave = await util.setResult(resultSave, false, 400, "La cédula profesional no está registrada");
-    return resultSave;
-  }
-
-  datoAcademico.grado_academico = params.grado_academico;
-  datoAcademico.grado_obtenido = params.grado_obtenido;
-  datoAcademico.institucion_emisora = params.institucion_emisora;
-  datoAcademico.fecha_obtencion = params.fecha_obtencion;
-  datoAcademico.cedula_profesional = params.cedula_profesional;
-  datoAcademico.id_docente = params.id_docente;
-  datoAcademico.validado = params.validado;
-  
-  resultSave = await dbhelper.updateDatoAcademico(datoAcademico);
-
-  console.log(dbhelper.disconnect());
-  
-  console.log(resultSave);
-  return resultSave;
-}*/
-
 
 /* GET datoAcademico by id_docente. */
 datoAcademicoController.get = async (req, res) => {
@@ -94,10 +55,8 @@ datoAcademicoController.get = async (req, res) => {
   }
 
   const id_docente = req.params.id_docente;
-
   result = await dbhelper.findDatoAcademicoByIdDocente(id_docente);
-
-  console.log(dbhelper.disconnect());
+  console.log(await dbhelper.disconnect());
 
   return result;
 }
@@ -113,12 +72,9 @@ datoAcademicoController.delete = async (req, res) => {
   }
 
   const id = req.params.id;
-
   result = await dbhelper.deleteDatoAcademicoById(id);
+  console.log(await dbhelper.disconnect());
 
-  console.log(dbhelper.disconnect());
-
-  console.log(result);
   return result;
 }
 

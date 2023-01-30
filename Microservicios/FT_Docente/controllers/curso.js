@@ -31,9 +31,9 @@ cursoController.add = async (req, res) => {
 
       resultSave = await dbhelper.saveCurso(curso);
     }
-    dbhelper.disconnect();
+    console.log(await dbhelper.disconnect());
   }
-  console.log(resultSave);
+  
   return resultSave;
 }
 
@@ -48,10 +48,8 @@ cursoController.get = async (req, res) => {
   }
 
   const id_docente = req.params.id_docente;
-
   result = await dbhelper.findCursoByIdDocente(id_docente);
-
-  console.log(dbhelper.disconnect());
+  console.log(await dbhelper.disconnect());
 
   return result;
 }
@@ -67,12 +65,9 @@ cursoController.delete = async (req, res) => {
   }
 
   const id = req.params.id;
-
   result = await dbhelper.deleteCursoById(id);
+  console.log(await dbhelper.disconnect());
 
-  console.log(dbhelper.disconnect());
-
-  console.log(result);
   return result;
 }
 
