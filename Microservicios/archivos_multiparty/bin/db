@@ -5,6 +5,7 @@ const Docente = require("../model/docente");
 const DatoAcademico = require("../model/datoAcademico");
 const Curso         = require("../model/curso");
 const Certificacion = require("../model/certificacion");
+const Idioma = require("../model/idioma");
 
 
 const dbhelper = {}
