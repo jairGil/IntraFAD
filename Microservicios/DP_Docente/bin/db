@@ -118,6 +118,8 @@ dbhelper.disconnect = async () => {
     }, error => {
       resultDisconnect = util.setResult(resultDisconnect, false, 500, error.code + " - " + error.codeName);
     });
+
+  return resultDisconnect;
 }
 
 

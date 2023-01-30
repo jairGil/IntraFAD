@@ -14,7 +14,7 @@ const dbhelper = {}
 /********************************* Base de Datos ********************************/
 // Conexión a la base de datos
 dbhelper.connect = async () => {
-  let conn = { action: "Conectar con BD", value: false, code: 500, msg: "No conectado" };
+  let conn = { action: "Conectar con BDD", value: false, code: 500, msg: "No conectado" };
   await mongoose.connect(config.db.uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(
     () => {
       conn = util.setResult(conn, true, 200, "Conectado a la BD");
@@ -27,7 +27,15 @@ dbhelper.connect = async () => {
 
 //Desconectar de la base de datos
 dbhelper.disconnect = async () => {
-  await mongoose.disconnect();
+  let conn = { action: "Desconectar de la BDD", value: false, code: 500, msg: "No desconectado" };
+  await mongoose.disconnect().then(
+    () => {
+      conn = util.setResult(conn, true, 200, "Desconectado de la BD");
+    }, error => {
+      conn = util.setResult(conn, false, 500, error.code + " - " + error.codeName);
+    });
+
+  return conn;
 }
 /********************************************************************************/
 
@@ -297,7 +305,7 @@ dbhelper.deleteIdiomaById = async (id_idioma) => {
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar el idioma");
     });
-    
+
   return resultFind;
 }
 
