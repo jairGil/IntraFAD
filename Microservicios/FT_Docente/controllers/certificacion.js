@@ -6,7 +6,7 @@ const util = require("../util/util");
 
 let certificacionController = {}
 
-//Agregar un nuevo curso
+//Agregar una nueva certificación
 certificacionController.add = async (req, res) => {
   const connected = await dbhelper.connect();
   console.log(connected);
@@ -16,7 +16,7 @@ certificacionController.add = async (req, res) => {
     let certificacion = {};
     const params = req.body;
 
-    // Verificar que el curso no este registrado
+    // Verificar que la certificación no este registrado
     let resultFind = await dbhelper.findCertificado(params.nombre, params.institucion, params.fecha, params.id_docente);
     if (resultFind.value) {
       resultSave = await util.setResult(resultSave, false, 400, "El certificado ya está registrado para este docente");
@@ -33,6 +33,45 @@ certificacionController.add = async (req, res) => {
   }
   console.log(resultSave);
   return resultSave;
+}
+
+/* GET certificaciones by id_docente. */
+certificacionController.get = async (req, res) => {
+  let result = { action: "Obtener certificaciones del docente", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id_docente = req.params.id_docente;
+
+  result = await dbhelper.findCertificacionByIdDocente(id_docente);
+
+  console.log(dbhelper.disconnect());
+
+  return result;
+}
+
+/* DELETE certificacion by id. */
+certificacionController.delete = async (req, res) => {
+  let result = { action: "Eliminar certificacion", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.params.id;
+
+  result = await dbhelper.deleteCertificacionById(id);
+
+  console.log(dbhelper.disconnect());
+
+  console.log(result);
+  return result;
 }
 
 
