@@ -28,4 +28,8 @@ export class ArchivosService {
   setDoc(tipo: string, docenteID: any, doc: any) {
     return this.http.put<any>(this.URL_DOC + '/upload-document/' + tipo + '/' + docenteID, doc);
   }
+
+  setDocFT(tipo: string, docenteID: any, idFT: any, doc: any) {
+    return this.http.put<any>(this.URL_DOC + '/upload-document-ft/' + tipo + '/' + docenteID + '/' + idFT, doc);
+  }
 }

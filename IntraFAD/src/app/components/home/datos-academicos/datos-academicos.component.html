@@ -13,7 +13,7 @@
 
     <div class="form-row">
       <div class="form-group col-md-3">
-        <select class="form-control" name="grado_s" placeholder="Grado" formControlName="grado_academico">
+        <select class="form-control" name="grado_academico" placeholder="Grado" formControlName="grado_academico">
           <option class="dropdown-item" value="Licenciatura">
             Licenciatura
           </option>
@@ -30,10 +30,32 @@
             Diplomado
           </option>
         </select>
+        <div class="mt-2 mb-2">
+          <div *ngIf="grado_academico?.invalid && (grado_academico?.dirty || grado_academico?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="grado_academico?.errors?.['required']">
+              El campo <b>grado academico</b> es obligatorio.
+            </div>
+          </div>
+        </div>
       </div>
       <div class="form-group col-md-3">
         <input type="text" class="form-control" name="grado_obtenido" placeholder="Grado obtenido"
-          formControlName="grado_obtenido">
+          formControlName="grado_obtenido" onkeydown="return /[a-z]/i.test(event.key)">
+        <div class="mt-2 mb-2">
+          <div *ngIf="grado_obtenido?.invalid && (grado_obtenido?.dirty || grado_obtenido?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="grado_obtenido?.errors?.['required']">
+              El campo <b>grado obtenido</b> es obligatorio.
+            </div>
+            <div *ngIf="grado_obtenido?.errors?.['minlength']">
+              La longitud mínima del grado obtenido es de 3 caracteres.
+            </div>
+            <div *ngIf="grado_obtenido?.errors?.['maxlength']">
+              La longitud máxima del grado obtenido es de 50 caracteres.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -44,7 +66,7 @@
     </div>
 
     <div class="form-row">
-      <div class="form-grup col-md-2">
+      <div class="form-grup col-md-3">
         <div class="btn btn-primary btn-file">
           <label class="form-label text-white" for="doc_grad">Cargar PDF</label>
           <input type="file" class="form-control d-none" id="doc_grad" (change)="onGradoAcadSelect($event)"
@@ -55,10 +77,20 @@
         <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
         <div *ngIf="this.docGradAcad; else noPDF1">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span class="pdf-name">{{this.gaFilename}}</span>
         </div>
         <ng-template #noPDF1>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span class="pdf-name">No se ha seleccionado un archivo</span>
         </ng-template>
+      </div>
+      <div class="mt-2 mb-2">
+        <div *ngIf="doc_grado_acad?.invalid && (doc_grado_acad?.dirty || doc_grado_acad?.touched)"
+          class="alert alert-danger" role="alert">
+          <div *ngIf="doc_grado_acad?.errors?.['required']">
+            El <b>documento de grado academico</b> es obligatorio.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -74,11 +106,33 @@
     <div class="form-row">
       <div class="form-group col-md-3">
         <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
-          formControlName="institucion_emisora">
+          formControlName="institucion_emisora" onkeydown="return /[a-z]/i.test(event.key)">
+        <div class="mt-2 mb-2">
+          <div *ngIf="institucion_emisora?.invalid && (institucion_emisora?.dirty || institucion_emisora?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="institucion_emisora?.errors?.['required']">
+              El campo <b>institución emisora</b> es obligatorio.
+            </div>
+            <div *ngIf="institucion_emisora?.errors?.['minlength']">
+              La longitud mínima de la institución emisora es de 3 caracteres.
+            </div>
+            <div *ngIf="institucion_emisora?.errors?.['maxlength']">
+              La longitud máxima de la institución emisora es de 50 caracteres.
+            </div>
+          </div>
+        </div>
       </div>
       <div class="form-group col-md-3">
         <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
           formControlName="fecha_obtencion">
+        <div class="mt-2 mb-2">
+          <div *ngIf="fecha_obtencion?.invalid && (fecha_obtencion?.dirty || fecha_obtencion?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="fecha_obtencion?.errors?.['required']">
+              El campo <b>fecha de obtención</b> es obligatorio.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -94,7 +148,22 @@
     <div class="form-row">
       <div class="form-group col-md-3">
         <input type="text" class="form-control" name="cedula_profesional" placeholder="Cedula profesional"
-          formControlName="cedula_profesional">
+          formControlName="cedula_profesional" maxlength="8" 
+          onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+        <div class="mt-2 mb-2">
+          <div *ngIf="cedula_profesional?.invalid && (cedula_profesional?.dirty || cedula_profesional?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="cedula_profesional?.errors?.['required']">
+              El campo <b>cédula profesional</b> es obligatorio.
+            </div>
+            <div *ngIf="cedula_profesional?.errors?.['minlength']">
+              La longitud mínima de la cédula profesional es de 7 caracteres.
+            </div>
+            <div *ngIf="cedula_profesional?.errors?.['maxlength']">
+              La longitud máxima de la cédula profesional es de 8 caracteres.
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-md-3">
         <div class="btn btn-primary btn-file">
@@ -106,9 +175,11 @@
       <div class="col-md">
         <div *ngIf="this.docCedProf; else noPDF1">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon" placeholder="">
+          <span class="pdf-name">{{this.cpFilename}}</span>
         </div>
         <ng-template #noPDF1>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span class="pdf-name">No se ha seleccionado un archivo</span>
         </ng-template>
       </div>
     </div>
@@ -118,12 +189,14 @@
         <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
       </div>
       <div class="form-group col-md-2">
-        <button class="btn btn-primary" type="submit" (click)="cambiarModo(2)">Guardar</button>
+        <button class="btn btn-primary" type="submit" [disabled]="!daForm.valid">Guardar</button>
       </div>
     </div>
   </form>
 </div>
-<ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+<ng-template #boton_ini>
+  <button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button>
+</ng-template>
 
 <div *ngIf="modo_agregar == false">
   <label for="grado_s" class="title"><b>Mis datos académicos</b></label>

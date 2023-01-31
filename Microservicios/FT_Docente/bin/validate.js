@@ -41,7 +41,6 @@ validateHelper.validarDatoAcademico = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("La institución emisora debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
 
   /*** Validación fecha de obtención ***/

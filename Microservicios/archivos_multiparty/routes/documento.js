@@ -7,6 +7,8 @@ const documentoController = require("../controller/documento");
 
 router.put('/upload-document/:tipo/:docenteID', documentoController.cargarDocumento);
 
+router.put('/upload-document-ft/:tipo/:docenteID/:idFT', documentoController.cargarDocumentoFT);
+
 router.get('/get-document/:doc', async (req, res, next) => {
   await documentoController.getDoc(req, res).then(
     (resultFind) => {

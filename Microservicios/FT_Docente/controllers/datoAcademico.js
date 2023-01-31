@@ -17,28 +17,21 @@ datoAcademicoController.add = async (req, res) => {
     return resultSave;
   }
 
-  let datoAcademico = {};
-  const params = req.body;
+  let datoAcademico = req.body;
 
   //Verificar que la cédula profesional no esté registrada
-  let resultFind = await dbhelper.findDatoAcademicoByCP(params.cedula_profesional);
+  let resultFind = await dbhelper.findDatoAcademicoByCP(datoAcademico.cedula_profesional);
 
   if (resultFind.value) {
     resultSave = await util.setResult(resultSave, false, 400, "La cédula profesional ya está registrada");
     return resultSave;
   }
 
-  datoAcademico.grado_academico = params.grado_academico;
-  datoAcademico.grado_obtenido = params.grado_obtenido;
-  datoAcademico.doc_grado_acad = params.doc_grado_acad;
-  datoAcademico.institucion_emisora = params.institucion_emisora;
-  datoAcademico.fecha_obtencion = params.fecha_obtencion;
-  datoAcademico.cedula_profesional = params.cedula_profesional;
-  datoAcademico.doc_ced_prof = params.doc_ced_prof;
-  datoAcademico.id_docente = params.id_docente;
-  datoAcademico.validado = false;
+  console.log("DA:");
+  console.log(datoAcademico);
 
   resultSave = await dbhelper.saveDatoAcademico(datoAcademico);
+
   console.log(await dbhelper.disconnect());
 
   return resultSave;

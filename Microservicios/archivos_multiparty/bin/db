@@ -37,12 +37,12 @@ dbhelper.setImagen = async (docenteId, fileName) => {
   return resultSave;
 }
 
-dbhelper.setPDF = async (docenteId, tipo, fileName) => {
+dbhelper.setPDF = async (ID, tipo, fileName) => {
   let resultSave = { action: "Actualizar PDF", value: false, code: 500, msg: "No inicializado" };
   
   switch (tipo) { 
     case "rfc":
-      await Docente.findByIdAndUpdate(docenteId, { doc_rfc: fileName }).then(
+      await Docente.findByIdAndUpdate(ID, { doc_rfc: fileName }).then(
         (docente) => {
             resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", docente: docente }
           }, error => {
@@ -51,7 +51,7 @@ dbhelper.setPDF = async (docenteId, tipo, fileName) => {
         );
       break;
     case "curp":
-      await Docente.findByIdAndUpdate(docenteId, { doc_curp: fileName }).then(
+      await Docente.findByIdAndUpdate(ID, { doc_curp: fileName }).then(
         (docente) => {
             resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", docente: docente }
           }, error => {
@@ -60,7 +60,7 @@ dbhelper.setPDF = async (docenteId, tipo, fileName) => {
         );
       break;
     case "gradoAcad":
-      await DatoAcademico.findByIdAndUpdate(docenteId, { doc_grado_acad: fileName }).then(
+      await DatoAcademico.findByIdAndUpdate(ID, { doc_grado_acad: fileName }).then(
         (datoAcad) => {
           resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", datoAcad: datoAcad }
         }, error => {
@@ -69,7 +69,7 @@ dbhelper.setPDF = async (docenteId, tipo, fileName) => {
       );
       break;
     case "cedulaProf":
-      await DatoAcademico.findByIdAndUpdate(docenteId, { doc_cedula_prof: fileName }).then(
+      await DatoAcademico.findByIdAndUpdate(ID, { doc_ced_prof: fileName }).then(
         (datoAcad) => {
           resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", datoAcad: datoAcad }
         }, error => {
@@ -78,7 +78,7 @@ dbhelper.setPDF = async (docenteId, tipo, fileName) => {
       );
       break;
     case "certificacion":
-      await Certificacion.findByIdAndUpdate(docenteId, { constancia: fileName }).then(
+      await Certificacion.findByIdAndUpdate(ID, { constancia: fileName }).then(
         (certificacion) => {
           resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", certificacion: certificacion }
         }, error => {
@@ -87,7 +87,7 @@ dbhelper.setPDF = async (docenteId, tipo, fileName) => {
       );
       break;
     case "cursos":
-      await Curso.findByIdAndUpdate(docenteId, { constancia: fileName }).then(
+      await Curso.findByIdAndUpdate(ID, { constancia: fileName }).then(
         (curso) => {
           resultSave = { action: "Actualizar PDF", value: true, code: 200, msg: "PDF actualizado", curso: curso }
         }, error => {

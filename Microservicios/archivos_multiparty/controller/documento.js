@@ -96,6 +96,86 @@ documentoController.cargarDocumento = (req, res) => {
     form.parse(req);
 };
 
+documentoController.cargarDocumentoFT = (req, res) => {
+    let resultUpload = {};
+    let form = new multiparty.Form();
+    let docenteID = req.params.docenteID;
+    let tipo = req.params.tipo;
+    let idFT = req.params.idFT;
+
+    utilResponse.init(resultUpload, "cargar documento");
+    //Error al cargar documento
+    form.on("error", (error) => {
+        console.log("error");
+        console.log(error);
+    });
+
+    //Archivo recibido
+    form.on("close", () => {
+        console.log("Archivo recibido");
+    });
+
+    //Abortado
+    form.on("aborted", (error) => {
+        console.log("aborted");
+        console.log(error);
+    });
+
+
+    //Emite el progreso de cargar documento
+    form.on("progress", (bytesReceived, bytesExpected) => {
+        //console.log("bytes: " + (bytesReceived + " / " + bytesExpected));
+    });
+
+    //Guardar el archivo en el disco
+    form.on("file", (name, file) => {
+        let tipoArchivo = directorios.getTipoArchivo(tipo);
+        let filename = file.originalFilename;
+        let ext = path.extname(filename);
+        let tmpPath = file.path;
+        let targetPath = config.routes.files + docenteID + '/' + tipoArchivo + '/';
+
+        if (!(ext === ".pdf")) {
+            utilResponse.error(resultUpload, "Tipo de archivo no soportado");
+            res.status(resultUpload.code).send(resultUpload);
+            return;
+        }
+
+        targetPath += filename;
+
+        //Crear directorios necesarios
+        directorios.createDir(config.routes.files, docenteID, tipoArchivo);
+
+        mv(tmpPath, targetPath, async (err) => {
+            if (err) {
+                utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
+                res.status(resultUpload.code).send(resultUpload);
+                return;
+            }
+            utilResponse.success(resultUpload, "Documento guardado");
+            
+            const connected = await dbhelper.connect();
+            
+            if (!connected.value) { 
+                utilResponse.innerError(resultUpload, err, "Error al conectar con la base de datos");
+                res.status(resultUpload.code).send(resultUpload);
+                return;
+            }
+            
+            console.log(await dbhelper.setPDF(idFT, tipo, targetPath.replaceAll("/", "-")));
+            
+            dbhelper.disconnect();
+
+            utilResponse.success(resultUpload, "Documento guardado");
+            resultUpload.doc = targetPath;
+            console.log(resultUpload);
+            res.status(resultUpload.code).send(resultUpload);
+        });
+    });
+
+    form.parse(req);
+};
+
 // Enviar documento al cliente
 documentoController.getDoc = async (req, res) => {
     const pathFile = req.params.doc.replaceAll("-", "/");
