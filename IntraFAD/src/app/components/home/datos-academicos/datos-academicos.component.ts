@@ -79,7 +79,7 @@ export class DatosAcademicosComponent implements OnInit {
 
   // TODO: subir datos a la bd primero, luego documentos y luego URLs
   enviarDatos() {
-    
+
     let datoAcad = {
       grado_academico: this.daForm.get('grado_academico')?.value,
       grado_obtenido: this.daForm.get('grado_obtenido')?.value,
@@ -91,13 +91,15 @@ export class DatosAcademicosComponent implements OnInit {
       id_docente: this.token_data.id,
       validado: false
     }
-    
+
     //console.log(this.daForm.get('doc_grado_acad')?.value);
     this.daService.addDatoAcademico(datoAcad).subscribe({
       next: (res: any) => {
-        console.log(res);        
-        this.uploadDocument('gradoAcad', 'doc_grado_acad', res.idFT);
-        this.uploadDocument('cedulaProf', 'doc_ced_prof', res.idFT);
+        console.log(res);
+        if (res.value) {
+          this.uploadDocument('gradoAcad', 'doc_grado_acad', res.idFT);
+          this.uploadDocument('cedulaProf', 'doc_ced_prof', res.idFT);
+        }
       },
       error: (err: any) => {
         console.log(err);
@@ -133,7 +135,7 @@ export class DatosAcademicosComponent implements OnInit {
     this.archivosService.setDocFT(tipo, this.token_data.id, id, formData).subscribe({
       next: (res: any) => {
         this.daForm.get(campo)?.setValue(res.doc);
-        console.log("Dir: "+res.doc);
+        console.log("Dir: " + res.doc);
         console.log(this.daForm.get(campo)?.value)
         // return res.doc;	
       },

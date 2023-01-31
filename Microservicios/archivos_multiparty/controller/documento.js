@@ -83,7 +83,7 @@ documentoController.cargarDocumento = (req, res) => {
             
             await dbhelper.setPDF(docenteID, tipo, targetPath.replaceAll("/", "-"));
             
-            dbhelper.disconnect();
+            await dbhelper.disconnect();
 
             utilResponse.success(resultUpload, "Documento guardado");
             resultUpload.doc = targetPath;
