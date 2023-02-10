@@ -52,11 +52,10 @@ import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
     HttpClientModule
   ],
   providers: [
-    AuthGuard,
     {
-      provide: HTTP_INTERCEPTORS,
+      provide : HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
-      multi: true
+      multi   : true,
     }
   ],
   bootstrap: [AppComponent]

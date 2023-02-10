@@ -1,7 +1,7 @@
 <div class="row" *ngIf="this.edicion == false; else modoEdicion">
   <div class="col-md-9">
     <div class="row">
-      <img [src]="imgSrc || getImage()" class="perfil ml-3" alt="Imagen de perfil" id="perfil"/>
+      <img [src]="imgSrc || this.imagen" class="perfil ml-3" alt="Imagen de perfil" id="perfil"/>
       <div class="col-md-8 align-self-center">
         <label><b>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</b></label> <br>
       </div>
@@ -25,8 +25,36 @@
 
     <hr class="hr"/>
     <label><b>Identidad</b></label> <br>
-    <label>RFC: {{ token_data?.rfc }}</label> <br>
-    <label>CURP: {{ token_data?.curp }}</label> <br>
+
+    <!-- Verificar que el documento del docente exista y poner hipervinculo -->
+    <span *ngIf="this.token_data.doc_rfc == 'no_inicializado.pdf'; else lblRfcValido">
+      <label>RFC: {{ token_data?.rfc }}</label> <br>
+    </span>
+
+    <ng-template #lblRfcValido>
+      <label>
+        <!--<a [attr.href]="getDocument('rfc')" target="_blank">-->
+          <a href="javascript: void(0);" target="_blank" (click)="showDoc('rfc')">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>RFC: {{ token_data?.rfc }}</span>
+        </a>
+      </label> <br>
+    </ng-template>
+
+    <span *ngIf="this.token_data.doc_rfc == 'no_inicializado.pdf'; else lblCurpValido">
+      <label>CURP: {{ token_data?.curp }}</label> <br>
+    </span>
+
+    <ng-template #lblCurpValido>
+      <label>
+        <a [attr.href]="getDocument('curp')" target="_blank">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>CURP: {{ token_data?.curp }}</span>
+        </a>        
+      </label> <br>
+    </ng-template>
+
+    
     <label>No. de Empleado: {{ token_data?.no_empleado }}</label> <br>
 
     <hr class="hr"/>
@@ -209,7 +237,7 @@
             <select class="form-control" name="estado" placeholder="Estado" formControlName="estado">
               <option class="dropdown-item" placeholder="Seleccionar..." value="">
               </option>
-              <option *ngFor="let estado of listaEstados" class="dropdown-item" value="{{ estado }}">
+              <option *ngFor="let estado of listaEstados" class="dropdown-item" [value]="estado">
                 {{ estado }}
               </option>
             </select>
@@ -285,7 +313,7 @@
         <div class="form-row mb-3">
           <label for="staticEmail" class="col-md-4 col-form-label is-required">Teléfono</label>
           <div class="col-md-4">
-            <input type="text" class="form-control" name="telefono" placeholder="xxxxxxxxxx" 
+            <input type="text" class="form-control" name="telefono" placeholder="1234567890" 
               maxlength="10" formControlName="telefono">
           </div>
         </div>
@@ -338,7 +366,7 @@
             </div>
             <ng-template #RFCinilbl>
               <div class="col-md-2">
-                  <a href="{{ URL_DOC + this.token_data.doc_rfc }}" target="_blank">
+                  <a [attr.href]="getDocument('rfc')" target="_blank">
                     <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
                     <span>Ver RFC</span>
                   </a>
@@ -380,7 +408,7 @@
             </div>
             <ng-template #CURPinilbl>
               <div class="col-md-2">
-                  <a href="{{ URL_DOC + this.token_data.doc_curp }}" target="_blank">
+                  <a [attr.href]="getDocument('curp')" target="_blank">
                     <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
                     <span>Ver CURP</span>
                   </a>
@@ -423,7 +451,7 @@
       <div class="col-md-2">
         <div>
           <div class="d-flex justify-content-center mb-4">
-            <img [src]="imgSrc || getImage()" alt="" class="perfil">
+            <img [src]="imgSrc || this.imagen" alt="" class="perfil">
           </div>
 
           <div class="justify-content-center">

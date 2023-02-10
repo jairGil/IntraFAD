@@ -100,7 +100,7 @@ export class CursosComponent implements OnInit {
     const formData = new FormData();
 
     formData.append(tipo, this.curForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, this.token_data.id, formData).subscribe(
+    this.archivosService.setDoc(tipo, formData).subscribe(
       (res: any) => {
         console.log(res);
       },

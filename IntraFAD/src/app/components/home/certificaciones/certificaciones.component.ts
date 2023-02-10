@@ -97,7 +97,7 @@ export class CertificacionesComponent implements OnInit {
     const formData = new FormData();
 
     formData.append(tipo, this.certForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, this.token_data.id, formData).subscribe(
+    this.archivosService.setDoc(tipo, formData).subscribe(
       (res: any) => {
         console.log(res);
       },
