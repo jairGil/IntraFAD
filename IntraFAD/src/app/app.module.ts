@@ -14,8 +14,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
 import { ExitoComponent } from './components/register/exito/exito.component';
-import { RegisterInstitucionalComponent } from './components/register/institucional/institucional.component';
-import { RegisterNoInstitucionalComponent } from './components/register/no-institucional/no-institucional.component';
 import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
 import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
 import { DatosAcademicosComponent } from './components/home/datos-academicos/datos-academicos.component';
@@ -34,8 +32,6 @@ import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
     HomeComponent,
     DatosPersonalesComponent,
     ExitoComponent,
-    RegisterInstitucionalComponent,
-    RegisterNoInstitucionalComponent,
     LoginInstitucionalComponent,
     LoginNoInstitucionalComponent,
     DatosAcademicosComponent,

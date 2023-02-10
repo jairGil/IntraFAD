@@ -337,14 +337,23 @@
           <div class="col-md-4">
             <input type="text" class="form-control" name="rfc" 
               maxlength="13" style="text-transform:uppercase" formControlName="rfc">
+            <div *ngIf="rfc?.invalid && (rfc?.dirty || rfc?.touched)" class="alert alert-danger col-md-12"
+              role="alert">
+              <div *ngIf="rfc?.errors?.['required']">
+                El campo <b>RFC</b> es obligatorio.
+              </div>
+              <div *ngIf="rfc?.errors?.['minlength']">
+                La longitud mínima es de 12 caracteres.
+              </div>
+              <div *ngIf="rfc?.errors?.['maxlength']">
+                La longitud máxima es de 13 caracteres.
+              </div>
+            </div>
           </div>
 
           <div class="col-md-2">
             <div class="btn btn-primary btn-file">
-              <label *ngIf="this.rfcFilename == 'no_inicializado.pdf'; else RFCinibtn" class="form-label text-white" for="doc_rfc">Cargar RFC</label>
-              <ng-template #RFCinibtn>
-                <label class="form-label text-white" for="doc_rfc">Cambiar RFC</label>
-              </ng-template>
+              <label class="form-label text-white" for="doc_rfc">Subir archivo</label>
               <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)"
                 accept=".pdf" />
             </div>
@@ -375,18 +384,24 @@
           </ng-template>
         </div>
         <div class="form-row mb-3">
-          <label for="curp" class="col-md-4 col-form-label is-required">Curp</label>
+          <label for="curp" class="col-md-4 col-form-label is-required">CURP</label>
           <div class="col-md-4">
             <input type="text" class="form-control" name="curp" 
               maxlength="18" style="text-transform:uppercase" formControlName="curp">
+            <div *ngIf="curp?.invalid && (curp?.dirty || curp?.touched)" class="alert alert-danger col-md-12"
+              role="alert">
+              <div *ngIf="curp?.errors?.['required']">
+                El campo <b>CURP</b> es obligatorio.
+              </div>
+              <div *ngIf="curp?.errors?.['minlength']">
+                La longitud mínima es de 18 caracteres.
+              </div>
+            </div>
           </div>
 
           <div class="col-md-2">
             <div class="btn btn-primary btn-file">
-              <label *ngIf="this.curpFilename == 'no_inicializado.pdf'; else CURPinibtn" class="form-label text-white" for="doc_curp">Cargar CURP</label>
-              <ng-template #CURPinibtn>
-                <label class="form-label text-white" for="doc_curp">Cambiar CURP</label>
-              </ng-template>
+              <label class="form-label text-white" for="doc_curp">Subir archivo</label>
               <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)"
                 accept=".pdf" />
             </div>

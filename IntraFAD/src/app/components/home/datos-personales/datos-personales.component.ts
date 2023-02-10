@@ -59,7 +59,7 @@ export class DatosPersonalesComponent implements OnInit {
     ],
     correo_personal: [
       '',
-      [Validators.required, Validators.pattern(this.regex_personal)],
+      [Validators.pattern(this.regex_personal)],
     ],
     correo_institucional: ['', [Validators.pattern(this.regex_institucional)]],
     telefono: [
@@ -99,12 +99,12 @@ export class DatosPersonalesComponent implements OnInit {
     // this.token_data = this.loginService.decodeToken();
     // this.token_data.id = this.loginService.decodeToken()._id;
     // this.cleanToken();
-
-    this.dpForm.controls['correo_institucional'].disable();
+    //this.dpForm.controls['correo_institucional'].disable();
     this.getImage();
   }
 
   ngOnInit(): void {
+    this.cleanToken();
     this.token_data = this.loginService.decodeToken();
     this.token_data._id = this.loginService.decodeToken()._id;
     this.direccion = this.token_data.direccion.split(', ');
@@ -118,7 +118,8 @@ export class DatosPersonalesComponent implements OnInit {
         this.token_data = res.docente;
         this.token_data.id = res.docente._id;
         this.direccion = this.token_data.direccion.split(', ');
-        //console.log(this.token_data);
+        console.log("Dirección:");
+        console.log(this.direccion);
       },
       (err) => console.log(err)
     );
@@ -201,7 +202,7 @@ export class DatosPersonalesComponent implements OnInit {
       (res) => {
         this.loginService.setToken(res.token);
         this.token_data = this.loginService.decodeToken();
-        this.edicion = false;
+        this.cambiar_modo(1);
         // console.log(this.token_data);
       },
       (err) => {
@@ -440,6 +441,10 @@ export class DatosPersonalesComponent implements OnInit {
         // console.log(this.token_data);
         this.setData();
         this.setDomicilio();
+        //console.log("CI: "+ this.token_data.correo_institucional);
+        if(this.token_data.correo_institucional != ""){
+          this.dpForm.controls['correo_institucional'].disable();
+        }
         break;
     }
   }
