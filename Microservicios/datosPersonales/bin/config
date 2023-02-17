@@ -1,0 +1,23 @@
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+} 
+
+//Información sobre la base de datos en MongoDB
+const dbuser = "jgild";
+const dbname = "IntraFAD";
+const dbpass = "v0EbhL2LprsKYUP1";
+const uriDB = "mongodb://mongoAdmin:AdminFAD@mongodb-ms_datosPersonales:27017/";
+
+
+const config = {
+    port: process.env.PORT || 3000,
+    db: {
+        uri: process.env.URIDB || uriDB
+    },
+    routes: {
+        files: "/data/",
+    }
+}
+
+
+module.exports = config;
