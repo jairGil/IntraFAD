@@ -7,6 +7,7 @@ const dbuser = "jgild";
 const dbname = "IntraFAD";
 const dbpass = "v0EbhL2LprsKYUP1";
 const uriDB = "mongodb://mongoAdmin:AdminFAD@mongodb-ms_datosPersonales:27017/";
+// const uriDB = `mongodb+srv://${dbuser}:${dbpass}@intrafad.rpczxmh.mongodb.net/test`;
 
 
 const config = {
@@ -16,6 +17,7 @@ const config = {
     },
     routes: {
         files: "/data/",
+        // files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos/controller/uploads/"
     }
 }
 

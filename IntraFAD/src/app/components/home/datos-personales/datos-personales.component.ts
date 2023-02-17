@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
 import { ArchivosService } from 'src/app/services/archivos.service';
@@ -37,69 +37,16 @@ export class DatosPersonalesComponent implements OnInit {
 
   public URL_IMG = environment.URL_IMG;
   public URL_DOC = environment.URL_DOC;
+  public dpForm: FormGroup = new FormGroup({});
 
-  dpForm = this.formBuilder.group({
-    img: [''],
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    apellido_p: ['', [Validators.required, Validators.minLength(3)]],
-    apellido_m: ['', [Validators.required, Validators.minLength(3)]],
-    calle: ['', [Validators.required, Validators.minLength(3)]],
-    no_ext: [''],
-    no_int: [''],
-    colonia: ['', [Validators.required, Validators.minLength(3)]],
-    estado: ['', [Validators.required, Validators.minLength(3)]],
-    municipio: ['', [Validators.required, Validators.minLength(3)]],
-    cp: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.pattern(this.regex_num),
-      ],
-    ],
-    correo_personal: [
-      '',
-      [Validators.pattern(this.regex_personal)],
-    ],
-    correo_institucional: ['', [Validators.pattern(this.regex_institucional)]],
-    telefono: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(10),
-        Validators.pattern(this.regex_num),
-      ],
-    ],
-    rfc: [
-      '',
-      [Validators.required, Validators.minLength(12), Validators.maxLength(13)],
-    ],
-    doc_rfc: ['', [Validators.required]],
-    curp: [
-      '',
-      [Validators.required, Validators.minLength(18), Validators.maxLength(18)],
-    ],
-    doc_curp: ['', [Validators.required]],
-    no_empleado: [
-      '',
-      [Validators.maxLength(6), Validators.pattern(this.regex_num)],
-    ],
-    ldg: [false],
-    ldi: [false],
-    arq: [false],
-    apou: [false],
-  });
-
+  
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private dpDocenteService: DpDocenteService,
     private archivosService: ArchivosService
   ) {
-    // this.token_data = this.loginService.decodeToken();
-    // this.token_data.id = this.loginService.decodeToken()._id;
-    // this.cleanToken();
-    //this.dpForm.controls['correo_institucional'].disable();
+    this.initForm();
     this.getImage();
   }
 
@@ -111,21 +58,92 @@ export class DatosPersonalesComponent implements OnInit {
     this.cleanToken();
   }
 
-  getDocente() {
-    this.dpDocenteService.getDocente(this.token_data.id).subscribe(
-      (res) => {
-        //console.log(res)
+  /**
+   * Inicializa el formulario de datos personales
+   * @returns void
+   * @private
+   * @since 1.0.0
+   * @version 1.0.0
+   */ 
+  private initForm(): void {
+    this.dpForm = this.formBuilder.group({
+      img: [''],
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      apellido_p: ['', [Validators.required, Validators.minLength(3)]],
+      apellido_m: ['', [Validators.required, Validators.minLength(3)]],
+      calle: ['', [Validators.required, Validators.minLength(3)]],
+      no_ext: [''],
+      no_int: [''],
+      colonia: ['', [Validators.required, Validators.minLength(3)]],
+      estado: ['', [Validators.required, Validators.minLength(3)]],
+      municipio: ['', [Validators.required, Validators.minLength(3)]],
+      cp: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.pattern(this.regex_num),
+        ],
+      ],
+      correo_personal: [
+        '',
+        [Validators.pattern(this.regex_personal)],
+      ],
+      correo_institucional: ['', [Validators.pattern(this.regex_institucional)]],
+      telefono: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.pattern(this.regex_num),
+        ],
+      ],
+      rfc: [
+        '',
+        [Validators.required, Validators.minLength(12), Validators.maxLength(13)],
+      ],
+      doc_rfc: ['', [Validators.required]],
+      curp: [
+        '',
+        [Validators.required, Validators.minLength(18), Validators.maxLength(18)],
+      ],
+      doc_curp: ['', [Validators.required]],
+      no_empleado: [
+        '',
+        [Validators.maxLength(6), Validators.pattern(this.regex_num)],
+      ],
+      ldg: [false],
+      ldi: [false],
+      arq: [false],
+      apou: [false],
+    });
+  }
+
+  /**
+   * Obtiene todos los datos del docente
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   * @private
+   */
+  private getDocente(): void {
+    this.dpDocenteService.getDocente(this.token_data.id).subscribe({
+      next: (res) => {
         this.token_data = res.docente;
         this.token_data.id = res.docente._id;
         this.direccion = this.token_data.direccion.split(', ');
-        console.log("Dirección:");
-        console.log(this.direccion);
       },
-      (err) => console.log(err)
-    );
+      error: (err) => console.log(err)
+    });
   }
 
-  cleanToken() {
+  /**
+   * Limpia los campos por defecto del token
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  private cleanToken(): void {
     if (this.token_data.nombre == 'No ingresado') {
       this.token_data.nombre = '';
     }
@@ -163,15 +181,16 @@ export class DatosPersonalesComponent implements OnInit {
     }
   }
 
-  enviarDatos() {
+  /**
+   * Genera las peticiónes para subir los documentos y los datos del docente al servidor
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+  */
+  public enviarDatos(): void {
     this.uploadImage();
     this.urlRfc = this.uploadDocument('rfc', 'doc_rfc');
     this.urlCurp = this.uploadDocument('curp', 'doc_curp');
-
-    // console.log("URL de curp: " + this.dpForm.get('doc_curp').value);
-    // console.log("URL de rfc: " + this.dpForm.get('doc_rfc')?.value);
-    console.log(JSON.stringify(this.dpForm.get('doc_rfc')?.value));
-    console.log(JSON.stringify(this.dpForm.get('doc_curp')?.value));
 
     let docente: Docente = {
       _id: this.token_data.id,
@@ -196,27 +215,29 @@ export class DatosPersonalesComponent implements OnInit {
       rol: 'USER_ROLE',
     };
 
-    console.log("Docente enviado: " + JSON.stringify(docente));
-
-    this.dpDocenteService.updateDocente(docente).subscribe(
-      (res) => {
+    this.dpDocenteService.updateDocente(docente).subscribe({
+      next: (res) => {
         this.loginService.setToken(res.token);
         this.token_data = this.loginService.decodeToken();
         this.cambiar_modo(1);
-        // console.log(this.token_data);
       },
-      (err) => {
+      error: (err) => {
         console.log(err);
       }
-    );
+    });
 
-    // this.refreshService.sendUpdate(this.token_data);
     this.getDocente();
-    // this.imgSrc = undefined;
-    console.log(this.token_data);
   }
 
-  setData() {
+
+  /**
+   * colocar los datos del docente en los campos del formulario
+   * @returns void
+   * @private
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  private setData(): void {
     if (this.token_data.nombre != 'No ingresado') {
       this.dpForm.get('nombre')?.setValue(this.token_data.nombre);
     }
@@ -228,6 +249,7 @@ export class DatosPersonalesComponent implements OnInit {
     if (this.token_data.apellido_m != 'No ingresado') {
       this.dpForm.get('apellido_m')?.setValue(this.token_data.apellido_m);
     }
+
 
     if (this.token_data.correo_personal != 'no_inicializado@mail.com') {
       this.dpForm
@@ -263,7 +285,14 @@ export class DatosPersonalesComponent implements OnInit {
     this.curpFilename = this.token_data.doc_curp;
   }
 
-  getDireccion() {
+  /**
+   * Generar la dirección del docente
+   * @returns string
+   * @private
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  private getDireccion(): string {
     if (
       this.dpForm.get('no_ext')?.value == '' ||
       this.dpForm.get('no_ext')?.value == null
@@ -295,18 +324,33 @@ export class DatosPersonalesComponent implements OnInit {
     );
   }
 
-  setDomicilio() {
-    this.dpForm.get('calle')?.setValue(this.direccion[0]);
-    this.dpForm.get('no_ext')?.setValue(this.direccion[1]);
-    this.dpForm.get('no_int')?.setValue(this.direccion[2]);
-    this.dpForm.get('colonia')?.setValue(this.direccion[3]);
-    this.dpForm.get('municipio')?.setValue(this.direccion[4]);
-    this.dpForm.get('estado')?.setValue(this.direccion[5]);
-    this.dpForm.get('cp')?.setValue(this.direccion[6]);
+  /**
+   * Colocar la dirección del docente en los campos del formulario
+   * @returns void
+   * @private
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  private setDomicilio(): void {
+    if(this.direccion[0] != 'No ingresado') {
+      this.dpForm.get('calle')?.setValue(this.direccion[0]);
+      this.dpForm.get('no_ext')?.setValue(this.direccion[1]);
+      this.dpForm.get('no_int')?.setValue(this.direccion[2]);
+      this.dpForm.get('colonia')?.setValue(this.direccion[3]);
+      this.dpForm.get('municipio')?.setValue(this.direccion[4]);
+      this.dpForm.get('estado')?.setValue(this.direccion[5]);
+      this.dpForm.get('cp')?.setValue(this.direccion[6]);
+    }
   }
 
-  /** EVENTO DE CAMBIO DE IMAGEN */
-  onImageSelect(event: any) {
+  /** 
+   * Evento de cambio de imagen 
+   * @param event
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public onImageSelect(event: any): void {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       this.imgForm.append('img', file);
@@ -314,23 +358,35 @@ export class DatosPersonalesComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) =>
         (this.imgSrc = reader.result);
-        //console.log(this.imgSrc)
       reader.readAsDataURL(file);
 
-      /******************************** */
+      /*********************************/
       this.dpForm.get('img')?.setValue(file);
     }
   }
 
+  /** 
+   * Evento de cambio de archivo de RFC
+   * @param event
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
   onRFCSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.dpForm.get('doc_rfc')?.setValue(file);
       this.rfcFilename = file.name;
-      // console.log(this.dpForm.get('doc_rfc')?.value);
     }
   }
 
+  /** 
+   * Evento de cambio de archivo de CURP
+   * @param event
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
   onCURPSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -339,60 +395,79 @@ export class DatosPersonalesComponent implements OnInit {
     }
   }
 
-  uploadImage() {
-    //this.imgForm.append('img', this.dpForm.get('img')?.value!);
-    //this.imgForm.append('img', this.dpForm.get('img').files[0]);
-    //this.archivosService.setImage(this.imgForm).subscribe(
-    this.archivosService.uploadImage(this.imgForm).subscribe(
-      (res: any) => {
+  /** 
+   * Envio de imagen al servidor
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  private uploadImage(): void {
+    this.archivosService.uploadImage(this.imgForm).subscribe({
+      next: (res: any) => {
         this.token_data.img = res.img;
         this.dpForm.get('img')?.setValue(res.img);
       },
-      (err: any) => {
+      error: (err: any) => {
         console.log(err);
       }
-    );
+    });
   }
 
-  uploadDocument(tipo: string, campo: string): string {
+  /**
+   * Envio de documentos al servidor
+   * @returns string
+   * @param tipo (string) - Tipo de documento
+   * @param campo (string) - Campo del formulario
+   * @since 1.0.0
+   * @version 1.0.0
+   * @private
+   */
+  private uploadDocument(tipo: string, campo: string): string {
     const formData = new FormData();
     let doc = '**';
 
     formData.append(tipo, this.dpForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, formData).subscribe(
-      (res: any) => {
+    this.archivosService.setDoc(tipo, formData).subscribe({
+      next: (res: any) => {
         if (tipo == 'rfc') this.token_data.doc_rfc = res.doc;
         if (tipo == 'curp') this.token_data.doc_curp = res.doc;
         this.dpForm.get(campo)?.setValue(res.doc);
         doc = res.doc;
-        console.log('doc: ' + doc);
       },
-      (err: any) => {
+      error: (err: any) => {
         console.log(err);
       }
-    );
+    });
     return doc;
   }
 
-  getImage() {
-    // return this.URL_IMG + 'get-image/' + this.token_data.img;
-
-    // return this.URL_IMG + 'get-image';
-    // console.log("token: " + this.loginService.getToken());
-
-    this.archivosService.getImage().subscribe(
-      (data) => {
-        //console.log('Datos recibidos ' + data);
+  /**
+   * Obtener la imagen del servidor y colocarla en la interfaz
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   * @private
+   */
+  private getImage(): void {
+    this.archivosService.getImage().subscribe({
+      next: (data) => {
         this.createImageFromBlob(data);
       },
-      (error) => {
+      error: (error) => {
         console.log('Error', error);
       }
-    );
+    });
   }
 
+  /**
+   * Obtener el documento del servidor
+   * @returns string
+   * @param type (string) - Tipo de documento
+   * @since 1.0.0
+   * @version 1.0.0
+   * @private
+   */
   getDocument(type: string): string {
-    
     switch (type) {
       case 'rfc':
         return this.URL_DOC + 'get-document/' + this.token_data.doc_rfc;
@@ -413,6 +488,15 @@ export class DatosPersonalesComponent implements OnInit {
         return '';
     }
   }
+
+  /**
+   * Crear imagen a partir de un Blob
+   * @returns void
+   * @param image (Blob) - Imagen en formato Blob
+   * @since 1.0.0
+   * @version 1.0.0
+   * @private
+   */
   createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener(
@@ -427,7 +511,14 @@ export class DatosPersonalesComponent implements OnInit {
     }
   }
 
-  cambiar_modo(modo: number) {
+  /**
+   * intercambiar el modo edicion y visualizacion
+   * @returns void
+   * @param modo (number) - Modo de la vista (1: visualizacion, 2: edicion)
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public cambiar_modo(modo: number): void {
     switch (modo) {
       case 1:
         this.token_data = this.loginService.decodeToken();
@@ -437,14 +528,12 @@ export class DatosPersonalesComponent implements OnInit {
         this.edicion = false;
         break;
       case 2:
-        this.edicion = true;
-        // console.log(this.token_data);
         this.setData();
         this.setDomicilio();
-        //console.log("CI: "+ this.token_data.correo_institucional);
         if(this.token_data.correo_institucional != ""){
           this.dpForm.controls['correo_institucional'].disable();
         }
+        this.edicion = true;
         break;
     }
   }
@@ -464,7 +553,7 @@ export class DatosPersonalesComponent implements OnInit {
     'Guerrero',
     'Hidalgo',
     'Jalisco',
-    'México',
+    'Estado de México',
     'Michoacán',
     'Morelos',
     'Nayarit',
@@ -484,70 +573,26 @@ export class DatosPersonalesComponent implements OnInit {
     'Zacatecas',
   ];
 
-  get nombre() {
-    return this.dpForm.get('nombre');
-  }
-  get apellido_p() {
-    return this.dpForm.get('apellido_p');
-  }
-  get apellido_m() {
-    return this.dpForm.get('apellido_m');
-  }
-  get calle() {
-    return this.dpForm.get('calle');
-  }
-  get no_ext() {
-    return this.dpForm.get('no_ext');
-  }
-  get no_int() {
-    return this.dpForm.get('no_int');
-  }
-  get colonia() {
-    return this.dpForm.get('colonia');
-  }
-  get estado() {
-    return this.dpForm.get('estado');
-  }
-  get municipio() {
-    return this.dpForm.get('municipio');
-  }
-  get cp() {
-    return this.dpForm.get('cp');
-  }
-  get correo_personal() {
-    return this.dpForm.get('correo_personal');
-  }
-  get correo_institucional() {
-    return this.dpForm.get('correo_institucional');
-  }
-  get telefono() {
-    return this.dpForm.get('telefono');
-  }
-  get rfc() {
-    return this.dpForm.get('rfc');
-  }
-  get doc_rfc() {
-    return this.dpForm.get('doc_rfc');
-  }
-  get curp() {
-    return this.dpForm.get('curp');
-  }
-  get doc_curp() {
-    return this.dpForm.get('doc_curp');
-  }
-  get no_empleado() {
-    return this.dpForm.get('no_empleado');
-  }
-  get ldg() {
-    return this.dpForm.get('ldg');
-  }
-  get ldi() {
-    return this.dpForm.get('ldi');
-  }
-  get arq() {
-    return this.dpForm.get('arq');
-  }
-  get apou() {
-    return this.dpForm.get('apou');
-  }
+  get nombre() { return this.dpForm.get('nombre'); }
+  get apellido_p() { return this.dpForm.get('apellido_p'); }
+  get apellido_m() { return this.dpForm.get('apellido_m'); }
+  get calle() { return this.dpForm.get('calle'); }
+  get no_ext() { return this.dpForm.get('no_ext'); }
+  get no_int() { return this.dpForm.get('no_int'); }
+  get colonia() { return this.dpForm.get('colonia'); }
+  get estado() { return this.dpForm.get('estado'); }
+  get municipio() { return this.dpForm.get('municipio'); }
+  get cp() { return this.dpForm.get('cp'); }
+  get correo_personal() { return this.dpForm.get('correo_personal'); }
+  get correo_institucional() { return this.dpForm.get('correo_institucional'); }
+  get telefono() { return this.dpForm.get('telefono'); }
+  get rfc() { return this.dpForm.get('rfc'); }
+  get doc_rfc() { return this.dpForm.get('doc_rfc'); }
+  get curp() { return this.dpForm.get('curp'); }
+  get doc_curp() { return this.dpForm.get('doc_curp'); }
+  get no_empleado() { return this.dpForm.get('no_empleado'); }
+  get ldg() { return this.dpForm.get('ldg'); }
+  get ldi() { return this.dpForm.get('ldi'); }
+  get arq() { return this.dpForm.get('arq'); }
+  get apou() { return this.dpForm.get('apou'); }
 }

@@ -84,7 +84,7 @@
         <div class="form-group form-check">
           <input type="checkbox" formControlName="aviso_privacidad" id="aviso_privacidad" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && aviso_privacidad?.errors }" />
           <label for="aviso_privacidad" class="form-check-label">He leido el 
-            <a href="http://web.uaemex.mx/avisos/Aviso_Privacidad.pdf" target="_blank">aviso de privacidad</a></label>
+            <a href="http://web.uaemex.mx/avisos/Aviso_Privacidad.pdf" target="_blank" class="link">aviso de privacidad</a></label>
           <div *ngIf="submitted && aviso_privacidad?.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
         </div>
         <button class="btn btn-primary" type="submit" [disabled]="!this.validForm()">Crear cuenta</button>
@@ -94,12 +94,12 @@
         </div> 
       </form>
 
-      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional">No cuento con correo institucional</button>
+      <!-- <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional">No cuento con correo institucional</button> -->
       <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional">Registrarme con correo institucional</button>
 
       <hr class="hr hr-blurry"/>
       <div class="mt-2">
-        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+        ¿Ya tienes una cuenta? <a routerLink="/login" class="link">Inicia sesión</a>
       </div>
 
     </div>

@@ -48,7 +48,7 @@ cursoController.get = async (req, res) => {
   }
 
   const id_docente = req.params.id_docente;
-  result = await dbhelper.findCursoByIdDocente(id_docente);
+  result = await dbhelper.findCursosByIdDocente(id_docente);
   console.log(await dbhelper.disconnect());
 
   return result;

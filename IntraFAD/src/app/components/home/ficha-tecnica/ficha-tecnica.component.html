@@ -6,7 +6,7 @@
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(2)" #btnCursos>Cursos</button>
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnIdiomas>Idiomas</button>
 </div>
-<div class="col-md-9 tarjeta">
+<div class="col-md-9 ">
   <div class="contenido">
     <app-datos-academicos *ngIf="pagina == 0" [token_data]="token_data"></app-datos-academicos>
     <app-certificaciones *ngIf="pagina == 1" [token_data]="token_data"></app-certificaciones>

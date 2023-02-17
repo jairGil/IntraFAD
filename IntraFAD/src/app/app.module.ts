@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthGuard } from './auth.guard';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -14,8 +13,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
 import { ExitoComponent } from './components/register/exito/exito.component';
-import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
-import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
 import { DatosAcademicosComponent } from './components/home/datos-academicos/datos-academicos.component';
 import { FichaTecnicaComponent } from './components/home/ficha-tecnica/ficha-tecnica.component';
 import { CursosComponent } from './components/home/cursos/cursos.component';
@@ -32,8 +29,6 @@ import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
     HomeComponent,
     DatosPersonalesComponent,
     ExitoComponent,
-    LoginInstitucionalComponent,
-    LoginNoInstitucionalComponent,
     DatosAcademicosComponent,
     FichaTecnicaComponent,
     CursosComponent,

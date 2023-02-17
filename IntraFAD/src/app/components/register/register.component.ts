@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DpDocenteService } from 'src/app/services/dp-docente.service';
 
@@ -14,6 +14,7 @@ export class RegisterComponent {
   private regex_mail_uaemex = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_mail = /([\w\.]+)@([\w\.]+)\.(\w+)/;
 
+  public registerForm: FormGroup;
   public institucional = true;
   public submitted = false;
   public error = {
@@ -21,31 +22,46 @@ export class RegisterComponent {
     value: true
   };
 
-  registerForm = this.formBuilder.group({
-    correo_institucional: ['', {
-      validators: [Validators.required, Validators.pattern(this.regex_mail_uaemex)]
-    }],
-    correo_personal: ['', {
-      validators: [Validators.required, Validators.pattern(this.regex_mail)]
-    }],
-    contrasena: ['', {
-      validators: [Validators.required, Validators.minLength(8), Validators.maxLength(64)]
-    }],
-    confirma_contrasena: ['', Validators.required],
-    aviso_privacidad: [false, Validators.requiredTrue]
-  });
 
   constructor(
     private formBuilder: FormBuilder,
     private dpDocenteService: DpDocenteService,
     private router: Router,
-  ) { }
+  ) {
+    this.registerForm = this.formBuilder.group({
+      correo_institucional: ['', {
+        validators: [Validators.required, Validators.pattern(this.regex_mail_uaemex)]
+      }],
+      correo_personal: ['', {
+        validators: [Validators.required, Validators.pattern(this.regex_mail)]
+      }],
+      contrasena: ['', {
+        validators: [Validators.required, Validators.minLength(8), Validators.maxLength(64)]
+      }],
+      confirma_contrasena: ['', Validators.required],
+      aviso_privacidad: [false, Validators.requiredTrue]
+    });
+  }
 
-  cambiaTipoCuenta() {
+  /**
+   * Cambiar el tipo de cuenta dependiendo el correo
+   * @returns void
+   * @memberof RegisterComponent
+   * @since 1.0.0
+   * @version 1.0.0 
+  */
+  public cambiaTipoCuenta(): void {
     this.institucional = !this.institucional;
   }
 
-  submit() {
+  /**
+   * Registro de usuarios dependiendo su tipo de correo
+   * @returns void
+   * @memberof RegisterComponent
+   * @since 1.0.0
+   * @version 1.0.0 
+  */
+  public submit(): void {
     this.submitted = true;
     
     if (this.registerForm.value.contrasena === this.registerForm.value.confirma_contrasena) {
@@ -59,7 +75,7 @@ export class RegisterComponent {
             }
           },
           error: err => {
-            console.log(err);
+            this.error = err.error;
           }
         });
       } else {
@@ -72,14 +88,21 @@ export class RegisterComponent {
           }
         },
         error: (err: any) => {
-          console.log(err);
+          this.error = err.error;
         }
       });
       }
     }
   }
 
-  validForm(): boolean {
+  /**
+   * Validar que el formulario es correcto dependiendo el tipo de cuenta
+   * @returns boolean
+   * @memberof RegisterComponent
+   * @since 1.0.0
+   * @version 1.0.0 
+   */
+  public validForm(): boolean {
     let valid = false;
     if (this.institucional) {
       valid = this.correo_institucional!.valid;

@@ -5,7 +5,8 @@ if(process.env.NODE_ENV !== "production"){
 const config = {
     port: process.env.PORT || 3000,
     routes: {
-        files: "/data/"
+        files: "/data/",
+        // files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos/controller/uploads/"
     }    
 }
 
