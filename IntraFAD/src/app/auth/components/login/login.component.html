@@ -1,0 +1,83 @@
+<div class="login h-100 container">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3>Bienvenido</h3>
+  
+        <form (submit)="login()" [formGroup]="loginForm">
+  
+          <div class="form-group" *ngIf="institucional; else CorreoPersonal">
+            <label for="correo_institucional">Correo institucional</label>
+            <input type="email" class="form-control" placeholder="mail@uaemex.mx" formControlName="correo_institucional">
+            <div class="mt-2 mb-2">
+              <div *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="correo_institucional?.errors?.['required']">
+                  El <b>correo institucional</b> es requerido.
+                </div>
+                <div *ngIf="correo_institucional?.errors?.['pattern']">
+                  El correo institucional debe tener los siguientes formatos
+                  <ul>
+                    <li>mail@uaemex.mx</li>
+                    <li>mail@profesor.uaemex.mx</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <ng-template #CorreoPersonal>
+            <div class="form-group">
+              <label for="correo_personal">Correo personal</label>
+              <input type="email" class="form-control" placeholder="mail@mail.com" formControlName="correo_personal">
+              <div class="mt-2 mb-2">
+                <div
+                  *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+                  class="alert alert-danger" role="alert">
+                  <div *ngIf="correo_institucional?.errors?.['required']">
+                    El <b>correo institucional</b> es requerido.
+                  </div>
+                  <div *ngIf="correo_institucional?.errors?.['pattern']">
+                    Debe ingresar un correo personal válido.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+  
+          <div class="form-group">
+            <label for="constrasena">Contraseña</label>
+            <input type="password" class="form-control" formControlName="contrasena">
+            <div class="mt-2 mb-2">
+              <div *ngIf="contrasena?.invalid && (contrasena?.dirty || contrasena?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="contrasena?.errors?.['required']">
+                  La <b>contraseña</b> es requerida.
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="alert alert-danger" role="alert" *ngIf="!this.error?.value">
+            {{ this.error.msg }}
+          </div>
+  
+          <button type="submit" class="btn btn-primary" [disabled]="!formValid()">Iniciar sesión</button> <br>
+          <!-- <button class="btn btn-light btn-block">Olvide mi contraseña</button> <br> -->
+        </form>
+  
+        <!-- <login-institucional *ngIf="institucional"></login-institucional>
+        <login-no-institucional *ngIf="!institucional"></login-no-institucional> -->
+        <!-- <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional">Iniciar sesión con un
+        correo personal</button> -->
+        <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional">Iniciar sesión con un
+          correo institucional</button>
+        <div class="mt-4">
+          <span>¿No tiene una cuenta? <a routerLink="/auth/register" class="link">Crear una cuenta</a></span>
+        </div>
+      </div>
+  
+      <div class="col">
+        <img src="../../assets/img/IntraFAD.png" width="auto" height="300px" alt="">
+      </div>
+    </div>
+  </div>

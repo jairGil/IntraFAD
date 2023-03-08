@@ -19,7 +19,7 @@ console.log("aqui estoy")
         try{
             //si el token es válido devuelve la imagen
             let decoded = jwt.verify(token, secret);
-            req._id = decoded.id;
+            req._id = decoded._id;
             console.log("SI entra")
             next();
         }catch(e){

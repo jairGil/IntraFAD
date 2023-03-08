@@ -1,0 +1,22 @@
+<div class="main">
+  <!-- Panel Ixquierdo (secciones de la pagina) -->
+  <div class="pnl-izq col-md-2">
+    <div class="row">
+      <img [src]="this.imagen" class="perfil ml-3" alt="Imagen de perfil" id="perfil" />
+      <div class="col-md-8 align-self-center">
+        <label><b>{{ dataDocente?.nombre + ' ' + dataDocente?.apellido_p + ' ' + dataDocente?.apellido_m
+            }}</b></label> <br>
+      </div>
+    </div>
+    <button class="btn btn-transparent btn-outline-success" (click)="switchPage(0)" #btnDP>Datos personales</button>
+    <button class="btn btn-transparent" (click)="switchPage(1)" #btnDA>Ficha técnica</button>
+  </div>
+
+  <!-- Panel derecho, contenido de cada sección -->
+  <div class="pnl-der col-md-12 ml-5">
+    <app-personal-data *ngIf="pagina == 0"></app-personal-data>
+    <app-data-sheet *ngIf="pagina == 1"></app-data-sheet>
+    <!-- <app-datos-personales></app-datos-personales> -->
+    <!-- <app-ficha-tecnica *ngIf="pagina == 1" [token_data]="token_data"></app-ficha-tecnica> -->
+  </div>
+</div>

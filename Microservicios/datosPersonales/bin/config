@@ -6,18 +6,19 @@ if(process.env.NODE_ENV !== "production"){
 const dbuser = "jgild";
 const dbname = "IntraFAD";
 const dbpass = "v0EbhL2LprsKYUP1";
-const uriDB = "mongodb://mongoAdmin:AdminFAD@mongodb-ms_datosPersonales:27017/";
-// const uriDB = `mongodb+srv://${dbuser}:${dbpass}@intrafad.rpczxmh.mongodb.net/test`;
+// const uriDB = "mongodb://mongoAdmin:AdminFAD@mongodb-ms_datosPersonales:27017/";
+const uriDB = `mongodb+srv://${dbuser}:${dbpass}@intrafad.rpczxmh.mongodb.net/test`;
 
 
 const config = {
     port: process.env.PORT || 3000,
     db: {
-        uri: process.env.URIDB || uriDB
+        // uri: process.env.URIDB || uriDB,
+        uri: uriDB,
     },
     routes: {
-        files: "/data/",
-        // files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos/controller/uploads/"
+        // files: "/data/",
+        files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos/controller/uploads/"
     }
 }
 
