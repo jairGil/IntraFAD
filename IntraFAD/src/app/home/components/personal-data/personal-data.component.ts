@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Docente } from '../../models/docente.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ArchivosService } from '../../services/archivos.service';
@@ -6,6 +6,7 @@ import { PersonalDataService } from '../../services/personal-data.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { environment } from 'src/environments/environment.development';
 import { Observable } from 'rxjs';
+import { Profile } from '../../models/profile.model';
 
 @Component({
   selector: 'app-personal-data',
@@ -13,6 +14,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['./personal-data.component.scss', '../../../app.component.scss']
 })
 export class PersonalDataComponent {
+  /** 
+   * @Output - Salida de datos para comunicación con **HomeComponent**
+  */
+  @Output() dataEmitter = new EventEmitter<Profile>();
+
   currentFile?: File;
   fileInfos?: Observable<any>;
 
@@ -40,6 +46,8 @@ export class PersonalDataComponent {
     ldi: false,
     arq: false,
     apou: false,
+    contratoDefinitivo: false,
+    tipoContrato: ''
   };
   public edicion = false;
   public direccion: any;
@@ -131,6 +139,8 @@ export class PersonalDataComponent {
       ldi: [false],
       arq: [false],
       apou: [false],
+      contratoDefinitivo: [false],
+      tipoContrato: ['']
     });
   }
 
@@ -146,6 +156,7 @@ export class PersonalDataComponent {
       next: (res: any) => {
         this.dataDocente = res.docente;
         this.direccion = this.dataDocente.direccion.split(', ');
+        this.sendDataToParent();
       },
       error: (err: any) => console.log(err)
     });
@@ -227,6 +238,8 @@ export class PersonalDataComponent {
       arq: this.dpForm.get('arq')?.value!,
       apou: this.dpForm.get('apou')?.value!,
       rol: 'USER_ROLE',
+      tipoContrato: this.dpForm.get('tipoContrato')?.value!,
+      contratoDefinitivo: this.dpForm.get('contratoDefinitivo')?.value!
     };
 
     this.personalDataService.updateDocente(docente).subscribe({
@@ -523,7 +536,7 @@ export class PersonalDataComponent {
   }
 
   /**
-   * intercambiar el modo edicion y visualizacion
+   * Intercambiar el modo edicion y visualizacion
    * @returns void
    * @param modo (number) - Modo de la vista (1: visualizacion, 2: edicion)
    * @since 1.0.0
@@ -546,6 +559,23 @@ export class PersonalDataComponent {
         this.edicion = true;
         break;
     }
+
+    console.log("Estado " + modo);
+    console.log("Valor del formulario" + JSON.stringify(this.dpForm.value));
+    console.log("Estado del formulario" + this.dpForm.valid);
+  }
+
+  /**
+   * Comunicar los datos obtenidos de la API Docente para la visualización del perfil de usuario
+   */
+  sendDataToParent() {
+    let profile: Profile = {
+      img: this.imagen,
+      nombre: this.dataDocente.nombre,
+      apellido_p: this.dataDocente.apellido_p,
+      apellido_m: this.dataDocente.apellido_m
+    }
+    this.dataEmitter.emit(profile);
   }
 
   public listaEstados = [
@@ -583,6 +613,14 @@ export class PersonalDataComponent {
     'Zacatecas',
   ];
 
+  public listaEmpleos = [ 
+    "Profesor de asignatura",
+    "Profesor tiempo completo",
+    "Profesor medio tiempo",
+    "Técnico académico de tiempo completo",
+    "Técnico académico de medio tiempo"
+];
+
   get nombre() { return this.dpForm.get('nombre'); }
   get apellido_p() { return this.dpForm.get('apellido_p'); }
   get apellido_m() { return this.dpForm.get('apellido_m'); }
@@ -605,4 +643,6 @@ export class PersonalDataComponent {
   get ldi() { return this.dpForm.get('ldi'); }
   get arq() { return this.dpForm.get('arq'); }
   get apou() { return this.dpForm.get('apou'); }
+  get tipoContrato() { return this.dpForm.get('tipoContrato'); }
+  get contratoDefinitivo() { return this.dpForm.get('contratoDefinitivo'); }
 }

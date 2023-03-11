@@ -116,6 +116,21 @@ const docenteSchema = Schema({
     fechaRegistro: {
         type: Date,
         default: "07/12/1990"
+    },
+    tipoContrato: {
+        type: String,
+        trim: true,
+        enum: [ "Profesor de asignatura",
+                "Profesor tiempo completo",
+                "Profesor medio tiempo",
+                "Técnico académico de tiempo completo",
+                "Técnico académico de medio tiempo"
+            ],
+        default: "Profesor de asignatura"
+    },
+    contratoDefinitivo: {
+        type: Boolean,
+        default: false
     }
 });
 

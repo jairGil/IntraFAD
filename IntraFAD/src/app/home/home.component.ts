@@ -1,7 +1,5 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service';
-import { ArchivosService } from './services/archivos.service';
-import { PersonalDataService } from './services/personal-data.service';
+import { Profile } from './models/profile.model';
 
 @Component({
   selector: 'app-home',
@@ -14,23 +12,13 @@ export class HomeComponent {
 
   public pagina = 0;
   public editar = false;
-  public imagen: any;
-  public dataDocente: any;
+  public dataDocente: Profile | undefined = undefined;
 
   constructor(
     private renderer: Renderer2,
-    private authService: AuthService,
-    private personalDataService: PersonalDataService,
-    private archivosService: ArchivosService
-  ) {
-      this.getDocente();
-      this.getImage();
-   }
+  ) { }
 
-  ngOnInit(): void {
-    this.getDocente();
-    console.log("DATOS IZQ: " + JSON.stringify(this.dataDocente));
-  }
+  ngOnInit(): void { }
 
   /**
    * Cambiar la página que se muestra en el componente
@@ -54,52 +42,10 @@ export class HomeComponent {
   }
 
   /**
-   * Obtener la imagen desde el servidor
-   * @returns void
-  */
-  public getImage(): void {
-    this.archivosService.getImage().subscribe({
-      next: (data: any) => {
-        this.createImageFromBlob(data);
-      },
-      error: (error: any) => {
-        console.log('Error', error);
-      }
-  });
-  }
-
-  /**
-   * Cargar una iamgen del dispositivo del usuario en el componente
-   * @param image (Blob) Imagen en formato Blob
-   * @returns void
+   * Datos recibidos del componente **PersonalDataComponent**
+   * @param data - Datos del perfil del docente
    */
-  public createImageFromBlob(image: Blob): void {
-    let reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        this.imagen = reader.result;
-      },
-      false
-    );
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
-
-  /**
-   * Obtiene todos los datos del docente
-   * @returns void
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  private getDocente(): void {
-    this.personalDataService.getDocente(this.authService.decodeToken()._id).subscribe({
-      next: (res: any) => {
-        this.dataDocente = res.docente;
-      },
-      error: (err: any) => console.log(err)
-    });
+  receiveDataFromChild(data: Profile) {
+    this.dataDocente = data;
   }
 }

@@ -18,4 +18,6 @@ export interface Docente {
     ldi: Boolean;
     arq: Boolean;
     apou: Boolean;
+    tipoContrato: String;
+    contratoDefinitivo: Boolean;
 }
