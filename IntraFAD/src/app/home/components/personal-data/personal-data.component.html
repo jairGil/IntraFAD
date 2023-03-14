@@ -48,9 +48,10 @@
     </ng-template>
 
     <hr class="hr" />
+    <label><b>Datos de contrato</b></label> <br>
     <label>No. de Empleado: {{ dataDocente.no_empleado }}</label> <br>
-    <label>Tipo de contrato: {{ dataDocente.tipoContrato }}</label> <br>
-    <label>Contrato definitivo: {{ dataDocente.no_empleado? "SI" : "NO" }}</label> <br>
+    <label>Tipo de contrato: {{ dataDocente.contratoDefinitivo ? "Definitivo" : "Interino" }}</label> <br>
+    <label>Puesto de contrato: {{ dataDocente.tipoContrato }}</label> <br>
 
     <hr class="hr" />
     <label><b>Licenciaturas donde imparto clase</b></label> <br>
@@ -441,8 +442,8 @@
           <label for="contratoDefinitivo" class="col-md-4 col-form-label">Tipo de contrato</label>
           <div class="col-md-4">
             <select class="form-control" formControlName="contratoDefinitivo">
-              <option [ngValue]="true">Permanente</option>
-              <option [ngValue]="false">Interno</option>
+              <option [ngValue]="true">Definitivo</option>
+              <option [ngValue]="false">Interino</option>
             </select>
           </div>
         </div>

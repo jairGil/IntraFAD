@@ -1,11 +1,11 @@
 <div class="main">
   <!-- Panel Ixquierdo (secciones de la pagina) -->
   <div class="pnl-izq col-md-2">
+    <div class="row d-flex justify-content-center" *ngIf="this.dataDocente != undefined">
+      <img [src]="this.dataDocente.img" class="perfil mb-4" alt="Imagen de perfil" id="perfil" />
+    </div>
     <div class="row" *ngIf="this.dataDocente != undefined">
-      <img [src]="this.dataDocente.img" class="perfil ml-3" alt="Imagen de perfil" id="perfil" />
-      <div class="col-md-8 align-self-center">
-        <label><b>{{ dataDocente.nombre + ' ' + dataDocente.apellido_p + ' ' + dataDocente.apellido_m }}</b></label> <br>
-      </div>
+      <label><b>{{ dataDocente.nombre + ' ' + dataDocente.apellido_p + ' ' + dataDocente.apellido_m }}</b></label> <br>
     </div>
     <hr class="hr" />
     <button class="btn btn-transparent btn-outline-success" (click)="switchPage(0)" #btnDP>Datos personales</button>

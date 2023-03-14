@@ -135,12 +135,12 @@ export class PersonalDataComponent {
         '',
         [Validators.maxLength(6), Validators.pattern(this.regex_num)],
       ],
+      contratoDefinitivo: [false],
+      tipoContrato: [''],
       ldg: [false],
       ldi: [false],
       arq: [false],
       apou: [false],
-      contratoDefinitivo: [false],
-      tipoContrato: ['']
     });
   }
 
@@ -304,6 +304,8 @@ export class PersonalDataComponent {
     this.dpForm.get('ldi')?.setValue(this.dataDocente.ldi);
     this.dpForm.get('arq')?.setValue(this.dataDocente.arq);
     this.dpForm.get('apou')?.setValue(this.dataDocente.apou);
+    this.dpForm.get('tipoContrato')?.setValue(this.dataDocente.tipoContrato);
+    this.dpForm.get('contratoDefinitivo')?.setValue(this.dataDocente.contratoDefinitivo);
 
     this.rfcFilename = this.dataDocente.doc_rfc;
     this.curpFilename = this.dataDocente.doc_curp;
@@ -478,6 +480,7 @@ export class PersonalDataComponent {
         this.createImageFromBlob(res);
       },
       error: (err: any) => {
+        this.imagen = 'assets/img/default.png';
         console.log('Error', err);
       }
     });
@@ -559,10 +562,6 @@ export class PersonalDataComponent {
         this.edicion = true;
         break;
     }
-
-    console.log("Estado " + modo);
-    console.log("Valor del formulario" + JSON.stringify(this.dpForm.value));
-    console.log("Estado del formulario" + this.dpForm.valid);
   }
 
   /**
