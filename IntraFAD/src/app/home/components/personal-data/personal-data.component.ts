@@ -11,7 +11,7 @@ import { Profile } from '../../models/profile.model';
 @Component({
   selector: 'app-personal-data',
   templateUrl: './personal-data.component.html',
-  styleUrls: ['./personal-data.component.scss', '../../../app.component.scss']
+  styleUrls: ['./personal-data.component.scss', '../../../app.component.scss', '../../home.component.scss']
 })
 export class PersonalDataComponent {
   /** 

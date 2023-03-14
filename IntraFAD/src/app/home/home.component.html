@@ -7,7 +7,7 @@
     <div class="row" *ngIf="this.dataDocente != undefined">
       <label><b>{{ dataDocente.nombre + ' ' + dataDocente.apellido_p + ' ' + dataDocente.apellido_m }}</b></label> <br>
     </div>
-    <hr class="hr" />
+    <hr class="hr">
     <button class="btn btn-transparent btn-outline-success" (click)="switchPage(0)" #btnDP>Datos personales</button>
     <button class="btn btn-transparent" (click)="switchPage(1)" #btnDA>Ficha técnica</button>
   </div>

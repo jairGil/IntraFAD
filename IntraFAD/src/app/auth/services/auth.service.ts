@@ -59,7 +59,11 @@ export class AuthService {
    * @version 1.0.1
    */
   public logout(): void {
+    this.cookieService.delete('token');
     this.cookieService.deleteAll();
+
+    // reload window
+    window.location.reload();
   }
 
   /**

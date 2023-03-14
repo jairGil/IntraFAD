@@ -30,7 +30,7 @@
     <div class="form-row">
       <div class="form-group col-md-3">
         <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
-          formControlName="fecha_obtencion">
+          formControlName="fecha">
       </div>
     </div>
 
@@ -42,8 +42,8 @@
 
     <div class="form-row">
       <div class="form-grup col-md-2">
-        <div class="btn btn-primary btn-file">
-          <label class="form-label text-white" for="doc_cert">Cargar PDF</label>
+        <div class="btn-primary btn-file">
+          <label class="lbl-file" for="doc_cert">Cargar PDF</label>
           <input type="file" class="form-control d-none" id="doc_cert" (change)="onCertificacionSelect($event)"
             accept=".pdf" />
         </div>
@@ -54,6 +54,7 @@
         </div>
         <ng-template #noPDF1>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span> No se ha seleccionado ningún archivo</span>
         </ng-template>
       </div>
     </div>

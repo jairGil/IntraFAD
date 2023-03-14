@@ -47,3 +47,21 @@
     object-fit: cover;
     border-radius: 10px;
 }
+
+.lbl-file {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    // Alinear el texto al medio del div
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-file {
+    height: 38px;
+    border-radius: 10px;
+}

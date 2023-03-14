@@ -39,7 +39,7 @@
     <div class="form-row">
       <div class="form-group col-md-3">
         <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
-          formControlName="fecha_obtencion">
+          formControlName="fecha_fin">
       </div>
       <div class="form-group col-md-3">
         <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
@@ -58,9 +58,9 @@
 
     <div class="form-row">
       <div class="col-md-3">
-        <div class="btn btn-primary btn-file">
-          <label class="form-label text-white" for="constancia">Cargar PDF</label>
-          <input type="file" class="form-control d-none" id="constancia_f" (change)="onCursoSelect($event)"
+        <div class="btn-primary btn-file">
+          <label class="lbl-file" for="constancia">Cargar PDF</label>
+          <input type="file" class="form-control d-none" id="constancia" (change)="onCursoSelect($event)"
             accept=".pdf" />
         </div>
       </div>
@@ -70,6 +70,7 @@
         </div>
         <ng-template #noPDF1>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span> No se ha seleccionado ningún archivo</span>
         </ng-template>
       </div>
     </div>

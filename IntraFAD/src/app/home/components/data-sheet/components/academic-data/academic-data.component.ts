@@ -102,15 +102,14 @@ export class AcademicDataComponent {
         if (res.value) {
           // this.uploadDocument('gradoAcad', 'doc_grado_acad', res.idFT);
           // this.uploadDocument('cedulaProf', 'doc_ced_prof', res.idFT);
+          this.getDA();
+          this.cambiarModo(2);
         }
       },
       error: (err: any) => {
         console.log(err);
       }
     });
-
-    this.getDA();
-    this.cambiarModo(2);
   }
 
   onGradoAcadSelect(event: any) {

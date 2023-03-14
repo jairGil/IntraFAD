@@ -13,14 +13,14 @@
 
     <div class="form-row">
       <div class="form-group col-md-3">
-        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="tipo">
+        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="nombre">
           <option class="dropdown-item" value="Licenciatura">
             Técnico
           </option>
         </select>
       </div>
       <div class="form-group col-md-3">
-        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="tipo">
+        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="nivel">
           <option class="dropdown-item" value="Licenciatura">
             Técnico
           </option>
@@ -35,22 +35,16 @@
       <div class="form-group col-md-3">
         <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
       </div>
-      <div class="form-group col-md-3">
-        <label for="duracion" class="col-form-label is-required">Duración</label>
-      </div>
     </div>
 
     <div class="form-row">
       <div class="form-group col-md-3">
         <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
-          formControlName="fecha_obtencion">
+          formControlName="fecha_fin">
       </div>
       <div class="form-group col-md-3">
         <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
           formControlName="institucion">
-      </div>
-      <div class="form-group col-md-3">
-        <input type="text" class="form-control" name="duracion" placeholder="Horas" formControlName="duracion">
       </div>
     </div>
 
@@ -62,9 +56,9 @@
 
     <div class="form-row">
       <div class="col-md-3">
-        <div class="btn btn-primary btn-file">
-          <label class="form-label text-white" for="constancia">Cargar PDF</label>
-          <input type="file" class="form-control d-none" id="constancia_f" (change)="onFileSelect($event)"
+        <div class="btn-primary btn-file">
+          <label class="lbl-file" for="constancia">Cargar PDF</label>
+          <input type="file" class="form-control d-none" id="constancia" (change)="onFileSelect($event)"
             accept=".pdf" />
         </div>
       </div>
@@ -74,6 +68,7 @@
         </div>
         <ng-template #noPDF>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span> No se ha seleccionado ningún archivo</span>
         </ng-template>
       </div>
     </div>
