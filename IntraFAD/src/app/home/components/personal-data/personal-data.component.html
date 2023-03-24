@@ -78,6 +78,7 @@
     </div>
     <button class="btn-flotante" (click)="cambiar_modo(2)">
       <img src="../../../../assets/img/edit.svg" alt="">
+      <span> Editar</span>
     </button>
   </div>
 </div>
@@ -375,7 +376,7 @@
               <div class="col-md-2">
                 <a [attr.href]="getDocument('rfc')" target="_blank">
                   <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-                  <span>Ver RFC</span>
+                  <span> Ver RFC</span>
                 </a>
               </div>
             </ng-template>
@@ -424,7 +425,7 @@
               <div class="col-md-2">
                 <a [attr.href]="getDocument('curp')" target="_blank">
                   <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-                  <span>Ver CURP</span>
+                  <span> Ver CURP</span>
                 </a>
               </div>
             </ng-template>
@@ -455,11 +456,17 @@
         </div>
         <div class="form-row mb-3">
           <label for="contratoDefinitivo" class="col-md-4 col-form-label">Tipo de contrato</label>
-          <div class="col-md-4">
-            <select class="form-control" formControlName="contratoDefinitivo">
-              <option [ngValue]="true">Definitivo</option>
-              <option [ngValue]="false">Interino</option>
-            </select>
+          <div class="col-md-2">
+            <label>
+              <input type="radio" formControlName="contratoDefinitivo" [value]="false" checked>
+              <span> Interino</span>
+            </label>
+          </div>
+          <div class="col-md-2">
+            <label>
+              <input type="radio" formControlName="contratoDefinitivo" [value]="true">
+              <span> Definitivo</span>
+            </label>
           </div>
         </div>
         <div class="form-row mb-3">

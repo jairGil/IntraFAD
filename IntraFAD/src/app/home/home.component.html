@@ -1,11 +1,11 @@
 <div class="main">
   <!-- Panel Ixquierdo (secciones de la pagina) -->
   <div class="pnl-izq col-md-2">
-    <div class="row d-flex justify-content-center" *ngIf="this.dataDocente != undefined">
-      <img [src]="this.dataDocente.img" class="perfil mb-4" alt="Imagen de perfil" id="perfil" />
+    <div class="row d-flex justify-content-center" *ngIf="this.profileDocente != undefined">
+      <img [src]="this.profileDocente.img" class="perfil mb-4" alt="Imagen de perfil" id="perfil" />
     </div>
-    <div class="row" *ngIf="this.dataDocente != undefined">
-      <label><b>{{ dataDocente.nombre + ' ' + dataDocente.apellido_p + ' ' + dataDocente.apellido_m }}</b></label> <br>
+    <div class="row" *ngIf="this.profileDocente != undefined">
+      <span><b>{{ profileDocente.nombre + ' ' + profileDocente.apellido_p + ' ' + profileDocente.apellido_m }}</b></span> <br>
     </div>
     <hr class="hr">
     <button class="btn btn-transparent btn-outline-success" (click)="switchPage(0)" #btnDP>Datos personales</button>
@@ -14,7 +14,7 @@
 
   <!-- Panel derecho, contenido de cada sección -->
   <div class="pnl-der col-md-12 ml-5">
-    <app-personal-data *ngIf="pagina == 0" (dataEmitter)="receiveDataFromChild($event)"></app-personal-data>
+    <app-personal-data *ngIf="pagina == 0" (dataEmitter)="receiveDataFromChild($event)" [dataDocente]="this.dataDocente"></app-personal-data>
     <app-data-sheet *ngIf="pagina == 1"></app-data-sheet>
     <!-- <app-datos-personales></app-datos-personales> -->
     <!-- <app-ficha-tecnica *ngIf="pagina == 1" [token_data]="token_data"></app-ficha-tecnica> -->

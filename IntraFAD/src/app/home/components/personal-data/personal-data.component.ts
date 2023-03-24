@@ -1,12 +1,20 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Docente } from '../../models/docente.model';
+/** ANGULAR CORE, FORMS, RXJS */
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+/** ENVIRONMENT */
+import { environment } from 'src/environments/environment.development';
+
+/** SERVICES */
 import { ArchivosService } from '../../services/archivos.service';
 import { PersonalDataService } from '../../services/personal-data.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { environment } from 'src/environments/environment.development';
-import { Observable } from 'rxjs';
+import { StaticDataService } from '../../services/static-data.service';
+
+/** MODELS */ 
 import { Profile } from '../../models/profile.model';
+import { Docente } from '../../models/docente.model';
 
 @Component({
   selector: 'app-personal-data',
@@ -14,41 +22,24 @@ import { Profile } from '../../models/profile.model';
   styleUrls: ['./personal-data.component.scss', '../../../app.component.scss', '../../home.component.scss']
 })
 export class PersonalDataComponent {
-  /** 
-   * @Output - Salida de datos para comunicación con **HomeComponent**
-  */
+  /** (Input) Docente - Recibe datos de **HomeComponent** */
+  @Input() dataDocente!: Docente;
+
+  /** (Output) EventEmmiter<Profile> - Salida de datos para comunicación con **HomeComponent** */
   @Output() dataEmitter = new EventEmitter<Profile>();
+
+  /* STATIC ARRAYS */
+  public listaEstados = StaticDataService.listaEstados;
+  public listaEmpleos = StaticDataService.listaEmpleos;
 
   currentFile?: File;
   fileInfos?: Observable<any>;
 
+  /* REGULAR EXPRESSIONS */
   private regex_num = /^([0-9])*$/;
   private regex_institucional = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_personal = /([\w\.]+)@([\w\.]+)\.(\w+)/;
   
-  public dataDocente: Docente = {
-    _id: '',
-    nombre: '',
-    apellido_p: '',
-    apellido_m: '',
-    direccion: '',
-    correo_personal: '',
-    correo_institucional: '',
-    telefono: '',
-    rfc: '',
-    doc_rfc: '',
-    curp: '',
-    doc_curp: '',
-    img: '',
-    no_empleado: '',
-    rol: '',
-    ldg: false,
-    ldi: false,
-    arq: false,
-    apou: false,
-    contratoDefinitivo: false,
-    tipoContrato: ''
-  };
   public edicion = false;
   public direccion: any;
   public imgSrc: any;
@@ -246,6 +237,7 @@ export class PersonalDataComponent {
       next: (res: any) => {
         this.getDocente();
         this.cambiar_modo(1);
+        this.enviarDatos();
       },
       error: (err: any) => {
         console.log(err);
@@ -576,49 +568,6 @@ export class PersonalDataComponent {
     }
     this.dataEmitter.emit(profile);
   }
-
-  public listaEstados = [
-    'Aguascalientes',
-    'Baja California',
-    'Baja California Sur',
-    'Campeche',
-    'Chiapas',
-    'Chihuahua',
-    'Cuidad de México',
-    'Coahuila',
-    'Colima',
-    'Durango',
-    'Guanajuato',
-    'Guerrero',
-    'Hidalgo',
-    'Jalisco',
-    'Estado de México',
-    'Michoacán',
-    'Morelos',
-    'Nayarit',
-    'Nuevo León',
-    'Oaxaca',
-    'Puebla',
-    'Querétaro',
-    'Quintana Roo',
-    'San Luis Potosí',
-    'Sinaloa',
-    'Sonora',
-    'Tabasco',
-    'Tamaulipas',
-    'Tlaxcala',
-    'Veracruz',
-    'Yucatán',
-    'Zacatecas',
-  ];
-
-  public listaEmpleos = [ 
-    "Profesor de asignatura",
-    "Profesor tiempo completo",
-    "Profesor medio tiempo",
-    "Técnico académico de tiempo completo",
-    "Técnico académico de medio tiempo"
-];
 
   get nombre() { return this.dpForm.get('nombre'); }
   get apellido_p() { return this.dpForm.get('apellido_p'); }
