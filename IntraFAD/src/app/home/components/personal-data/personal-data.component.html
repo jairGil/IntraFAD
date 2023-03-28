@@ -1,5 +1,5 @@
 <div class="row" *ngIf="this.edicion == false; else modoEdicion">
-  <div class="col-md-9">
+  <div class="col-md-10">
 
     <label><b>Dirección</b></label> <br>
     <label>Calle: {{ direccion[0] != 'No ingresado' ? direccion[0]: ''}}</label> <br>
@@ -51,7 +51,7 @@
     <label><b>Datos de contrato</b></label> <br>
     <label>No. de Empleado: {{ dataDocente.no_empleado }}</label> <br>
     <label>Tipo de contrato: {{ dataDocente.contratoDefinitivo ? "Definitivo" : "Interino" }}</label> <br>
-    <label>Puesto de contrato: {{ dataDocente.tipoContrato }}</label> <br>
+    <label>Plaza: {{ dataDocente.tipoContrato }}</label> <br>
 
     <hr class="hr" />
     <label><b>Licenciaturas donde imparto clase</b></label> <br>
@@ -88,7 +88,7 @@
 <ng-template #modoEdicion>
   <form (submit)="enviarDatos()" [formGroup]="dpForm">
     <div class="row">
-      <div class="col-md-7">
+      <div class="col-md-9">
         <label for="nombre"><b>Nombre completo</b></label>
         <div class="form-row">
           <div class="form-group col-md-4">
@@ -470,7 +470,7 @@
           </div>
         </div>
         <div class="form-row mb-3">
-          <label for="tipoContrato" class="col-md-4 col-form-label">Puesto</label>
+          <label for="tipoContrato" class="col-md-4 col-form-label">Plaza</label>
           <div class="col-md-4">
             <select class="form-control" formControlName="tipoContrato">
               <option *ngFor="let empleo of listaEmpleos" class="dropdown-item" [value]="empleo">
@@ -528,3 +528,5 @@
     </div>
   </form>
 </ng-template>
+
+<app-loading [loading]="this.loading" [msg]="this.msg"></app-loading>

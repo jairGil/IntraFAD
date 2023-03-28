@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CoreModule } from '../core/core.module';
 
 import { HomeComponent } from './home.component';
 import { PersonalDataComponent } from './components/personal-data/personal-data.component';
@@ -24,7 +25,8 @@ import { CertificationsComponent } from './components/data-sheet/components/cert
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CoreModule
   ]
 })
 export class HomeModule { }

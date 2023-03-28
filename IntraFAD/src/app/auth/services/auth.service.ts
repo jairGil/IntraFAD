@@ -75,7 +75,7 @@ export class AuthService {
    */
   public setToken(token: string): void {
     if(!this.loggedIn()) {
-      this.cookieService.set('token', token);
+      this.cookieService.set('token', token, 1);
     }
   }
 

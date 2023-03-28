@@ -1,4 +1,4 @@
-const IP_HOST =  'http://172.26.54.204';
+const IP_HOST =  'http://192.168.1.7';
 
 export const environment = {
     production: false,

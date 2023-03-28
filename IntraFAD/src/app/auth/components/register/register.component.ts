@@ -15,6 +15,8 @@ export class RegisterComponent {
   private regex_mail_uaemex = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_mail = /([\w\.]+)@([\w\.]+)\.(\w+)/;
 
+  public loading: boolean = false;
+  public msg: string = 'Creando cuenta...';
   public registerForm: FormGroup;
   public institucional = true;
   public cuentaCreada = false;
@@ -63,6 +65,7 @@ export class RegisterComponent {
    * @version 1.0.1
   */
   public submit(): void {
+    this.loading = true;
     this.submitted = true;
 
     let docente: Docente = this.registerForm.value;
@@ -73,6 +76,7 @@ export class RegisterComponent {
           next: (res: any) => {
             if (res.value) {
               this.cuentaCreada = true;
+              this.loading = false;
             } else {
               this.error = res;
             }

@@ -78,7 +78,7 @@ imageController.cargarImagen = async (req, res) => {
 
 // Enviar imagen al cliente
 imageController.getImage = async (req, res) => {
-    const pathFile = "/data/" + req._id + "/ImagenPerfil/" + req._id;
+    const pathFile = config.routes.files + req._id + "/ImagenPerfil/" + req._id;
 
     //console.log("pathImage: " + pathFile)
     let result = { img: "" };

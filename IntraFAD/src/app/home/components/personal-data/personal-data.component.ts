@@ -15,6 +15,7 @@ import { StaticDataService } from '../../services/static-data.service';
 /** MODELS */ 
 import { Profile } from '../../models/profile.model';
 import { Docente } from '../../models/docente.model';
+import { FormUtils } from '../../utils/FormUtils';
 
 @Component({
   selector: 'app-personal-data',
@@ -31,14 +32,12 @@ export class PersonalDataComponent {
   /* STATIC ARRAYS */
   public listaEstados = StaticDataService.listaEstados;
   public listaEmpleos = StaticDataService.listaEmpleos;
+  
+  public URL_IMG = environment.URL_IMG;
+  public URL_DOC = environment.URL_DOC;
 
   currentFile?: File;
   fileInfos?: Observable<any>;
-
-  /* REGULAR EXPRESSIONS */
-  private regex_num = /^([0-9])*$/;
-  private regex_institucional = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
-  private regex_personal = /([\w\.]+)@([\w\.]+)\.(\w+)/;
   
   public edicion = false;
   public direccion: any;
@@ -48,153 +47,24 @@ export class PersonalDataComponent {
   public imagen: any;
   private urlCurp: String = '';
   private urlRfc: String = '';
+
+  public dpForm: FormGroup = new FormGroup({});
   private imgForm: FormData = new FormData();
 
-  public URL_IMG = environment.URL_IMG;
-  public URL_DOC = environment.URL_DOC;
-  public dpForm: FormGroup = new FormGroup({});
+  public loading: boolean = false;
+  public msg: string = 'Guardando datos...';
 
 
   constructor(
-    private formBuilder: FormBuilder,
     private authService: AuthService,
     private personalDataService: PersonalDataService,
     private archivosService: ArchivosService
-  ) {
-    this.getDocente();
-    this.getImage();
-    this.initForm();
-  }
+  ) { }
 
-  ngOnInit(): void {
-    this.getDocente();
+  ngOnInit() {
     this.direccion = this.dataDocente.direccion.split(', ');
-    this.cleanToken();
-  }
-
-  /**
-   * Inicializa el formulario de datos personales
-   * @returns void
-   * @private
-   * @since 1.0.0
-   * @version 1.0.0
-   */
-  private initForm(): void {
-    this.dpForm = this.formBuilder.group({
-      img: [''],
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      apellido_p: ['', [Validators.required, Validators.minLength(3)]],
-      apellido_m: ['', [Validators.required, Validators.minLength(3)]],
-      calle: ['', [Validators.required, Validators.minLength(3)]],
-      no_ext: [''],
-      no_int: [''],
-      colonia: ['', [Validators.required, Validators.minLength(3)]],
-      estado: ['', [Validators.required, Validators.minLength(3)]],
-      municipio: ['', [Validators.required, Validators.minLength(3)]],
-      cp: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.pattern(this.regex_num),
-        ],
-      ],
-      correo_personal: [
-        '',
-        [Validators.pattern(this.regex_personal)],
-      ],
-      correo_institucional: ['', [Validators.pattern(this.regex_institucional)]],
-      telefono: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.pattern(this.regex_num),
-        ],
-      ],
-      rfc: [
-        '',
-        [Validators.required, Validators.minLength(12), Validators.maxLength(13)],
-      ],
-      doc_rfc: ['', [Validators.required]],
-      curp: [
-        '',
-        [Validators.required, Validators.minLength(18), Validators.maxLength(18)],
-      ],
-      doc_curp: ['', [Validators.required]],
-      no_empleado: [
-        '',
-        [Validators.maxLength(6), Validators.pattern(this.regex_num)],
-      ],
-      contratoDefinitivo: [false],
-      tipoContrato: [''],
-      ldg: [false],
-      ldi: [false],
-      arq: [false],
-      apou: [false],
-    });
-  }
-
-  /**
-   * Obtiene todos los datos del docente
-   * @returns void
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  private getDocente(): void {
-    this.personalDataService.getDocente(this.authService.decodeToken()._id).subscribe({
-      next: (res: any) => {
-        this.dataDocente = res.docente;
-        this.direccion = this.dataDocente.direccion.split(', ');
-        this.sendDataToParent();
-      },
-      error: (err: any) => console.log(err)
-    });
-  }
-
-  /**
-   * Limpia los campos por defecto del token
-   * @returns void
-   * @since 1.0.0
-   * @version 1.0.0
-   */
-  private cleanToken(): void {
-    if (this.dataDocente.nombre == 'No ingresado') {
-      this.dataDocente.nombre = '';
-    }
-
-    if (this.dataDocente.apellido_p == 'No ingresado') {
-      this.dataDocente.apellido_p = '';
-    }
-
-    if (this.dataDocente.apellido_m == 'No ingresado') {
-      this.dataDocente.apellido_m = '';
-    }
-
-    if (this.dataDocente.direccion == 'No ingresado') {
-      this.dataDocente.direccion = '';
-    }
-
-    if (this.dataDocente.correo_personal == 'no_inicializado@mail.com') {
-      this.dataDocente.correo_personal = '';
-    }
-
-    if (this.dataDocente.correo_institucional == 'no_inicializado@uaemex.com') {
-      this.dataDocente.correo_institucional = '';
-    }
-
-    if (this.dataDocente.telefono == '0000000000') {
-      this.dataDocente.telefono = '';
-    }
-
-    if (this.dataDocente.rfc == 'ABCD123456789') {
-      this.dataDocente.rfc = '';
-    }
-
-    if (this.dataDocente.curp == 'ABCD123456EFGHIJK0') {
-      this.dataDocente.curp = '';
-    }
+    this.dpForm = FormUtils.buildForm();
+    this.dpForm = FormUtils.setDataDocente(this.dpForm, this.dataDocente);
   }
 
   /**
@@ -204,17 +74,18 @@ export class PersonalDataComponent {
    * @version 1.0.0
   */
   public enviarDatos(): void {
+    this.loading = true;
     this.uploadImage();
-    this.urlRfc = this.uploadDocument('rfc', 'doc_rfc');
-    this.urlCurp = this.uploadDocument('curp', 'doc_curp');
-
+    // this.urlRfc = this.uploadDocument('rfc', 'doc_rfc');
+    // this.urlCurp = this.uploadDocument('curp', 'doc_curp');
+    
     let docente: Docente = {
       _id: this.dataDocente._id,
       img: this.dataDocente.img,
       nombre: this.dpForm.get('nombre')?.value!,
       apellido_p: this.dpForm.get('apellido_p')?.value!,
       apellido_m: this.dpForm.get('apellido_m')?.value!,
-      direccion: this.getDireccion(),
+      direccion: FormUtils.makeDireccion(this.dpForm),
       correo_personal: this.dpForm.get('correo_personal')?.value!,
       correo_institucional: this.dpForm.get('correo_institucional')?.value!,
       telefono: this.dpForm.get('telefono')?.value!,
@@ -235,130 +106,14 @@ export class PersonalDataComponent {
 
     this.personalDataService.updateDocente(docente).subscribe({
       next: (res: any) => {
-        this.getDocente();
+        this.sendDataToParent();
         this.cambiar_modo(1);
-        this.enviarDatos();
+        this.loading = false;
       },
       error: (err: any) => {
         console.log(err);
       }
     });
-  }
-
-
-  /**
-   * colocar los datos del docente en los campos del formulario
-   * @returns void
-   * @private
-   * @since 1.0.0
-   * @version 1.0.0
-   */
-  private setData(): void {
-    if (this.dataDocente.nombre != 'No ingresado') {
-      this.dpForm.get('nombre')?.setValue(this.dataDocente.nombre);
-    }
-
-    if (this.dataDocente.apellido_p != 'No ingresado') {
-      this.dpForm.get('apellido_p')?.setValue(this.dataDocente.apellido_p);
-    }
-
-    if (this.dataDocente.apellido_m != 'No ingresado') {
-      this.dpForm.get('apellido_m')?.setValue(this.dataDocente.apellido_m);
-    }
-
-
-    if (this.dataDocente.correo_personal != 'no_inicializado@mail.com') {
-      this.dpForm
-        .get('correo_personal')
-        ?.setValue(this.dataDocente.correo_personal);
-    }
-
-    if (this.dataDocente.correo_institucional != 'no_inicializado@uaemex.com') {
-      this.dpForm
-        .get('correo_institucional')
-        ?.setValue(this.dataDocente.correo_institucional);
-    }
-
-    if (this.dataDocente.telefono != '0000000000') {
-      this.dpForm.get('telefono')?.setValue(this.dataDocente.telefono);
-    }
-
-    if (this.dataDocente.no_empleado != '0000000') {
-      this.dpForm.get('no_empleado')?.setValue(this.dataDocente.no_empleado);
-    }
-
-    this.dpForm.get('img')?.setValue(this.dataDocente.img);
-    this.dpForm.get('rfc')?.setValue(this.dataDocente.rfc);
-    this.dpForm.get('curp')?.setValue(this.dataDocente.curp);
-    this.dpForm.get('doc_rfc')?.setValue(this.dataDocente.doc_rfc);
-    this.dpForm.get('doc_curp')?.setValue(this.dataDocente.doc_curp);
-    this.dpForm.get('ldg')?.setValue(this.dataDocente.ldg);
-    this.dpForm.get('ldi')?.setValue(this.dataDocente.ldi);
-    this.dpForm.get('arq')?.setValue(this.dataDocente.arq);
-    this.dpForm.get('apou')?.setValue(this.dataDocente.apou);
-    this.dpForm.get('tipoContrato')?.setValue(this.dataDocente.tipoContrato);
-    this.dpForm.get('contratoDefinitivo')?.setValue(this.dataDocente.contratoDefinitivo);
-
-    this.rfcFilename = this.dataDocente.doc_rfc;
-    this.curpFilename = this.dataDocente.doc_curp;
-  }
-
-  /**
-   * Generar la dirección del docente
-   * @returns string
-   * @private
-   * @since 1.0.0
-   * @version 1.0.0
-   */
-  private getDireccion(): string {
-    if (
-      this.dpForm.get('no_ext')?.value == '' ||
-      this.dpForm.get('no_ext')?.value == null
-    ) {
-      this.dpForm.get('no_ext')?.setValue('SN');
-    }
-
-    if (
-      this.dpForm.get('no_int')?.value == '' ||
-      this.dpForm.get('no_int')?.value == null
-    ) {
-      this.dpForm.get('no_int')?.setValue('SN');
-    }
-
-    return (
-      this.dpForm.get('calle')?.value +
-      ', ' +
-      this.dpForm.get('no_ext')?.value +
-      ', ' +
-      this.dpForm.get('no_int')?.value +
-      ', ' +
-      this.dpForm.get('colonia')?.value +
-      ', ' +
-      this.dpForm.get('municipio')?.value +
-      ', ' +
-      this.dpForm.get('estado')?.value +
-      ', ' +
-      this.dpForm.get('cp')?.value
-    );
-  }
-
-  /**
-   * Colocar la dirección del docente en los campos del formulario
-   * @returns void
-   * @private
-   * @since 1.0.0
-   * @version 1.0.0
-   */
-  private setDomicilio(): void {
-    if (this.direccion[0] != 'No ingresado') {
-      this.dpForm.get('calle')?.setValue(this.direccion[0]);
-      this.dpForm.get('no_ext')?.setValue(this.direccion[1]);
-      this.dpForm.get('no_int')?.setValue(this.direccion[2]);
-      this.dpForm.get('colonia')?.setValue(this.direccion[3]);
-      this.dpForm.get('municipio')?.setValue(this.direccion[4]);
-      this.dpForm.get('estado')?.setValue(this.direccion[5]);
-      this.dpForm.get('cp')?.setValue(this.direccion[6]);
-    }
   }
 
   /** 
@@ -460,25 +215,6 @@ export class PersonalDataComponent {
   }
 
   /**
-   * Obtener la imagen del servidor y colocarla en la interfaz
-   * @returns void
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  private getImage(): void {
-    this.archivosService.getImage().subscribe({
-      next: (res: any) => {
-        this.createImageFromBlob(res);
-      },
-      error: (err: any) => {
-        this.imagen = 'assets/img/default.png';
-        console.log('Error', err);
-      }
-    });
-  }
-
-  /**
    * Obtener el documento del servidor
    * @returns string
    * @param type (string) - Tipo de documento
@@ -508,27 +244,6 @@ export class PersonalDataComponent {
     }
   }
 
-  /**
-   * Crear imagen a partir de un Blob
-   * @returns void
-   * @param image (Blob) - Imagen en formato Blob
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        this.imagen = reader.result;
-      },
-      false
-    );
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
 
   /**
    * Intercambiar el modo edicion y visualizacion
@@ -537,20 +252,15 @@ export class PersonalDataComponent {
    * @since 1.0.0
    * @version 1.0.0
    */
-  public cambiar_modo(modo: number): void {
+  public async cambiar_modo(modo: number): Promise<void> {
     switch (modo) {
       case 1:
-        this.getDocente();
         this.direccion = this.dataDocente.direccion.split(', ');
-        this.cleanToken();
         this.edicion = false;
         break;
       case 2:
-        this.setData();
-        this.setDomicilio();
-        if (this.dataDocente.correo_institucional != "") {
-          this.dpForm.controls['correo_institucional'].disable();
-        }
+        this.imagen = await this.archivosService.getImageSrc();
+        FormUtils.setDataDocente(this.dpForm, this.dataDocente);
         this.edicion = true;
         break;
     }
@@ -559,7 +269,7 @@ export class PersonalDataComponent {
   /**
    * Comunicar los datos obtenidos de la API Docente para la visualización del perfil de usuario
    */
-  sendDataToParent() {
+  public sendDataToParent(): void {
     let profile: Profile = {
       img: this.imagen,
       nombre: this.dataDocente.nombre,

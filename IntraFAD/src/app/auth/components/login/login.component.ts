@@ -10,6 +10,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
+  /** Variable bandera para mostrar el loading */ 
+  public loading = false;
+  /** Variable del mensaje para mostrar en **app-loading** */
+  public msg = 'Iniciando sesión...';
+
+  // Expresiones regulares para validar los campos correo_institucional y correo_personal
   private regex_institucional = /([a-z0-9]{3,})+\@+(profesor\.|)+(uaemex\.mx)/;
   private regex_mail = /([\w\.]+)@([\w\.]+)\.(\w+)/;
   
@@ -72,6 +78,7 @@ export class LoginComponent {
    * @version 1.0.0
   */
   public login(): void {
+    this.loading = true;
     if (this.institucional) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
@@ -81,9 +88,11 @@ export class LoginComponent {
           } else {
             this.error = res;
           }
+          this.loading = false;
         },
         error: (err: any) => {
           this.error = err.error;
+          this.loading = false;
         }
       });
     } else {
