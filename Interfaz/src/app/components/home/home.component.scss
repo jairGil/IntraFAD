@@ -1,0 +1,23 @@
+.pnl-izq {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid black;
+    min-height: 37rem;
+}
+
+.main {
+    margin-top: 50px;
+    display: flex;
+    margin-inline: 5%;
+    margin-bottom: 50px;
+}
+
+.btn-transparent {
+    background: none;
+    text-align: start;
+    margin-bottom: 5px;
+}
+
+.btn-transparent:hover {
+    color: #28A745;
+}

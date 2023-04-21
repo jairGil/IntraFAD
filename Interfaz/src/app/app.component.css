@@ -1,0 +1,60 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.contraste {
+    background: linear-gradient(90deg, rgba(102, 131, 112, 1) 0%, rgba(97, 133, 111, 1) 23%, rgba(103, 126, 109, 1) 100%);
+    width: 100%;
+    height: 6px;
+}
+
+.bg-gradient {
+    background: linear-gradient(90deg, rgba(102, 131, 112, 1) 0%, rgba(97, 133, 111, 1) 23%, rgba(103, 126, 109, 1) 100%);
+    color: #E5FDEC;
+}
+
+.btn-primary {
+    background-color: #3d8557;
+    border: none;
+    padding-inline: 5%;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #479965;
+}
+
+.is-required:after {
+    content: '*';
+    margin-left: 3px;
+    color: red;
+    font-weight: bold;
+}
+
+.pdf-icon {
+    width: auto;
+    height: 35px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+button[type="submit"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #3d8557cc;
+    box-shadow: 0 1px 1px #00000013 inset, 0 0 8px #3d8557cc;
+    outline: 0 none;
+}
+
+#page-container {
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+}
+
+app-footer {
+    width: 100%;
+    height: auto;
+}

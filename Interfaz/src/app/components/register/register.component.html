@@ -1,0 +1,111 @@
+<div class="register container">
+  <div class="row align-items-center">
+    <div class="col">
+      <h3>Crear cuenta</h3>
+
+      <form (submit)="submit()" [formGroup]="registerForm">
+        <div class="form-group" *ngIf="institucional; else NoInstitucional">
+          <label for="correo_institucional">Correo institucional</label>
+          <input type="email" class="form-control" formControlName="correo_institucional" placeholder="micorreo@uaemex.mx">
+          <div class="mt-2 mb-2">
+            <div *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="correo_institucional?.errors?.['required']">
+                El <b>correo institucional</b> es requerido.
+              </div>
+              <div *ngIf="correo_institucional?.errors?.['pattern']">
+                El correo institucional debe tener los siguientes formatos
+                <ul>
+                  <li>micorreo@uaemex.mx</li>
+                  <li>micorreo@profesor.uaemex.mx</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #NoInstitucional>
+          <div class="form-group">
+            <label for="correo_personal">Correo personal</label>
+            <input type="email" class="form-control" formControlName="correo_personal" placeholder="mail@gmail.com">
+            <div class="mt-2 mb-2">
+              <div *ngIf="correo_personal?.invalid && (correo_personal?.dirty || correo_personal?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="correo_personal?.errors?.['required']">
+                  El <b>correo personal</b> es requerido.
+                </div>
+                <div *ngIf="correo_personal?.errors?.['pattern']">
+                  Debe ingresar un correo electrónico válido.
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      
+        <div class="form-group">
+          <label for="constrasena">Contraseña</label>
+          <input type="password" class="form-control" formControlName="contrasena" placeholder="mi contraseña">
+          <div class="mt-2 mb-2">
+            <div *ngIf="contrasena?.invalid && (contrasena?.dirty || contrasena?.touched)" class="alert alert-danger"
+              role="alert">
+              <div *ngIf="contrasena?.errors?.['required']">
+                La <b>contraseña</b> es requerida.
+              </div>
+              <div *ngIf="contrasena?.errors?.['minlength']">
+                La contraseña debe tener como mínimo <b>8</b> caracteres
+              </div>
+              <div *ngIf="contrasena?.errors?.['maxlength']">
+                La contraseña debe contener como máximo de <b>64</b> caracteres
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="form-group">
+          <label for="confirma_contrasena">Confirma tu contraseña</label>
+          <input type="password" class="form-control" formControlName="confirma_contrasena" placeholder="mi contraseña">
+          <div class="mt-2 mb-2">
+            <div *ngIf="confirma_contrasena?.invalid && (confirma_contrasena?.dirty || confirma_contrasena?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="confirma_contrasena?.errors?.['required']">
+                La <b>confirmación de contraseña</b> es requerida.
+              </div>
+            </div>
+            <div
+              *ngIf="!confirma_contrasena?.invalid && (confirma_contrasena?.dirty || confirma_contrasena?.touched) && contrasena?.value != confirma_contrasena?.value"
+              class="alert alert-danger" role="alert">
+              <div>
+                Las contraseñas no coinciden.
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="form-group form-check">
+          <input type="checkbox" formControlName="aviso_privacidad" id="aviso_privacidad" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && aviso_privacidad?.errors }" />
+          <label for="aviso_privacidad" class="form-check-label">He leido el 
+            <a href="http://web.uaemex.mx/avisos/Aviso_Privacidad.pdf" target="_blank">aviso de privacidad</a></label>
+          <div *ngIf="submitted && aviso_privacidad?.errors" class="invalid-feedback">Accept Ts & Cs is required</div>
+        </div>
+        <button class="btn btn-primary" type="submit" [disabled]="!this.validForm()">Crear cuenta</button>
+      
+        <div class="alert alert-danger" role="alert" *ngIf="!this.error?.value">
+          {{ this.error.msg }}
+        </div> 
+      </form>
+
+      <!--<button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="institucional">No cuento con correo institucional</button>-->
+      <button class="btn btn-block btn-light" (click)="cambiaTipoCuenta()" *ngIf="!institucional">Registrarme con correo institucional</button>
+
+      <hr class="hr hr-blurry"/>
+      <div class="mt-2">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+      </div>
+
+    </div>
+
+    <div class="col">
+      <img src="../../assets/img/IntraFAD.png" class="img" alt="">
+    </div>
+  </div>
+</div>

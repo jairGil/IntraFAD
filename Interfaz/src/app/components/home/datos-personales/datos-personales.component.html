@@ -1,0 +1,487 @@
+<div class="row" *ngIf="this.edicion == false; else modoEdicion">
+  <div class="col-md-9">
+    <div class="row">
+      <img [src]="imgSrc || this.imagen" class="perfil ml-3" alt="Imagen de perfil" id="perfil"/>
+      <div class="col-md-8 align-self-center">
+        <label><b>{{ token_data?.nombre + ' ' + token_data?.apellido_p + ' ' + token_data?.apellido_m }}</b></label> <br>
+      </div>
+    </div>
+
+    <hr class="hr"/>
+    <label><b>Dirección</b></label> <br>
+    <label>Calle: {{ direccion[0] != 'No ingresado' ? direccion[0]: ''}}</label> <br>
+    <label>No. ext.: {{ direccion[1] != '' && direccion[1] != null ? direccion[1] : 'SN' }}</label> <br>
+    <label>No. int.: {{ direccion[2] != '' && direccion[2] != null ? direccion[2] : 'SN' }}</label> <br>
+    <label>Colonia: {{ direccion[3] }}</label> <br>
+    <label>Municipio: {{ direccion[4] }}</label> <br>
+    <label>Estado: {{ direccion[5] }}</label> <br>
+    <label>C.P.: {{ direccion[6] }}</label> <br>
+
+    <hr class="hr"/>
+    <label><b>Contacto</b></label> <br>
+    <label>Correo personal: {{ token_data?.correo_personal }}</label> <br>
+    <label>Correo institucional: {{ token_data?.correo_institucional }}</label> <br>
+    <label>Teléfono: {{ token_data?.telefono }}</label> <br>
+
+    <hr class="hr"/>
+    <label><b>Identidad</b></label> <br>
+
+    <!-- Verificar que el documento del docente exista -->
+    <!-- ******** RFC ********** -->
+    <span *ngIf="!this.token_data.doc_rfc; else lblRfcValido">
+      <label>RFC: {{ token_data?.rfc }} -- Se requerie subir el documento probatorio en formato PDF</label> <br>
+    </span>
+
+    <ng-template #lblRfcValido>
+      <label>
+          <a href="javascript: void(0);"  (click)="showIDDoc('rfc')">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>RFC: {{ token_data?.rfc }}</span>
+        </a>
+      </label> <br>
+    </ng-template>
+    <!-- ******** FIN_RFC ********** -->
+
+    <span *ngIf="!this.token_data.doc_curp; else lblCurpValido">
+      <label>CURP: {{ token_data?.curp }} -- Se requerie subir el documento probatorio en formato PDF</label> <br>
+    </span>
+
+    <ng-template #lblCurpValido>
+      <label>
+        <a href="javascript: void(0);"  (click)="showIDDoc('curp')">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>CURP: {{ token_data?.curp }}</span>
+        </a>        
+      </label> <br>
+    </ng-template>
+
+    
+    <label>No. de Empleado: {{ token_data?.no_empleado }}</label> <br>
+
+    <hr class="hr"/>
+    <label><b>Licenciaturas donde imparto clase</b></label> <br>
+    <div class="row" *ngIf="token_data.ldg == true" >
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura ldg">Licenciatura en Diseño Gráfico <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.ldi == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura ldi">Licenciatura en Diseño Industrial <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.arq == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura arq">Licenciatura en Arquitectura <br></label>
+      </div>
+    </div>
+    <div class="row" *ngIf="token_data.apou == true">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura apou">Licenciatura en Administración y Promoción de la Obra Urbana <br></label> <br>
+      </div>
+    </div>
+    <button class="btn btn-primary" (click)="cambiar_modo(2)">Editar</button>
+  </div>
+</div>
+
+
+
+<ng-template #modoEdicion>
+  <form (submit)="enviarDatos()" [formGroup]="dpForm">
+    <div class="row">
+      <div class="col-md-7">
+        <label for="nombre"><b>Nombre completo</b></label>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="nombre" class="col-form-label is-required">Nombre</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_p" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_m" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre(s)" formControlName="nombre">
+            <div class="mt-2 mb-2">
+              <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="nombre?.errors?.['required']">
+                  El campo <b>nombre</b> es obligatorio.
+                </div>
+                <div *ngIf="nombre?.errors?.['minlength']">
+                  La longitud mínima del nombre es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_p" placeholder="Apellido paterno"
+              formControlName="apellido_p">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_p?.invalid && (apellido_p?.dirty || apellido_p?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_p?.errors?.['required']">
+                  El campo <b>apellido paterno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_p?.errors?.['minlength']">
+                  La longitud mínima del apellido paterno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_m" placeholder="Apellido materno"
+              formControlName="apellido_m">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_m?.invalid && (apellido_m?.dirty || apellido_m?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_m?.errors?.['required']">
+                  El campo <b>apellido materno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_m?.errors?.['minlength']">
+                  La longitud mínima del apellido materno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="hr"/>
+        <label for="nombre"><b>Dirección</b></label>
+        <div class="form-row">
+          <div class="col-md-4">
+            <label for="calle" class="col-form-label is-required">Calle</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_ext">No. Ext.</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_int">No. Int.</label>
+          </div>
+          <div class="col-md-4">
+            <label for="no_ext" class="col-form-label is-required">Colonia</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="calle" placeholder="Calle" formControlName="calle">
+            <div class="mt-2 mb-2">
+              <div *ngIf="calle?.invalid && (calle?.dirty || calle?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="calle?.errors?.['required']">
+                  El campo <b>calle</b> es obligatorio.
+                </div>
+                <div *ngIf="calle?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_ext" placeholder="No. ext." formControlName="no_ext" maxlength="5">
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_int" placeholder="No. int." formControlName="no_int" maxlength="5">
+          </div>
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="colonia" placeholder="Colonia" formControlName="colonia">
+            <div class="mt-2 mb-2">
+              <div *ngIf="colonia?.invalid && (colonia?.dirty || colonia?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="colonia?.errors?.['required']">
+                  El campo <b>colonia</b> es obligatorio.
+                </div>
+                <div *ngIf="colonia?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-4">
+            <label for="municipio" class="col-form-label is-required">Municipio</label>
+          </div>
+          <div class="col-md-4">
+            <label for="estado" class="col-form-label is-required">Estado</label>
+          </div>
+          <div class="col-md-2" class="col-form-label is-required">
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="municipio" placeholder="Municipio"
+              formControlName="municipio">
+            <div class="mt-2 mb-2">
+              <div *ngIf="municipio?.invalid && (municipio?.dirty || municipio?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="municipio?.errors?.['required']">
+                  El campo <b>municipio</b> es obligatorio.
+                </div>
+                <div *ngIf="municipio?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-4">
+            <select class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+              <option class="dropdown-item" placeholder="Seleccionar..." value="">
+              </option>
+              <option *ngFor="let estado of listaEstados" class="dropdown-item" [value]="estado">
+                {{ estado }}
+              </option>
+            </select>
+            <div class="mt-2 mb-2">
+              <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="estado?.errors?.['required']">
+                  El campo <b>estado</b> es obligatorio.
+                </div>
+                <div *ngIf="estado?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp" maxlength="5">  
+            <div class="mt-2 mb-2">
+              <div *ngIf="cp?.invalid && (cp?.dirty || cp?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="cp?.errors?.['required']">
+                  El campo <b>C.P.</b> es obligatorio.
+                </div>
+                <div *ngIf="cp?.errors?.['minlength']">
+                  La longitud mínima es de 5 números.
+                </div>
+                <div *ngIf="cp?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="hr"/>
+        <label for="nombre"><b>Datos de contacto</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Correo personal</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_personal" placeholder="micorreopersonal@ejemplo.com"
+              formControlName="correo_personal">
+          </div>
+        </div>
+        <div *ngIf="correo_personal?.invalid && (correo_personal?.dirty || correo_personal?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_personal?.errors?.['required']">
+            El campo <b>correo personal</b> es obligatorio.
+          </div>
+          <div *ngIf="correo_personal?.errors?.['minlength']">
+            La longitud mínima es de 3 caracteres.
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">Correo institucional</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_institucional" placeholder="micorreo@uaemex.mx"
+              formControlName="correo_institucional">
+          </div>
+        </div>
+        <div *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_institucional?.errors?.['pattern']">
+            El correo institucional debe tener los siguientes formatos
+            <ul>
+              <li>micorreo@uaemex.mx</li>
+              <li>micorreo@profesor.uaemex.mx</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Teléfono</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="telefono" placeholder="Mi numero telefónico" 
+              maxlength="10" formControlName="telefono">
+          </div>
+        </div>
+        <div *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)" class="alert alert-danger col-md-12"
+          role="alert">
+          <div *ngIf="telefono?.errors?.['required']">
+            El campo <b>teléfono</b> es obligatorio.
+          </div>
+          <div *ngIf="telefono?.errors?.['minlength']">
+            La longitud mínima es de 10 caracteres.
+          </div>
+          <div *ngIf="telefono?.errors?.['pattern']">
+            Debe ingresar solo números.
+          </div>
+        </div>
+
+        <hr class="hr"/>
+        <label for="nombre"><b>Documentos de identidad</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">RFC</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="rfc" 
+              maxlength="13" style="text-transform:uppercase" formControlName="rfc" placeholder="Mi RFC con homoclave">
+            <div *ngIf="rfc?.invalid && (rfc?.dirty || rfc?.touched)" class="alert alert-danger col-md-12"
+              role="alert">
+              <div *ngIf="rfc?.errors?.['required']">
+                El campo <b>RFC</b> es obligatorio.
+              </div>
+              <div *ngIf="rfc?.errors?.['minlength']">
+                La longitud mínima es de 12 caracteres.
+              </div>
+              <div *ngIf="rfc?.errors?.['maxlength']">
+                La longitud máxima es de 13 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón subir documento RFC -->
+          <div class="col-md-2">
+            <div class="btn btn-primary btn-file">
+              <label class="form-label text-white" for="doc_rfc">Subir archivo</label>
+              <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-4" >
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.rfcFilename == 'no_inicializado.pdf'; else RFCini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #RFCini>
+            <div *ngIf="this.dpForm.get('doc_rfc')?.value != this.token_data.doc_rfc; else RFCinilbl" class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.rfcFilename }}</span>
+            </div>
+            <ng-template #RFCinilbl>
+              <div class="col-md-2">
+                  <a [attr.href]="getDocument('rfc')" target="_blank">
+                    <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                    <span>Ver RFC</span>
+                  </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+        <!-- FIN_Botón subir documento RFC -->
+        <div class="form-row mb-3">
+          <label for="curp" class="col-md-4 col-form-label is-required">CURP</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="curp" 
+              maxlength="18" style="text-transform:uppercase" formControlName="curp" placeholder="Mi CURP">
+            <div *ngIf="curp?.invalid && (curp?.dirty || curp?.touched)" class="alert alert-danger col-md-12"
+              role="alert">
+              <div *ngIf="curp?.errors?.['required']">
+                El campo <b>CURP</b> es obligatorio.
+              </div>
+              <div *ngIf="curp?.errors?.['minlength']">
+                La longitud mínima es de 18 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="btn btn-primary btn-file">
+              <label class="form-label text-white" for="doc_curp">Subir archivo</label>
+              <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.curpFilename == 'no_inicializado.pdf'; else CURPini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #CURPini>
+            <div *ngIf="this.dpForm.get('doc_curp')?.value != this.token_data.doc_curp; else CURPinilbl" class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.curpFilename }}</span>
+            </div>
+            <ng-template #CURPinilbl>
+              <div class="col-md-2">
+                  <a [attr.href]="getDocument('curp')" target="_blank">
+                    <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                    <span>Ver CURP</span>
+                  </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="no_emp" class="col-md-4 col-form-label">No. de Empleado</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" formControlName="no_empleado" placeholder="Mi numero de empleado">
+          </div>
+        </div>
+
+        <hr class="hr"/>
+        <label><b>Seleccione las licenciaturas donde imparte clase</b></label>
+        <div class="form-check licenciatura ldg">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.ldg}}" id="ldg" formControlName="ldg"/>
+          <label class="form-check-label label-lic" for="ldg">Licenciatura en Diseño Gráfico</label>
+        </div>
+        <div class="form-check licenciatura ldi">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.ldi}}" id="ldi" formControlName="ldi"/>
+          <label class="form-check-label label-lic" for="ldi">Licenciatura en Diseño Industrial</label>
+        </div>
+        <div class="form-check licenciatura arq">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.arq}}" id="arq" formControlName="arq"/>
+          <label class="form-check-label label-lic" for="arq">Licenciatura en Arquitectura</label>
+        </div>
+        <div class="form-check licenciatura apou">
+          <input class="form-check-input" type="checkbox" value="{{this.token_data.apou}}" id="apou" formControlName="apou"/>
+          <label class="form-check-label label-lic" for="apou">Licenciatura en  Administración y Promoción de la Obra Urbana</label>
+        </div>
+
+
+        <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>
+        <button class="btn btn-danger btn-salir" (click)="cambiar_modo(1)">Salir</button>
+      </div>
+
+      <div class="col-md-2">
+        <div>
+          <div class="d-flex justify-content-center mb-4">
+            <img [src]="imgSrc || this.imagen" alt="" class="perfil">
+          </div>
+
+          <div class="justify-content-center">
+            <div class="btn btn-primary">
+              <label class="form-label text-white m-1" for="img">Cambiar imagen</label>
+              <input type="file" class="form-control d-none" id="img" (change)="onImageSelect($event)"
+                accept=".jpg, .jpeg"/>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
