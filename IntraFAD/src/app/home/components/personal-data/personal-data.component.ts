@@ -14,7 +14,7 @@ import { StaticDataService } from '../../services/static-data.service';
 
 /** MODELS */ 
 import { Profile } from '../../models/profile.model';
-import { Docente } from '../../models/docente.model';
+import { Docente, DocenteSend } from '../../models/docente.model';
 import { FormUtils } from '../../utils/FormUtils';
 
 @Component({
@@ -76,12 +76,9 @@ export class PersonalDataComponent {
   public enviarDatos(): void {
     this.loading = true;
     this.uploadImage();
-    // this.urlRfc = this.uploadDocument('rfc', 'doc_rfc');
-    // this.urlCurp = this.uploadDocument('curp', 'doc_curp');
     
-    let docente: Docente = {
-      _id: this.dataDocente._id,
-      img: this.dataDocente.img,
+    //Inicializamos docente  para actualizar solo los datos 
+    let docente: DocenteSend = {
       nombre: this.dpForm.get('nombre')?.value!,
       apellido_p: this.dpForm.get('apellido_p')?.value!,
       apellido_m: this.dpForm.get('apellido_m')?.value!,
@@ -90,30 +87,43 @@ export class PersonalDataComponent {
       correo_institucional: this.dpForm.get('correo_institucional')?.value!,
       telefono: this.dpForm.get('telefono')?.value!,
       rfc: this.dpForm.get('rfc')?.value!,
-      // doc_rfc: this.uploadDocument('rfc', 'doc_rfc'),
-      doc_rfc: '-data-' + this.dataDocente._id + '-RFC-' + this.dataDocente._id + '.pdf',
       curp: this.dpForm.get('curp')?.value!,
-      doc_curp: '-data-' + this.dataDocente._id + '-CURP-' + this.dataDocente._id + '.pdf',
       no_empleado: this.dpForm.get('no_empleado')?.value!,
       ldg: this.dpForm.get('ldg')?.value!,
       ldi: this.dpForm.get('ldi')?.value!,
       arq: this.dpForm.get('arq')?.value!,
       apou: this.dpForm.get('apou')?.value!,
-      rol: 'USER_ROLE',
       tipoContrato: this.dpForm.get('tipoContrato')?.value!,
-      contratoDefinitivo: this.dpForm.get('contratoDefinitivo')?.value!
+      contratoDefinitivo: this.dpForm.get('contratoDefinitivo')?.value!,
+      rol: 'BASIC_ROLE', 
     };
 
-    this.personalDataService.updateDocente(docente).subscribe({
+    //Generamos un query para la actualización de los datos personales
+    const updateQuery = {
+      id:{DocenteID:this.dataDocente._id}, 
+      params: docente
+    };
+
+    //Actualizamos en la base de datos los Datos personales
+    this.personalDataService.updatePersonalData(updateQuery).subscribe({
       next: (res: any) => {
-        this.sendDataToParent();
-        this.cambiar_modo(1);
-        this.loading = false;
+        if(res.code == 200) {
+          this.sendDataToParent();
+          this.cambiar_modo(1);
+          this.loading = false;
+        }
+        console.log(res)
       },
       error: (err: any) => {
         console.log(err);
       }
     });
+
+    //Subimos los documentos rfc y curp
+    if(this.rfcFilename != null)
+    this.uploadDocument('rfc', 'doc_rfc');
+    if(this.curpFilename != null)
+    this.uploadDocument('curp', 'doc_curp');
   }
 
   /** 
@@ -189,59 +199,66 @@ export class PersonalDataComponent {
   /**
    * Envio de documentos al servidor
    * @returns string
-   * @param tipo (string) - Tipo de documento
+   * @param tipo (string) - Tipo de documento a subir
    * @param campo (string) - Campo del formulario
    * @since 1.0.0
    * @version 1.0.0
    * @private
    */
-  private uploadDocument(tipo: string, campo: string): string {
+  uploadDocument(tipo: string, campo: string){
+    //FormData para subir el archivo
     const formData = new FormData();
-    let doc = '**';
+    const fieldValue = this.dpForm.get(campo)?.value;
 
-    formData.append(tipo, this.dpForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, formData).subscribe({
-      next: (res: any) => {
-        if (tipo == 'rfc') this.dataDocente.doc_rfc = res.doc;
-        if (tipo == 'curp') this.dataDocente.doc_curp = res.doc;
-        this.dpForm.get(campo)?.setValue(res.doc);
-        doc = res.doc;
-      },
-      error: (err: any) => {
-        console.log(err);
-      }
-    });
-    return doc;
+    if (fieldValue !== null && fieldValue !== undefined) {
+      formData.append(tipo, fieldValue);
+      //Llama da al microservicio para subir el archivo
+      this.archivosService.setDoc(tipo, formData).subscribe({
+        next: (res: any) => {
+          //Si se subiío correctamente el documento se actualiza la base de datos
+          if(res.code === 200){
+            const updateQuery = {
+              id:{ DocenteID: this.dataDocente._id }, 
+              params: { [`doc_${tipo}`]: true }
+            }; 
+            //Actualizar en base de datos
+            this.personalDataService.updatePersonalData(updateQuery).subscribe({
+              next: (res: any) => {
+                console.log(res);
+              },
+              error: (err: any) => {
+                console.log(err);
+              }
+            });
+            
+            //Se limpian los campos de los documentos
+            this.rfcFilename = null;
+            this.curpFilename = null;
+          }
+        },
+        error: (err: any) => {
+          console.log(err);
+        }
+      });
+    }
   }
 
   /**
    * Obtener el documento del servidor
-   * @returns string
-   * @param type (string) - Tipo de documento
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  getDocument(type: string): string {
-    switch (type) {
-      case 'rfc':
-        return this.URL_DOC + 'get-document/' + this.dataDocente.doc_rfc;
-      case 'curp':
-        return this.URL_DOC + 'get-document/' + this.dataDocente.doc_curp;
-      default:
-        return '';
-    }
-  }
-
-  showDoc(type: string) {
-    switch (type) {
-      case 'rfc':
-        return this.archivosService.getDoc(this.dataDocente.doc_rfc)
-      case 'curp':
-        return this.archivosService.getDoc(this.dataDocente.doc_curp)
-      default:
-        return '';
-    }
+   * @param type (string) - Tipo de documento (RFC, CURP)
+   * @returns void
+   * @since 1.1.0
+   * @version 1.1.0
+  */
+  showIDDoc(type: String): void {
+    this.archivosService.getIDDoc(type, this.dataDocente._id)
+      .subscribe(
+        data => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        }
+      )
   }
 
 

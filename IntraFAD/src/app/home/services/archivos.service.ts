@@ -48,6 +48,20 @@ export class ArchivosService {
     return respuesta;
   }
 
+  /**
+   * Obtener documento de Identidad (RFC o CURP)
+   * @param type Tipo de documento (RFC o CURP)
+   * @param id ID del docente
+   * @returns Objeto Blob del documento
+   */
+  getIDDoc(type: String, id: String): Observable<Blob>{
+    const options = {
+      responseType: "blob" as 'json',
+    }
+    const body = { idDocente: id }
+    return this.http.get<any>(this.URL_DOC + 'get-document/' + type, options);
+  }
+
   getDoc(url: any) {
     let headers = new HttpHeaders().set(
       'Authorization',

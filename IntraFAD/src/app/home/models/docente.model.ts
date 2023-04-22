@@ -1,6 +1,4 @@
-export interface Docente {
-    _id: String;
-    img: String;
+export interface DocenteSend {
     nombre: String;
     apellido_p: String;
     apellido_m: String;
@@ -9,9 +7,9 @@ export interface Docente {
     correo_institucional: String;
     telefono: String;
     rfc: String;
-    doc_rfc: String;
+    doc_rfc?: String;
     curp: String;
-    doc_curp: String;
+    doc_curp?: String;
     rol: String;
     no_empleado: String;
     ldg: Boolean;
@@ -20,4 +18,12 @@ export interface Docente {
     apou: Boolean;
     tipoContrato: String;
     contratoDefinitivo: Boolean;
+}
+
+
+export interface Docente extends DocenteSend {
+    _id: String;
+    img: String;
+    doc_rfc: String;
+    doc_curp: String;
 }

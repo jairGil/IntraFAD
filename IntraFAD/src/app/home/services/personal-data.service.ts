@@ -19,10 +19,10 @@ export class PersonalDataService {
    * @param id_docente 
    * @returns Observable<any>
    * @since 1.0.0
-   * @version 1.0.0
+   * @version 1.1.0
    */
   public getDocente(id_docente: String): Observable<any> {
-    return this.http.get<any>(this.URL + 'get-docente/' + id_docente);
+    return this.http.get<any>(this.URL + id_docente);
   }
 
   /**
@@ -33,6 +33,11 @@ export class PersonalDataService {
    * @version 1.0.0
    */
   public updateDocente(docente: Docente): Observable<any> {
-    return this.http.put<any>(this.URL + 'update-dp', docente);
+    return this.http.put<any>(this.URL, docente);
+  }
+
+  /** */
+  updatePersonalData(updateData: any) {
+    return this.http.put<any>(this.URL, updateData);
   }
 }
