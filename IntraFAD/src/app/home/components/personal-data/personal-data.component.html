@@ -27,7 +27,7 @@
     <ng-template #lblRfcValido>
       <label>
         <!--<a [attr.href]="getDocument('rfc')" target="_blank">-->
-        <a href="javascript: void(0);"  (click)="showIDDoc('rfc')">
+        <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_rfc)">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
           <span>  RFC: {{ dataDocente.rfc }}</span>
         </a>
@@ -40,7 +40,7 @@
 
     <ng-template #lblCurpValido>
       <label>
-        <a href="javascript: void(0);"  (click)="showIDDoc('curp')">
+        <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_curp)">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
           <span>  CURP: {{ dataDocente.curp }}</span>
         </a>
@@ -374,7 +374,7 @@
             </div>
             <ng-template #RFCinilbl>
               <div class="col-md-2">
-                <a href="javascript: void(0);"  (click)="showIDDoc('rfc')">
+                <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_rfc)">
                   <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
                   <span> Ver RFC</span>
                 </a>
@@ -423,7 +423,7 @@
             </div>
             <ng-template #CURPinilbl>
               <div class="col-md-2">
-                <a href="javascript: void(0);"  (click)="showIDDoc('curp')">
+                <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_curp)">
                   <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
                   <span> Ver CURP</span>
                 </a>

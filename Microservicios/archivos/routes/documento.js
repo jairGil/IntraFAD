@@ -12,6 +12,7 @@ router.put('/upload-document/:tipo/', authService.verify, documentoController.ca
 
 /* *** RUTA PARA OBTENER DOCUMENTO *** */ 
 router.get('/get-document/:doc', authService.verify, async (req, res, next) => {
+  console.log("REQ: " + JSON.stringify(req.params));
   await documentoController.getDoc(req, res).then(
     (resultFind) => {
       console.log(resultFind);

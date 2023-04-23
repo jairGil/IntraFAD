@@ -245,13 +245,13 @@ export class PersonalDataComponent {
 
   /**
    * Obtener el documento del servidor
-   * @param type (string) - Tipo de documento (RFC, CURP)
+   * @param dir (string) - Direccion del documento
    * @returns void
    * @since 1.1.0
    * @version 1.1.0
   */
-  showIDDoc(type: String): void {
-    this.archivosService.getIDDoc(type, this.dataDocente._id)
+  public showDoc(dir: String): void {
+    this.archivosService.getIDDoc(dir, this.dataDocente._id)
       .subscribe(
         data => {
           const file = new Blob([data], { type: 'application/pdf' });
