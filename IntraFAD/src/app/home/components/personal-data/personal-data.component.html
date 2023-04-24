@@ -50,30 +50,16 @@
     <hr class="hr" />
     <label><b>Datos de contrato</b></label> <br>
     <label>No. de Empleado: {{ dataDocente.no_empleado }}</label> <br>
-    <label>Tipo de contrato: {{ dataDocente.contratoDefinitivo ? "Definitivo" : "Interino" }}</label> <br>
     <label>Plaza: {{ dataDocente.tipoContrato }}</label> <br>
+    <label>Tipo de contrato: {{ dataDocente.contratoDefinitivo ? "Definitivo" : "Interino" }}</label> <br>
 
     <hr class="hr" />
-    <label><b>Licenciaturas donde imparto clase</b></label> <br>
-    <div class="row" *ngIf="dataDocente.ldg == true">
+    <label><b>Planes de estudio en los que imparto clases</b></label> <br>
+    <div class="row" *ngFor="let plan of dataDocente.planes_estudio">
       <div class="col-md-10">
-        <label class="col-form-label licenciatura ldg">Licenciatura en Diseño Gráfico <br></label>
-      </div>
-    </div>
-    <div class="row" *ngIf="dataDocente.ldi == true">
-      <div class="col-md-10">
-        <label class="col-form-label licenciatura ldi">Licenciatura en Diseño Industrial <br></label>
-      </div>
-    </div>
-    <div class="row" *ngIf="dataDocente.arq == true">
-      <div class="col-md-10">
-        <label class="col-form-label licenciatura arq">Licenciatura en Arquitectura <br></label>
-      </div>
-    </div>
-    <div class="row" *ngIf="dataDocente.apou == true">
-      <div class="col-md-10">
-        <label class="col-form-label licenciatura apou">Licenciatura en Administración y Promoción de la Obra Urbana
-          <br></label> <br>
+        <label class="col-form-label licenciatura {{plan.clave}}">
+          {{plan.nombre}}<br>
+        </label>
       </div>
     </div>
     <button class="btn-flotante" (click)="cambiar_modo(2)">
@@ -455,6 +441,16 @@
           </div>
         </div>
         <div class="form-row mb-3">
+          <label for="tipoContrato" class="col-md-4 col-form-label">Plaza</label>
+          <div class="col-md-4">
+            <select class="form-control" formControlName="tipoContrato">
+              <option *ngFor="let empleo of listaEmpleos" class="dropdown-item" [value]="empleo">
+                {{ empleo }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row mb-3">
           <label for="contratoDefinitivo" class="col-md-4 col-form-label">Tipo de contrato</label>
           <div class="col-md-2">
             <label>
@@ -469,40 +465,14 @@
             </label>
           </div>
         </div>
-        <div class="form-row mb-3">
-          <label for="tipoContrato" class="col-md-4 col-form-label">Plaza</label>
-          <div class="col-md-4">
-            <select class="form-control" formControlName="tipoContrato">
-              <option *ngFor="let empleo of listaEmpleos" class="dropdown-item" [value]="empleo">
-                {{ empleo }}
-              </option>
-            </select>
-          </div>
-        </div>
 
         <hr class="hr" />
-        <label><b>Seleccione las licenciaturas donde imparte clase</b></label>
-        <div class="form-check licenciatura ldg">
-          <input class="form-check-input" type="checkbox" value="{{this.dataDocente.ldg}}" id="ldg"
-            formControlName="ldg" />
-          <label class="form-check-label label-lic" for="ldg">Licenciatura en Diseño Gráfico</label>
-        </div>
-        <div class="form-check licenciatura ldi">
-          <input class="form-check-input" type="checkbox" value="{{this.dataDocente.ldi}}" id="ldi"
-            formControlName="ldi" />
-          <label class="form-check-label label-lic" for="ldi">Licenciatura en Diseño Industrial</label>
-        </div>
-        <div class="form-check licenciatura arq">
-          <input class="form-check-input" type="checkbox" value="{{this.dataDocente.arq}}" id="arq"
-            formControlName="arq" />
-          <label class="form-check-label label-lic" for="arq">Licenciatura en Arquitectura</label>
-        </div>
-        <div class="form-check licenciatura apou">
-          <input class="form-check-input" type="checkbox" value="{{this.dataDocente.apou}}" id="apou"
-            formControlName="apou" />
-          <label class="form-check-label label-lic" for="apou">Licenciatura en Administración y Promoción de la Obra
-            Urbana</label>
-        </div>
+        <label><b>Seleccione los planes de estudio donde imparte clases</b></label>
+        <div *ngFor="let plan of listaPlanesEstudio" class="form-check licenciatura {{plan.clave}}">
+          <input class="form-check-input" type="checkbox" [checked]="this.dataDocente.planes_estudio.includes(plan)" 
+            [id]="plan.clave" [formControlName]="plan.clave" />
+          <label class="form-check-label label-lic" [for]="plan.clave">{{plan.nombre}}</label>
+      </div>
 
 
         <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>

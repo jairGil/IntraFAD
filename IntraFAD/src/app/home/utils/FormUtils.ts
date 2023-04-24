@@ -75,10 +75,16 @@ export class FormUtils {
       ],
       contratoDefinitivo: [false],
       tipoContrato: [''],
-      ldg: [false],
-      ldi: [false],
-      arq: [false],
-      apou: [false],
+      LDG: [false],
+      LDI: [false],
+      ARQ: [false],
+      APOU: [false],
+      AUAC: [false],
+      VBI: [false],
+      MD: [false],
+      MES: [false],
+      DD: [false],
+      DSFP: [false],
     });
   }
 
@@ -105,10 +111,16 @@ export class FormUtils {
     form.get('curp')?.setValue(dataDocente.curp);
     form.get('doc_rfc')?.setValue(dataDocente.doc_rfc);
     form.get('doc_curp')?.setValue(dataDocente.doc_curp);
-    form.get('ldg')?.setValue(dataDocente.ldg);
-    form.get('ldi')?.setValue(dataDocente.ldi);
-    form.get('arq')?.setValue(dataDocente.arq);
-    form.get('apou')?.setValue(dataDocente.apou);
+    form.get('LDG')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'LDG') ? true : false);
+    form.get('LDI')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'LDI') ? true : false);
+    form.get('ARQ')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'ARQ') ? true : false);
+    form.get('APOU')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'APOU') ? true : false);
+    form.get('AUAC')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'AUAC') ? true : false);
+    form.get('VBI')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'VBI') ? true : false);
+    form.get('MD')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'MD') ? true : false);
+    form.get('MES')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'MES') ? true : false);
+    form.get('DD')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'DD') ? true : false);
+    form.get('DSFP')?.setValue(dataDocente.planes_estudio.find((plan) => plan.clave === 'DSFP') ? true : false);
     form.get('tipoContrato')?.setValue(dataDocente.tipoContrato);
     form.get('contratoDefinitivo')?.setValue(dataDocente.contratoDefinitivo);
 

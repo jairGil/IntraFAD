@@ -1,6 +1,6 @@
 /** ANGULAR CORE, FORMS, RXJS */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 /** ENVIRONMENT */
@@ -16,6 +16,7 @@ import { StaticDataService } from '../../services/static-data.service';
 import { Profile } from '../../models/profile.model';
 import { Docente, DocenteSend } from '../../models/docente.model';
 import { FormUtils } from '../../utils/FormUtils';
+import { PlanEstudio } from '../../models/plan-estudio.model';
 
 @Component({
   selector: 'app-personal-data',
@@ -30,8 +31,9 @@ export class PersonalDataComponent {
   @Output() dataEmitter = new EventEmitter<Profile>();
 
   /* STATIC ARRAYS */
-  public listaEstados = StaticDataService.listaEstados;
-  public listaEmpleos = StaticDataService.listaEmpleos;
+  public listaEstados = StaticDataService.LISTA_ESTADOS;
+  public listaEmpleos = StaticDataService.LISTA_EMPLEOS;
+  public listaPlanesEstudio = StaticDataService.LISTA_PLANES_ESTUDIO;
   
   public URL_IMG = environment.URL_IMG;
   public URL_DOC = environment.URL_DOC;
@@ -54,6 +56,8 @@ export class PersonalDataComponent {
   public loading: boolean = false;
   public msg: string = 'Guardando datos...';
 
+  /** Variable auxilir que contiene los planes de estudio elegidos en la edicion */
+  private planesEstudio: PlanEstudio[] = [];
 
   constructor(
     private authService: AuthService,
@@ -89,10 +93,7 @@ export class PersonalDataComponent {
       rfc: this.dpForm.get('rfc')?.value!,
       curp: this.dpForm.get('curp')?.value!,
       no_empleado: this.dpForm.get('no_empleado')?.value!,
-      ldg: this.dpForm.get('ldg')?.value!,
-      ldi: this.dpForm.get('ldi')?.value!,
-      arq: this.dpForm.get('arq')?.value!,
-      apou: this.dpForm.get('apou')?.value!,
+      planes_estudio: this.getPlanesEstudio(),
       tipoContrato: this.dpForm.get('tipoContrato')?.value!,
       contratoDefinitivo: this.dpForm.get('contratoDefinitivo')?.value!,
       rol: 'BASIC_ROLE', 
@@ -124,6 +125,22 @@ export class PersonalDataComponent {
     this.uploadDocument('rfc', 'doc_rfc');
     if(this.curpFilename != null)
     this.uploadDocument('curp', 'doc_curp');
+  }
+
+  /**
+   * Agregar planes de estudio que se eligieron en la edición
+   * @returns Array<PlanEstudio> - Planes de estudio elegidos
+   * @since 1.1.0
+   * @version 1.1.0
+   */
+  public getPlanesEstudio(): Array<PlanEstudio> {
+    let pe = [];
+    for (const planEstudio of this.listaPlanesEstudio) {
+      if (this.dpForm.get(planEstudio.clave)?.value) {
+        pe.push(planEstudio);
+      }
+    }
+    return pe;
   }
 
   /** 
@@ -314,10 +331,16 @@ export class PersonalDataComponent {
   get curp() { return this.dpForm.get('curp'); }
   get doc_curp() { return this.dpForm.get('doc_curp'); }
   get no_empleado() { return this.dpForm.get('no_empleado'); }
-  get ldg() { return this.dpForm.get('ldg'); }
-  get ldi() { return this.dpForm.get('ldi'); }
-  get arq() { return this.dpForm.get('arq'); }
-  get apou() { return this.dpForm.get('apou'); }
+  get LDG() { return this.dpForm.get('LDG'); }
+  get LDI() { return this.dpForm.get('LDI'); }
+  get ARQ() { return this.dpForm.get('ARQ'); }
+  get APOU() { return this.dpForm.get('APOU'); }
+  get AUAC() { return this.dpForm.get('AUAC'); }
+  get VBI() { return this.dpForm.get('VBI'); }
+  get MD() { return this.dpForm.get('MD'); }
+  get MES() { return this.dpForm.get('MES'); }
+  get DD() { return this.dpForm.get('DD'); }
+  get DSFP() { return this.dpForm.get('DSFP'); }
   get tipoContrato() { return this.dpForm.get('tipoContrato'); }
   get contratoDefinitivo() { return this.dpForm.get('contratoDefinitivo'); }
 }

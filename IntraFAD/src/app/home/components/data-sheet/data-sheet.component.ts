@@ -8,10 +8,10 @@ import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 export class DataSheetComponent {
   public pagina = 0;
 
-  @ViewChild("btnDA") btnDA: ElementRef | undefined;
+  @ViewChild("btnAcad") btnDA: ElementRef | undefined;
   @ViewChild("btnCert") btnCertificaciones: ElementRef | undefined;
-  @ViewChild("btnCur") btnCursos: ElementRef | undefined;
-  @ViewChild("btnIdio") btnIdiomas: ElementRef | undefined;
+  @ViewChild("btnCour") btnCursos: ElementRef | undefined;
+  @ViewChild("btnLang") btnIdiomas: ElementRef | undefined;
 
   constructor(
     private renderer: Renderer2,

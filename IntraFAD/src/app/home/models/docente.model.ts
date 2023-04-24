@@ -1,3 +1,5 @@
+import { PlanEstudio } from "./plan-estudio.model";
+
 export interface DocenteSend {
     nombre: String;
     apellido_p: String;
@@ -7,15 +9,10 @@ export interface DocenteSend {
     correo_institucional: String;
     telefono: String;
     rfc: String;
-    doc_rfc?: String;
     curp: String;
-    doc_curp?: String;
     rol: String;
     no_empleado: String;
-    ldg: Boolean;
-    ldi: Boolean;
-    arq: Boolean;
-    apou: Boolean;
+    planes_estudio: PlanEstudio[];
     tipoContrato: String;
     contratoDefinitivo: Boolean;
 }

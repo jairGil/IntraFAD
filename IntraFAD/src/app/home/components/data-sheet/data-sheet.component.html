@@ -1,11 +1,11 @@
-<div class="col-md-10">
-  <button type="button" class="btn btn-transparent btn-outline-success" (click)="cambia_pagina(0)" #btnDA>Datos
+<div class="col-md-12">
+  <button type="button" class="btn btn-transparent btn-outline-success" (click)="cambia_pagina(0)" #btnAcad>Datos
     académicos</button>
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(1)" #btnCert>Certificaciones</button>
-  <button type="button" class="btn btn-transparent" (click)="cambia_pagina(2)" #btnCur>Cursos</button>
-  <button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnIdio>Idiomas</button>
+  <button type="button" class="btn btn-transparent" (click)="cambia_pagina(2)" #btnCour>Cursos</button>
+  <button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnLang>Idiomas</button>
 </div>
-<div class="col-md-9 ">
+<div class="col-md-11">
   <hr class="hr">
   <div class="contenido">
     <app-academic-data *ngIf="pagina == 0"></app-academic-data>
