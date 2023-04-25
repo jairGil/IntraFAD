@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { Certification } from 'src/app/home/models/certification.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { CertificationsService } from 'src/app/home/services/certifications.service';
 import { environment } from 'src/environments/environment.development';
@@ -16,6 +17,7 @@ export class CertificationsComponent {
   public modo_agregar = false;
   public certificaciones: any;
   public docCert: boolean = false;
+  public certName!: String;
 
   certForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -41,7 +43,7 @@ export class CertificationsComponent {
   getCert() {
     this.certificacionService.getCertificaciones(this.idDocente).subscribe({
       next: (res: any) => {
-        this.certificaciones = res.certificacion;
+        this.certificaciones = res.certificaciones;
       },
       error: (err: any) => {
         console.log(err);
@@ -72,13 +74,22 @@ export class CertificationsComponent {
   }
 
   enviarDatos() {
-    this.uploadDocument('certificacion', 'constancia_f');
+    // this.uploadDocument('certificacion', 'constancia_f');
 
+    let certificacion: Certification = {
+      nombre: this.certForm.get('nombre')?.value!,
+      institucion: this.certForm.get('institucion')?.value!,
+      fecha: new Date(this.certForm.get('fecha')?.value!),
+      constancia: "No_inicializado.pdf",
+      id_docente: this.idDocente
+    }
 
-    console.log(this.certForm.value);
-    this.certificacionService.addCertificacion(this.certForm.value).subscribe({
+    this.certificacionService.addCertificacion(certificacion).subscribe({
       next: (res: any) => {
-        console.log(res);
+        if (res.value) {
+          this.getCert();
+          this.cambiarModo(2);
+        }
       },
       error: (err: any) => {
         console.log(err);
@@ -91,6 +102,7 @@ export class CertificationsComponent {
       const file = event.target.files[0];
       this.certForm.get('constancia')?.setValue(file);
       this.docCert = true;
+      this.certName = file.name;
     }
   }
 

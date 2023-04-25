@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { AcademicData } from 'src/app/home/models/academic-data.model.';
 import { AcademicDataService } from 'src/app/home/services/academic-data.service';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { environment } from 'src/environments/environment.development';
@@ -83,12 +84,12 @@ export class AcademicDataComponent {
   // TODO: subir datos a la bd primero, luego documentos y luego URLs
   enviarDatos() {
 
-    let datoAcad = {
-      grado_academico: this.daForm.get('grado_academico')?.value,
-      grado_obtenido: this.daForm.get('grado_obtenido')?.value,
-      institucion_emisora: this.daForm.get('institucion_emisora')?.value,
-      fecha_obtencion: this.daForm.get('fecha_obtencion')?.value,
-      cedula_profesional: this.daForm.get('cedula_profesional')?.value,
+    let datoAcad: AcademicData = {
+      grado_academico: this.daForm.get('grado_academico')?.value!,
+      grado_obtenido: this.daForm.get('grado_obtenido')?.value!,
+      institucion_emisora: this.daForm.get('institucion_emisora')?.value!,
+      fecha_obtencion: new Date(this.daForm.get('fecha_obtencion')?.value!),
+      cedula_profesional: this.daForm.get('cedula_profesional')?.value!,
       doc_grado_acad: "no_inicializado.pdf",
       doc_ced_prof: "no_inicializado.pdf",
       id_docente: this.idDocente,

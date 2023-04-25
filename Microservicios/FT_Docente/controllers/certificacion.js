@@ -17,7 +17,7 @@ certificacionController.add = async (req, res) => {
     const params = req.body;
 
     // Verificar que la certificación no este registrado
-    let resultFind = await dbhelper.findCertificado(params.nombre, params.institucion, params.fecha, params.id_docente);
+    let resultFind = await dbhelper.findCertificacion(params.nombre, params.institucion, params.fecha, params.id_docente);
     if (resultFind.value) {
       resultSave = await util.setResult(resultSave, false, 400, "El certificado ya está registrado para este docente");
     } else {
@@ -27,12 +27,12 @@ certificacionController.add = async (req, res) => {
       certificacion.constancia  = params.constancia;
       certificacion.id_docente  = params.id_docente;
 
-      resultSave = await dbhelper.saveCurso(certificacion);
+      resultSave = await dbhelper.saveCertificacion(certificacion);
     }
     console.log(await dbhelper.disconnect());
   }
 
-  return resultSave;
+  return resultSave;p
 }
 
 /* GET certificaciones by id_docente. */

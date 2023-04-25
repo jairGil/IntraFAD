@@ -145,16 +145,17 @@ dbhelper.saveCurso = async (curso) => {
 dbhelper.findCurso = async (nombre, fecha_fin, institucion, id_docente) => {
   let resultFind = { action: "Buscar curso", value: false, code: 500, msg: "No inicializado" };
 
-  await Curso.find({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente }).then(
-    (curso) => {
-      if (curso) {
-        resultFind = util.setResult(resultFind, true, 200, "Curso registrado en la BD");
-      } else {
-        resultFind = util.setResult(resultFind, false, 400, "Curso no registrado")
-      }
-    }, error => {
-      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    });
+  try {
+    const curso = await Curso.findOne({ nombre: nombre, fecha_fin: fecha_fin, institucion: institucion, id_docente: id_docente });
+    console.log(curso);
+    if (curso) {
+      resultFind = util.setResult(resultFind, true, 200, "Curso registrado en la BD");
+    } else {
+      resultFind = util.setResult(resultFind, false, 404, "Curso no registrada");
+    }
+  } catch (error) {
+    resultFind = util.setResult(resultFind, false, 500, error.message + " - Error en la petición");
+  }
 
   return resultFind;
 }
@@ -214,16 +215,16 @@ dbhelper.saveCertificacion = async (certificacion) => {
 dbhelper.findCertificacion = async (nombre, institucion, fecha, id_docente) => {
   let resultFind = { action: "Buscar certificación", value: false, code: 500, msg: "No inicializado" };
 
-  await Certificacion.find({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente }).then(
-    (certificacion) => {
-      if (certificacion) {
-        resultFind = util.setResult(resultFind, true, 200, "Certificación registrado en la BD");
-      } else {
-        resultFind = util.setResult(resultFind, false, 400, "Certificación no registrado");
-      }
-    }, error => {
-      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
-    });
+  try {
+    const certificacion = await Certificacion.findOne({ nombre: nombre, fecha: fecha, institucion: institucion, id_docente: id_docente });
+    if (certificacion) {
+      resultFind = util.setResult(resultFind, true, 200, "Certificación registrada en la BD");
+    } else {
+      resultFind = util.setResult(resultFind, false, 404, "Certificación no registrada");
+    }
+  } catch (error) {
+    resultFind = util.setResult(resultFind, false, 500, error.message + " - Error en la petición");
+  }
 
   return resultFind;
 }

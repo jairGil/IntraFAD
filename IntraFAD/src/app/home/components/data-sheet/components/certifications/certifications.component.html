@@ -9,19 +9,6 @@
       <div class="form-group col-md-3">
         <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-3">
-        <input type="text" class="form-control" name="nombre" placeholder="Certificación" formControlName="nombre">
-      </div>
-      <div class="form-group col-md-3">
-        <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
-          formControlName="institucion">
-      </div>
-    </div>
-
-    <div class="form-row">
       <div class="form-group col-md-3">
         <label for="fecha_obtencion" class="col-form-label is-required">Fecha de obtención</label>
       </div>
@@ -29,19 +16,50 @@
 
     <div class="form-row">
       <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="nombre" placeholder="Certificación" formControlName="nombre">
+        <div class="mt-2 mb-2">
+          <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="nombre?.errors?.['required']">
+              El campo <b>Nombre de la certificación</b> es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
+          formControlName="institucion">
+          <div class="mt-2 mb-2">
+            <div *ngIf="institucion?.invalid && (institucion?.dirty || institucion?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="institucion?.errors?.['required']">
+                El campo <b>Institución educativa emisora</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="form-group col-md-3">
         <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
           formControlName="fecha">
+          <div class="mt-2 mb-2">
+            <div *ngIf="fecha?.invalid && (fecha?.dirty || fecha?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="fecha?.errors?.['required']">
+                El campo <b>Fecha de obtención</b> es obligatorio.
+              </div>
+            </div>
+          </div>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group col-md-3">
-        <label for="constancia" class="col-form-label is-required"><b>Documento de certificacion</b></label>
+        <label for="constancia" class="col-form-label is-required">Documento de certificacion</label>
       </div>
     </div>
 
     <div class="form-row">
-      <div class="form-grup col-md-2">
+      <div class="form-grup col-md-3">
         <div class="btn-primary btn-file">
           <label class="lbl-file" for="doc_cert">Cargar PDF</label>
           <input type="file" class="form-control d-none" id="doc_cert" (change)="onCertificacionSelect($event)"
@@ -51,6 +69,7 @@
       <div class="col-md">
         <div *ngIf="this.docCert; else noPDF1">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span> {{ this.certName }}</span>
         </div>
         <ng-template #noPDF1>
           <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
@@ -59,12 +78,13 @@
       </div>
     </div>
 
-    <div class="form-row mt-3 justify-content-end">
-      <div class="form-group col-md-2">
+    <hr class="hr">
+    <div class="form-row justify-content-end">
+      <div class="form-group col-md-3">
         <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
       </div>
-      <div class="form-group col-md-2">
-        <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)">Guardar</button>
+      <div class="form-group col-md-3">
+        <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!certForm.valid">Guardar</button>
       </div>
     </div>
   </form>
@@ -87,13 +107,7 @@
         <td>
           <a href="{{ URL_DOC + this.certificacion.constancia }}" target="_blank">
             {{ certificacion.nombre }}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd"
-                d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
-              <path fill-rule="evenodd"
-                d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z" />
-            </svg>
+            <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>
         </td>
         <td>{{ certificacion.institucion }}</td>

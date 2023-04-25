@@ -32,6 +32,7 @@ export class HomeComponent {
   ) { }
 
   ngOnInit() {
+    this.loadingData = 0;
     this.getDocente();
   }
 
