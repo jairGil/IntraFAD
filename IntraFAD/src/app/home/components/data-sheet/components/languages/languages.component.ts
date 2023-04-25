@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { Languaje } from 'src/app/home/models/languaje.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { LanguagesService } from 'src/app/home/services/languages.service';
 import { environment } from 'src/environments/environment.development';
@@ -16,6 +17,7 @@ export class LanguagesComponent {
   public modo_agregar = false;
   public idiomas: any;
   public docIdioma: boolean = false;
+  public docName: string = '';
 
   idioForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -42,7 +44,7 @@ export class LanguagesComponent {
   getLanguages() {
     this.languageService.getIdiomas(this.idDocente).subscribe({
       next: (res: any) => {
-        this.idiomas = res.idioma;
+        this.idiomas = res.idiomas;
       },
       error: (err: any) => {
         console.log(err);
@@ -73,11 +75,23 @@ export class LanguagesComponent {
   }
 
   enviarDatos() {
-    this.uploadDocument('idiomas', 'constancia_F');
+    // this.uploadDocument('idiomas', 'constancia_F');
 
-    this.languageService.addIdioma(this.idioForm.value).subscribe({
+    let idioma: Languaje = {
+      nombre: this.idioForm.get('nombre')?.value!,
+      nivel: this.idioForm.get('nivel')?.value!,
+      fecha_fin: new Date(this.idioForm.get('fecha_fin')?.value!),
+      institucion: this.idioForm.get('institucion')?.value!,
+      certificado: "no_inicializado.pdf",
+      id_docente: this.idDocente
+    }
+
+    this.languageService.addIdioma(idioma).subscribe({
       next: (res: any) => {
-        console.log(res);
+        if (res.value) {
+          this.getLanguages();
+          this.cambiarModo(2);
+        }
       },
       error: (err: any) => {
         console.log(err);
@@ -91,6 +105,7 @@ export class LanguagesComponent {
       const file = event.target.files[0];
       this.idioForm.get('certificado')?.setValue(file);
       this.docIdioma = true;
+      this.docName = file.name;
     }
   }
 

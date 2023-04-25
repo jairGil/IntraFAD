@@ -194,7 +194,7 @@ validateHelper.validarIdioma = async (req) => {
   .escape().run(req);
 
   /*** Validación fecha ***/
-  await body("fecha")   
+  await body("fecha_fin")   
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 10 }).withMessage("Error de formato de fecha, debe contener mínimo 10 caracteres")
@@ -212,7 +212,7 @@ validateHelper.validarIdioma = async (req) => {
     .escape().run(req);
     
   /*** Validación constancia ***/
-  await body("constancia")
+  await body("certificado")
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .custom(val => {

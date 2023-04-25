@@ -279,6 +279,24 @@ dbhelper.saveIdioma = async (idioma) => {
   return resultSave;
 }
 
+// Buscar idioma por nombre, fecha, institucion y id del docente
+dbhelper.findIdioma = async (nombre, institucion, fecha, id_docente) => {
+  let resultFind = { action: "Buscar idioma", value: false, code: 500, msg: "No inicializado" };
+
+  try {
+    const idioma = await Idioma.findOne({ nombre: nombre, fecha_fin: fecha, institucion: institucion, id_docente: id_docente });
+    if (idioma) {
+      resultFind = util.setResult(resultFind, true, 200, "Idioma registrado en la BD");
+    } else {
+      resultFind = util.setResult(resultFind, false, 404, "Idioma no registrado");
+    }
+  } catch (error) {
+    resultFind = util.setResult(resultFind, false, 500, error.message + " - Error en la petición");
+  }
+
+  return resultFind;
+}
+
 // Buscar idiomas por id del docente
 dbhelper.findIdiomaByIdDocente = async (id_docente) => {
   let resultFind = { action: "Buscar idiomas", value: false, code: 500, msg: "No inicializado" };
