@@ -50,6 +50,7 @@ documentoController.cargarDocumento = (req, res) => {
         let ext = path.extname(filename);
         let tmpPath = file.path;
         let targetPath = config.routes.files + docenteID + '/' + tipoArchivo + '/';
+        let responsePath = docenteID + '/' + tipoArchivo + '/';
 
         if (!(ext === ".pdf")) {
             utilResponse.error(resultUpload, "Tipo de archivo no soportado");
@@ -59,6 +60,7 @@ documentoController.cargarDocumento = (req, res) => {
 
         if (tipoArchivo === "RFC" || tipoArchivo === "CURP") {
             targetPath += docenteID + ext;
+            responsePath += docenteID + ext;;
         } else {
             targetPath += filename;
         }
@@ -72,11 +74,10 @@ documentoController.cargarDocumento = (req, res) => {
                 res.status(resultUpload.code).send(resultUpload);
                 return;
             }
-            utilResponse.success(resultUpload, "Documento guardado en disco");
 
             utilResponse.success(resultUpload, "Documento guardado");
-            resultUpload.doc = targetPath;
-            console.log(JSON.stringify(resultUpload));
+            resultUpload.doc = responsePath.replaceAll('/','-');
+            //console.log(JSON.stringify(resultUpload));
             res.status(resultUpload.code).send(resultUpload);
         });
     });
@@ -86,8 +87,13 @@ documentoController.cargarDocumento = (req, res) => {
 
 // Enviar documento al cliente
 documentoController.getDoc = async (req, res) => {
-    const pathFile = req.params.doc.replaceAll("-", "/");
-    console.log("PATHFILE: " + pathFile)
+    const idDocente = req._id;
+    let dir = req.params.doc;
+
+    dir = dir.replaceAll('-','/');
+
+    const pathFile = process.env.URIDATA + dir;
+
     let result = { doc: "" };
     
     result = utilResponse.init(result, "get document");

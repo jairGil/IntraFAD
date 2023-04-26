@@ -1,0 +1,162 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+  <label for="grado_s" class="title"><b>Nuevo curso</b></label>
+  <form (submit)="enviarDatos()" [formGroup]="curForm">
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="nombre" class="col-form-label is-required">Nombre del curso</label>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="tipo" class="col-form-label is-required">Tipo de curso</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
+          formControlName="institucion">
+          <div class="mt-2 mb-2">
+            <div *ngIf="institucion?.invalid && (institucion?.dirty || institucion?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="institucion?.errors?.['required']">
+                El campo <b>Institución educativa emisora</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="nombre" placeholder="Nombre del curso" formControlName="nombre">
+        <div class="mt-2 mb-2">
+          <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="nombre?.errors?.['required']">
+              El campo <b>Nombre del curso</b> es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label>
+          <input type="radio" formControlName="tipo" [value]="'Didactico'" [checked]="curForm.get('tipo')?.value === 'Didactico'">
+          <span> Didactico</span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label>
+          <input type="radio" formControlName="tipo" [value]="'Disciplinar'">
+          <span> Disciplinar</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="duracion" class="col-form-label is-required">Duración</label>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="fecha_obtencion" class="col-form-label is-required">Fecha de obtención</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="duracion" placeholder="Horas" formControlName="duracion"
+          onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" >
+          <div class="mt-2 mb-2">
+            <div *ngIf="duracion?.invalid && (duracion?.dirty || duracion?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="duracion?.errors?.['required']">
+                El campo <b>Duración</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="form-group col-md-3">
+        <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
+          formControlName="fecha_fin">
+          <div class="mt-2 mb-2">
+            <div *ngIf="fecha_fin?.invalid && (fecha_fin?.dirty || fecha_fin?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="fecha_fin?.errors?.['required']">
+                El campo <b>Fecha de obtención</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="constancia" class="col-form-label is-required">Constancia</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-3">
+        <div class="btn-primary btn-file">
+          <label class="lbl-file" for="constancia">Cargar PDF</label>
+          <input type="file" class="form-control d-none" id="constancia" (change)="onCursoSelect($event)"
+            accept=".pdf" />
+        </div>
+      </div>
+      <div class="col-md">
+        <div *ngIf="this.docCur; else noPDF1">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon" placeholder="">
+          <span> {{ this.curName }}</span>
+        </div>
+        <ng-template #noPDF1>
+          <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span> No se ha seleccionado ningún archivo</span>
+        </ng-template>
+      </div>
+    </div>
+
+    <hr class="hr">
+    <div class="form-row mt-3 justify-content-end">
+      <div class="form-group col-md-3">
+        <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+      </div>
+      <div class="form-group col-md-3">
+        <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!curForm.valid">Guardar</button>
+      </div>
+    </div>
+  </form>
+</div>
+<ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+
+<div *ngIf="modo_agregar == false">
+  <label for="grado_s" class="title"><b>Mis cursos</b></label>
+  <table class="table content-center">
+    <thead>
+      <tr>
+        <th>Nombre del curso</th>
+        <th>Tipo de curso</th>
+        <th>Fecha de obtención</th>
+        <th>Institucion emisora</th>
+        <th>Duración</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let curso of this.cursos">
+        <td>
+          <a href="{{ URL_DOC + this.curso.constancia }}" target="_blank">
+            {{ curso.nombre }}
+            <img src="../../../../../../assets/img/file-link.svg" alt="Abrir documento">
+          </a>
+        </td>
+        <td>{{ curso.tipo }}</td>
+        <td>{{ curso.fecha_fin.slice(0,10) }}</td>
+        <td>{{ curso.institucion }}</td>
+        <td>{{ curso.duracion }}</td>
+        <td>
+          <button class="btn btn-outline-danger" (click)="deleteCurso(curso._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

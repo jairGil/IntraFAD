@@ -1,0 +1,502 @@
+<div class="row" *ngIf="this.edicion == false; else modoEdicion">
+  <div class="col-md-10">
+
+    <label><b>Dirección</b></label> <br>
+    <label>Calle: {{ direccion[0] != 'No ingresado' ? direccion[0]: ''}}</label> <br>
+    <label>No. ext.: {{ direccion[1] != '' && direccion[1] != null ? direccion[1] : 'SN' }}</label> <br>
+    <label>No. int.: {{ direccion[2] != '' && direccion[2] != null ? direccion[2] : 'SN' }}</label> <br>
+    <label>Colonia: {{ direccion[3] }}</label> <br>
+    <label>Municipio: {{ direccion[4] }}</label> <br>
+    <label>Estado: {{ direccion[5] }}</label> <br>
+    <label>C.P.: {{ direccion[6] }}</label> <br>
+
+    <hr class="hr" />
+    <label><b>Contacto</b></label> <br>
+    <label>Correo personal: {{ dataDocente.correo_personal }}</label> <br>
+    <label>Correo institucional: {{ dataDocente.correo_institucional }}</label> <br>
+    <label>Teléfono: {{ dataDocente.telefono }}</label> <br>
+
+    <hr class="hr" />
+    <label><b>Identidad</b></label> <br>
+
+    <!-- Verificar que el documento del docente exista y poner hipervinculo -->
+    <span *ngIf="this.dataDocente.doc_rfc == 'no_inicializado.pdf'; else lblRfcValido">
+      <label>RFC: {{ dataDocente.rfc }}</label> <br>
+    </span>
+
+    <ng-template #lblRfcValido>
+      <label>
+        <!--<a [attr.href]="getDocument('rfc')" target="_blank">-->
+        <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_rfc)">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>  RFC: {{ dataDocente.rfc }}</span>
+        </a>
+      </label> <br>
+    </ng-template>
+
+    <span *ngIf="this.dataDocente.doc_rfc == 'no_inicializado.pdf'; else lblCurpValido">
+      <label>CURP: {{ dataDocente.curp }}</label> <br>
+    </span>
+
+    <ng-template #lblCurpValido>
+      <label>
+        <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_rfc)">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span>  CURP: {{ dataDocente.curp }}</span>
+        </a>
+      </label> <br>
+    </ng-template>
+
+    <hr class="hr" />
+    <label><b>Datos de contrato</b></label> <br>
+    <label>No. de Empleado: {{ dataDocente.no_empleado }}</label> <br>
+    <label>Plaza: {{ dataDocente.tipoContrato }}</label> <br>
+    <label>Tipo de contrato: {{ dataDocente.contratoDefinitivo ? "Definitivo" : "Interino" }}</label> <br>
+
+    <hr class="hr" />
+    <label><b>Planes de estudio en los que imparto clases</b></label> <br>
+    <div class="row" *ngFor="let plan of dataDocente.planes_estudio">
+      <div class="col-md-10">
+        <label class="col-form-label licenciatura {{plan.clave}}">
+          {{plan.nombre}}<br>
+        </label>
+      </div>
+    </div>
+    <button class="btn-flotante" (click)="cambiar_modo(2)">
+      <img src="../../../../assets/img/edit.svg" alt="">
+      <span> Editar</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- Formulario para editar el docente -->
+<ng-template #modoEdicion>
+  <form (submit)="enviarDatos()" [formGroup]="dpForm">
+    <div class="row">
+      <div class="col-md-9">
+        <label for="nombre"><b>Nombre completo</b></label>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="nombre" class="col-form-label is-required">Nombre</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_p" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="apellido_m" class="col-form-label is-required">Apellido Paterno</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre(s)" formControlName="nombre">
+            <div class="mt-2 mb-2">
+              <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="nombre?.errors?.['required']">
+                  El campo <b>nombre</b> es obligatorio.
+                </div>
+                <div *ngIf="nombre?.errors?.['minlength']">
+                  La longitud mínima del nombre es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_p" placeholder="Apellido paterno"
+              formControlName="apellido_p">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_p?.invalid && (apellido_p?.dirty || apellido_p?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_p?.errors?.['required']">
+                  El campo <b>apellido paterno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_p?.errors?.['minlength']">
+                  La longitud mínima del apellido paterno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-4">
+            <input type="text" class="form-control" name="apellido_m" placeholder="Apellido materno"
+              formControlName="apellido_m">
+            <div class="mt-2 mb-2">
+              <div *ngIf="apellido_m?.invalid && (apellido_m?.dirty || apellido_m?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="apellido_m?.errors?.['required']">
+                  El campo <b>apellido materno</b> es obligatorio.
+                </div>
+                <div *ngIf="apellido_m?.errors?.['minlength']">
+                  La longitud mínima del apellido materno es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="hr" />
+        <label for="nombre"><b>Dirección</b></label>
+        <div class="form-row">
+          <div class="col-md-4">
+            <label for="calle" class="col-form-label is-required">Calle</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_ext">No. Ext.</label>
+          </div>
+          <div class="col-md-2">
+            <label for="no_int">No. Int.</label>
+          </div>
+          <div class="col-md-4">
+            <label for="no_ext" class="col-form-label is-required">Colonia</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="calle" placeholder="Calle" formControlName="calle">
+            <div class="mt-2 mb-2">
+              <div *ngIf="calle?.invalid && (calle?.dirty || calle?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="calle?.errors?.['required']">
+                  El campo <b>calle</b> es obligatorio.
+                </div>
+                <div *ngIf="calle?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_ext" placeholder="No. ext." formControlName="no_ext"
+              maxlength="5">
+          </div>
+
+          <div class="form-group  col-md-2">
+            <input type="text" class="form-control" name="no_int" placeholder="No. int." formControlName="no_int"
+              maxlength="5">
+          </div>
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="colonia" placeholder="Colonia" formControlName="colonia">
+            <div class="mt-2 mb-2">
+              <div *ngIf="colonia?.invalid && (colonia?.dirty || colonia?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="colonia?.errors?.['required']">
+                  El campo <b>colonia</b> es obligatorio.
+                </div>
+                <div *ngIf="colonia?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-4">
+            <label for="municipio" class="col-form-label is-required">Municipio</label>
+          </div>
+          <div class="col-md-4">
+            <label for="estado" class="col-form-label is-required">Estado</label>
+          </div>
+          <div class="col-md-2" class="col-form-label is-required">
+            <label for="cp">Código Postal</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="municipio" placeholder="Municipio"
+              formControlName="municipio">
+            <div class="mt-2 mb-2">
+              <div *ngIf="municipio?.invalid && (municipio?.dirty || municipio?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="municipio?.errors?.['required']">
+                  El campo <b>municipio</b> es obligatorio.
+                </div>
+                <div *ngIf="municipio?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group  col-md-4">
+            <select class="form-control" name="estado" placeholder="Estado" formControlName="estado">
+              <option *ngFor="let estado of listaEstados" class="dropdown-item" [value]="estado">
+                {{ estado }}
+              </option>
+            </select>
+            <div class="mt-2 mb-2">
+              <div *ngIf="estado?.invalid && (estado?.dirty || estado?.touched)" class="alert alert-danger"
+                role="alert">
+                <div *ngIf="estado?.errors?.['required']">
+                  El campo <b>estado</b> es obligatorio.
+                </div>
+                <div *ngIf="estado?.errors?.['minlength']">
+                  La longitud mínima es de 3 caracteres.
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group  col-md-4">
+            <input type="text" class="form-control" name="cp" placeholder="C.P." formControlName="cp" maxlength="5">
+            <div class="mt-2 mb-2">
+              <div *ngIf="cp?.invalid && (cp?.dirty || cp?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="cp?.errors?.['required']">
+                  El campo <b>C.P.</b> es obligatorio.
+                </div>
+                <div *ngIf="cp?.errors?.['minlength']">
+                  La longitud mínima es de 5 números.
+                </div>
+                <div *ngIf="cp?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="hr" />
+        <label for="nombre"><b>Datos de contacto</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Correo personal</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_personal" placeholder="micorreopersonal@google.com"
+              formControlName="correo_personal">
+          </div>
+        </div>
+        <div *ngIf="correo_personal?.invalid && (correo_personal?.dirty || correo_personal?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_personal?.errors?.['required']">
+            El campo <b>correo personal</b> es obligatorio.
+          </div>
+          <div *ngIf="correo_personal?.errors?.['minlength']">
+            La longitud mínima es de 3 caracteres.
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label">Correo institucional</label>
+          <div class="col-md-4">
+            <input type="email" class="form-control" name="correo_institucional" placeholder="micorreo@uaemex.mx"
+              formControlName="correo_institucional">
+          </div>
+        </div>
+        <div *ngIf="correo_institucional?.invalid && (correo_institucional?.dirty || correo_institucional?.touched)"
+          class="alert alert-danger col-md-12" role="alert">
+          <div *ngIf="correo_institucional?.errors?.['pattern']">
+            El correo institucional debe tener los siguientes formatos
+            <ul>
+              <li>micorreo@uaemex.mx</li>
+              <li>micorreo@profesor.uaemex.mx</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">Teléfono</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="telefono" placeholder="Mi numero telefónico" maxlength="10"
+              formControlName="telefono">
+          </div>
+        </div>
+        <div *ngIf="telefono?.invalid && (telefono?.dirty || telefono?.touched)" class="alert alert-danger col-md-12"
+          role="alert">
+          <div *ngIf="telefono?.errors?.['required']">
+            El campo <b>teléfono</b> es obligatorio.
+          </div>
+          <div *ngIf="telefono?.errors?.['minlength']">
+            La longitud mínima es de 10 caracteres.
+          </div>
+          <div *ngIf="telefono?.errors?.['pattern']">
+            Debe ingresar solo números.
+          </div>
+        </div>
+
+        <hr class="hr" />
+        <label for="nombre"><b>Documentos de identidad</b></label>
+        <div class="form-row mb-3">
+          <label for="staticEmail" class="col-md-4 col-form-label is-required">RFC</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="rfc" maxlength="13" style="text-transform:uppercase"
+              formControlName="rfc" placeholder="Mi RFC con homoclave">
+            <div *ngIf="rfc?.invalid && (rfc?.dirty || rfc?.touched)" class="alert alert-danger col-md-12" role="alert">
+              <div *ngIf="rfc?.errors?.['required']">
+                El campo <b>RFC</b> es obligatorio.
+              </div>
+              <div *ngIf="rfc?.errors?.['minlength']">
+                La longitud mínima es de 12 caracteres.
+              </div>
+              <div *ngIf="rfc?.errors?.['maxlength']">
+                La longitud máxima es de 13 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="btn-primary btn-file">
+              <label class="lbl-file" for="doc_rfc">Subir archivo</label>
+              <input type="file" class="form-control d-none" id="doc_rfc" (change)="onRFCSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.rfcFilename == 'no_inicializado.pdf'; else RFCini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #RFCini>
+            <div *ngIf="this.dpForm.get('doc_rfc')?.value != this.dataDocente.doc_rfc; else RFCinilbl" class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.rfcFilename }}</span>
+            </div>
+            <ng-template #RFCinilbl>
+              <div class="col-md-2">
+                <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_rfc)">
+                  <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                  <span> Ver RFC</span>
+                </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+        <div class="form-row mb-3">
+          <label for="curp" class="col-md-4 col-form-label is-required">CURP</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" name="curp" maxlength="18" style="text-transform:uppercase"
+              formControlName="curp" placeholder="Mi CURP">
+            <div *ngIf="curp?.invalid && (curp?.dirty || curp?.touched)" class="alert alert-danger col-md-12"
+              role="alert">
+              <div *ngIf="curp?.errors?.['required']">
+                El campo <b>CURP</b> es obligatorio.
+              </div>
+              <div *ngIf="curp?.errors?.['minlength']">
+                La longitud mínima es de 18 caracteres.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="btn-primary btn-file">
+              <label class="lbl-file" for="doc_curp">Subir archivo</label>
+              <input type="file" class="form-control d-none" id="doc_curp" (change)="onCURPSelect($event)"
+                accept=".pdf" />
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <span>Archivo seleccionado: </span>
+          </div>
+          <div *ngIf="this.curpFilename == 'no_inicializado.pdf'; else CURPini">
+            <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+            <span>-</span>
+          </div>
+          <ng-template #CURPini>
+            <div *ngIf="this.dpForm.get('doc_curp')?.value != this.dataDocente.doc_curp; else CURPinilbl"
+              class="col-md-4">
+              <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+              <span>{{ this.curpFilename }}</span>
+            </div>
+            <ng-template #CURPinilbl>
+              <div class="col-md-2">
+                <a href="javascript: void(0);"  (click)="showDoc(this.dataDocente.doc_curp)">
+                  <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+                  <span> Ver CURP</span>
+                </a>
+              </div>
+            </ng-template>
+          </ng-template>
+        </div>
+
+        <hr class="hr" />
+        <label for="nombre"><b>Datos de contrato</b></label>
+        <div class="form-row mb-3">
+          <label for="no_emp" class="col-md-4 col-form-label">No. de Empleado</label>
+          <div class="col-md-4">
+            <input type="text" class="form-control" formControlName="no_empleado" placeholder="Mi numero de empleado"
+            maxlength="6">
+            <div class="mt-2 mb-2">
+              <div *ngIf="no_empleado?.invalid && (no_empleado?.dirty || no_empleado?.touched)" class="alert alert-danger" role="alert">
+                <div *ngIf="no_empleado?.errors?.['required']">
+                  El campo <b>número de empleado.</b> es obligatorio.
+                </div>
+                <div *ngIf="no_empleado?.errors?.['minlength']">
+                  La longitud es de 6 números.
+                </div>
+                <div *ngIf="no_empleado?.errors?.['pattern']">
+                  Debe ingresar solo números.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row mb-3">
+          <label for="tipoContrato" class="col-md-4 col-form-label">Plaza</label>
+          <div class="col-md-4">
+            <select class="form-control" formControlName="tipoContrato">
+              <option *ngFor="let empleo of listaEmpleos" class="dropdown-item" [value]="empleo">
+                {{ empleo }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row mb-3">
+          <label for="contratoDefinitivo" class="col-md-4 col-form-label">Tipo de contrato</label>
+          <div class="col-md-2">
+            <label>
+              <input type="radio" formControlName="contratoDefinitivo" [value]="false" checked>
+              <span> Interino</span>
+            </label>
+          </div>
+          <div class="col-md-2">
+            <label>
+              <input type="radio" formControlName="contratoDefinitivo" [value]="true">
+              <span> Definitivo</span>
+            </label>
+          </div>
+        </div>
+
+        <hr class="hr" />
+        <label><b>Seleccione los planes de estudio donde imparte clases</b></label>
+        <div *ngFor="let plan of listaPlanesEstudio" class="form-check licenciatura {{plan.clave}}">
+          <input class="form-check-input" type="checkbox" [checked]="this.dataDocente.planes_estudio.includes(plan)" 
+            [id]="plan.clave" [formControlName]="plan.clave" />
+          <label class="form-check-label label-lic" [for]="plan.clave">{{plan.nombre}}</label>
+      </div>
+
+
+        <button class="btn btn-primary" type="submit" [disabled]="!dpForm.valid">Guardar cambios</button>
+        <button class="btn btn-danger btn-salir" (click)="cambiar_modo(1)">Salir</button>
+      </div>
+
+      <div class="col-md-2">
+        <div>
+          <div class="d-flex justify-content-center mb-4">
+            <img [src]="imgSrc || this.imagen" alt="Imagen de perfil" class="perfil">
+          </div>
+
+          <div class="justify-content-center">
+            <div class="btn-primary btn-file">
+              <label class="lbl-file" for="img">Cambiar imagen</label>
+              <input type="file" class="form-control d-none" id="img" (change)="onImageSelect($event)"
+                accept=".jpg, .jpeg" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<app-loading [loading]="this.loading" [msg]="this.msg"></app-loading>

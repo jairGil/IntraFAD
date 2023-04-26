@@ -12,15 +12,17 @@ router.put('/upload-document/:tipo/', authService.verify, documentoController.ca
 
 /* *** RUTA PARA OBTENER DOCUMENTO *** */ 
 router.get('/get-document/:doc', authService.verify, async (req, res, next) => {
+
   await documentoController.getDoc(req, res).then(
     (resultFind) => {
-      console.log(resultFind);
+      //console.log(resultFind);
       // res.status(resultFind.code).send(resultFind);
       if (resultFind.code == 200) {
-        console.log(("SI Entra"))
+        //console.log(("SI Entra"))
         res.sendFile(path.resolve(resultFind.doc));
       }else{
-        console.log(("No Entra"))
+        res.status(404).send("Ela rchivo no existe")
+        //console.log(("No Entra"))
       }
     });
 });

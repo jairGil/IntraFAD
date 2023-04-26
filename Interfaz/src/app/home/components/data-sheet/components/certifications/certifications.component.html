@@ -1,0 +1,121 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+  <label for="grado_s" class="title"><b>Nueva certificación</b></label>
+  <form (submit)="enviarDatos()" [formGroup]="certForm">
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="nombre" class="col-form-label is-required">Nombre de la certificación</label>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="institucion" class="col-form-label is-required">Institución educativa emisora</label>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="fecha_obtencion" class="col-form-label is-required">Fecha de obtención</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="nombre" placeholder="Certificación" formControlName="nombre">
+        <div class="mt-2 mb-2">
+          <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
+            class="alert alert-danger" role="alert">
+            <div *ngIf="nombre?.errors?.['required']">
+              El campo <b>Nombre de la certificación</b> es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" name="institucion" placeholder="Institución educativa emisora"
+          formControlName="institucion">
+          <div class="mt-2 mb-2">
+            <div *ngIf="institucion?.invalid && (institucion?.dirty || institucion?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="institucion?.errors?.['required']">
+                El campo <b>Institución educativa emisora</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="form-group col-md-3">
+        <input type="date" class="form-control" name="fecha" placeholder="Fecha de obtención"
+          formControlName="fecha">
+          <div class="mt-2 mb-2">
+            <div *ngIf="fecha?.invalid && (fecha?.dirty || fecha?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="fecha?.errors?.['required']">
+                El campo <b>Fecha de obtención</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="constancia" class="col-form-label is-required">Documento de certificacion</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-grup col-md-3">
+        <div class="btn-primary btn-file">
+          <label class="lbl-file" for="doc_cert">Cargar PDF</label>
+          <input type="file" class="form-control d-none" id="doc_cert" (change)="onCertificacionSelect($event)"
+            accept=".pdf" />
+        </div>
+      </div>
+      <div class="col-md">
+        <div *ngIf="this.docCert; else noPDF1">
+          <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+          <span> {{ this.certName }}</span>
+        </div>
+        <ng-template #noPDF1>
+          <img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+          <span> No se ha seleccionado ningún archivo</span>
+        </ng-template>
+      </div>
+    </div>
+
+    <hr class="hr">
+    <div class="form-row justify-content-end">
+      <div class="form-group col-md-3">
+        <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+      </div>
+      <div class="form-group col-md-3">
+        <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!certForm.valid">Guardar</button>
+      </div>
+    </div>
+  </form>
+</div>
+<ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+
+<div *ngIf="modo_agregar == false">
+  <label for="grado_s" class="title"><b>Mis certificaciones</b></label>
+  <table class="table content-center">
+    <thead>
+      <tr>
+        <th>Certificación</th>
+        <th>Institución certificadora</th>
+        <th>Fecha de obtención</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let certificacion of this.certificaciones">
+        <td>
+          <a href="{{ URL_DOC + this.certificacion.constancia }}" target="_blank">
+            {{ certificacion.nombre }}
+            <img src="../../../../../../assets/img/file-link.svg" alt="">
+          </a>
+        </td>
+        <td>{{ certificacion.institucion }}</td>
+        <td>{{ certificacion.fecha.slice(0,10) }}</td>
+        <td>
+          <button class="btn btn-outline-danger" (click)="deleteCert(certificacion._id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

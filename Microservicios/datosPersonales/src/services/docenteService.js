@@ -1,4 +1,4 @@
-const { connectDB, saveDocente, findDocenteByInstitutionalEmail, findDocenteById, updateDocente, disconnect } = require('../database/db.js');
+const { connectDB, saveDocente, findDocenteByInstitutionalEmail, findDocenteById, updateDocente, updateOneDocDocente,  disconnect } = require('../database/db.js');
 const { initResult, setResult } = require('../util/utilResult.js')
 const util = require('../util/util.js')
 const jwt = require("../services/auth");
@@ -67,27 +67,55 @@ const login = async (body) => {
 
 }
 
+
+
 const updateOneDocente = async (data) => {
-    let resultUpdate = initResult("UpdateOne");
+    let resultUpdated = initResult("UpdateOne");
     
     const connected = await connectDB();
 
     if (!connected.value) return connected;
 
-    resultUpdate = await updateDocente(data);
+    resultUpdated = await updateDocente(data);
 
 
-    if (!resultUpdate.value)
-        return await util.setResult(resultSave, false, 500, "No se pudieron actualizar los datos personales");
+    if (!resultUpdated.value)
+        return setResult(data.id.DocenteID, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
 
   /* TOKEN */
-  resultSave.token = jwt.createToken(resultSave.docente);
-  resultSave = await util.setResult(resultSave, true, 200, "Datos personales actualizados");
+  //resultSave.token = jwt.createToken(resultSave.docente);
+    //resultUpdate = setResult(resultSave, true, 200, "Datos personales actualizados");
 
-  delete resultSave.docente;
-  dbhelper.disconnect();
-  return resultSave;
+  delete resultUpdated.docente;
+  disconnect();
+  
+  return resultUpdated;
 }
+
+
+const updateDocDocente = async (data) => {
+    let resultUpdated = initResult("UpdateOneDoc");
+    
+    const connected = await connectDB();
+
+    if (!connected.value) return connected;
+
+    resultUpdated = await updateOneDocDocente(data);
+
+
+    if (!resultUpdated.value)
+        return setResult(data.id.DocenteID, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
+
+  /* TOKEN */
+  //resultSave.token = jwt.createToken(resultSave.docente);
+    //resultUpdate = setResult(resultSave, true, 200, "Datos personales actualizados");
+
+  disconnect();
+  
+  return resultUpdated;
+}
+
+
 
 const getOneDocente = async (id_docente) => {
     let resultFind = initResult("getDocente")
@@ -114,6 +142,7 @@ module.exports = {
     createNewDocente,
     login,
     updateOneDocente,
+    updateDocDocente,
     getOneDocente
 }
 
