@@ -1,0 +1,163 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+    <label for="new_pub" class="title"><b>Nueva publicación</b></label>
+    <form (submit)="enviarDatos()" [formGroup]="pubForm">
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="formato" class="col-form-label is-required">Formato</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="tipo" class="col-form-label is-required">Tipo</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="autores" class="col-form-label is-required">Autores</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="fecha_pub" class="col-form-label is-required">Fecha de publicación</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="col-md-3">
+          <label>
+            <input type="radio" formControlName="formato" [value]="'Impreso'" [checked]="pubForm.get('formato')?.value === 'Impreso'">
+            <span> Impreso</span>
+          </label>
+          <label class="spacer"> </label>
+          <label>
+            <input type="radio" formControlName="formato" [value]="'Digital'">
+            <span> Digital</span>
+          </label>
+          <div class="mt-2 mb-2">
+            <div *ngIf="tipo?.invalid && (tipo?.dirty || tipo?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="tipo?.errors?.['required']">
+                El campo <b>Formato</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label>
+            <input type="radio" formControlName="tipo" [value]="'Publicacion'" [checked]="pubForm.get('tipo')?.value === 'Publicacion'">
+            <span> Publicación</span>
+          </label>
+          <label class="spacer"> </label>
+          <label>
+              <input type="radio" formControlName="tipo" [value]="'Articulo'">
+              <span> Artículo</span>
+          </label>
+          <div class="mt-2 mb-2">
+            <div *ngIf="tipo?.invalid && (tipo?.dirty || tipo?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="tipo?.errors?.['required']">
+                El campo <b>Tipo</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="autores" placeholder="Ej: Gil, J.; Sotelo, D. & Ramírez, E."
+            formControlName="autores" data-toggle="tooltip" data-placement="bottom" title="Ej: Gil, J.; Sotelo, D. & Ramírez, E.">
+            <div class="mt-2 mb-2">
+              <div *ngIf="autores?.invalid && (autores?.dirty || autores?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="autores?.errors?.['required']">
+                    El campo <b>Autores</b> es obligatorio.
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+          <input type="date" class="form-control" name="fecha_pub" placeholder="Fecha de publicación"
+            formControlName="fecha_pub">
+            <div class="mt-2 mb-2">
+              <div *ngIf="fecha_pub?.invalid && (fecha_pub?.dirty || fecha_pub?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="fecha_pub?.errors?.['required']">
+                  El campo <b>Fecha de publicación</b> es obligatorio.
+                </div>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="titulo" class="col-form-label is-required">Título</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="editorial" class="col-form-label">Editorial</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="doi_url" class="col-form-label">DOI/URL</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="titulo" placeholder="Título"
+            formControlName="titulo">
+              <div class="mt-2 mb-2">
+              <div *ngIf="titulo?.invalid && (titulo?.dirty || titulo?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="titulo?.errors?.['required']">
+                    El campo <b>Título</b> es obligatorio.
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="editorial" placeholder="Editorial"
+            formControlName="editorial">
+        </div>
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="doi_url" placeholder="DOI/URL"
+            formControlName="doi_url">
+        </div>
+      </div>
+  
+      <hr class="hr">
+      <div class="form-row mt-3 justify-content-end">
+        <div class="form-group col-md-3">
+          <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+        </div>
+        <div class="form-group col-md-3">
+          <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!pubForm.valid">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+  
+  <div *ngIf="modo_agregar == false">
+    <label for="pubs" class="title"><b>Mis publicaciones</b></label>
+    <table class="table content-center">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Autores</th>
+          <th>Fecha de publicación</th>
+          <th>Título</th>
+          <th>Editorial</th>
+          <th>DOI/URL</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let publicacion of this.publicaciones">
+          <td>{{ publicacion.tipo }}</td>
+          <td>{{ publicacion.autores }}   </td>
+          <td>{{ publicacion.fecha.slice(0,10) }}</td>
+          <td>{{ publicacion.titulo }}</td>
+          <td>{{ publicacion.editorial ? publicacion.editorial : "-" }}</td>
+          <td>{{ publicacion.doi_url ? publicacion.doi_url : "-" }}</td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="deletePublication(publicacion._id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

@@ -13,7 +13,7 @@ const publicacionSchema = Schema({
     tipo: {
         type: String,
         required: true,
-        enum: ["Publicación", "Artículo"],
+        enum: ["Publicacion", "Articulo"],
         default: "Publicación"
     },
     autores: {

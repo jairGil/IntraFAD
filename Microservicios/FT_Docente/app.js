@@ -8,6 +8,8 @@ let datoAcademicoRouter = require("./routes/datoAcademico");
 let certificacionRouter = require("./routes/certificacion");
 let cursoRouter = require("./routes/curso");
 let idiomaRouter = require("./routes/idioma");
+let publicacionRouter = require("./routes/publicacion");
+let experienciaRouter = require("./routes/experiencia");
 
 let app = express();
 
@@ -19,10 +21,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //app.use("/", indexRouter);
-app.use("/api/dato_academico", datoAcademicoRouter);
-app.use("/api/certificacion", certificacionRouter);
-app.use("/api/curso", cursoRouter);
-app.use("/api/idioma", idiomaRouter);
+app.use("/api/datos_academicos", datoAcademicoRouter);
+app.use("/api/certificaciones", certificacionRouter);
+app.use("/api/cursos", cursoRouter);
+app.use("/api/idiomas", idiomaRouter);
+app.use("/api/publicaciones", publicacionRouter);
+app.use("/api/experiencias", experienciaRouter);
+
 //idioma aquí
 
 module.exports = app;

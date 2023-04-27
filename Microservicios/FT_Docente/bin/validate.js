@@ -82,7 +82,6 @@ validateHelper.validarCertificacion = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de la certificación debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
 
   /*** Validación institucion ***/
@@ -90,7 +89,6 @@ validateHelper.validarCertificacion = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de la institución debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
 
   /*** Validación fecha***/
@@ -133,7 +131,6 @@ validateHelper.validarCurso = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de la certificación debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
 
   /*** Validación fecha_fin ***/
@@ -183,7 +180,6 @@ validateHelper.validarIdioma = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de la certificación debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
     
   /*** Validación nivel ***/
@@ -208,7 +204,6 @@ validateHelper.validarIdioma = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de la institución debe tener por lo menos 3 letras")
-    .isAlpha().withMessage("Debe ingresar solo letras")
     .escape().run(req);
     
   /*** Validación constancia ***/
@@ -233,6 +228,7 @@ validateHelper.validarPublicacion = async (req) => {
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El formato de publicación debe tener por lo menos 3 letras")
     .isAlpha().withMessage("Debe ingresar solo letras")
+    .escape().run(req);
     
   
   /*** Validación tipo ***/
@@ -248,7 +244,7 @@ validateHelper.validarPublicacion = async (req) => {
     .trim()
     .not().isEmpty().withMessage("Elemento vacío")
     .isLength({ min: 3 }).withMessage("El nombre de los autores debe tener por lo menos 3 letras")
-    .matches(/^[a-zA-Z]+\s[a-zA-Z]+(;[a-zA-Z]+\s[a-zA-Z]+)*/).withMessage("Error en el formato de entrada, debe ser: nombre1 apellido1; nombre2 apellido2; ...")
+    // .matches(/^[a-zA-Z]+\s[a-zA-Z]+(\s*;\s*[a-zA-Z]+\s[a-zA-Z]+)*/).withMessage("Error en el formato de entrada, debe ser: nombre1 apellido1; nombre2 apellido2; ...")
     .escape().run(req);
 
   /*** Validación titulo ***/
@@ -268,6 +264,56 @@ validateHelper.validarPublicacion = async (req) => {
     }).withMessage("Debe ingresar una fecha válida")
     .escape().run(req);
 
+  const result = validationResult(req);
+  return result;
+}
+
+/*** Validaciones de experiencia profesional ***/
+validateHelper.validarExperiencia = async (req) => {
+
+  /*** Validación de puesto de contratación ***/
+  await body("puesto")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El puesto de contratacion debe tener por lo menos 3 letras")
+    .escape().run(req);
+    
   
+  /*** Validación nombre de la empresa ***/
+  await body("empresa")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El nombre de la empresa debe tener por lo menos 3 letras")
+    .escape().run(req);
+
+  /*** Validación fecha_ingreso ***/
+  await body("fecha_ingreso")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 10 }).withMessage("Error de formato de fecha, debe contener mínimo 10 caracteres")
+    .custom(val => {
+      return moment(val, 'YYYY-MM-DD').isValid();
+    }).withMessage("Debe ingresar una fecha válida")
+    .escape().run(req);
+
+  /*** Validación fecha_egreso ***/
+  await body("fecha_egreso")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 10 }).withMessage("Error de formato de fecha, debe contener mínimo 10 caracteres")
+    .custom(val => {
+      return moment(val, 'YYYY-MM-DD').isValid();
+    }).withMessage("Debe ingresar una fecha válida")
+    .escape().run(req);
+
+  /*** Validación funciones ***/
+  await body("funciones")
+  .trim()
+  .not().isEmpty().withMessage("Elemento vacío")
+  .isLength({ min: 3 }).withMessage("El nombre de la empresa debe tener por lo menos 3 letras")
+  .escape().run(req);
+
+  const result = validationResult(req);
+  return result;
 }
 module.exports = validateHelper;

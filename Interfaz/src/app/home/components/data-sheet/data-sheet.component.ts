@@ -12,6 +12,8 @@ export class DataSheetComponent {
   @ViewChild("btnCert") btnCertificaciones: ElementRef | undefined;
   @ViewChild("btnCour") btnCursos: ElementRef | undefined;
   @ViewChild("btnLang") btnIdiomas: ElementRef | undefined;
+  @ViewChild("btnPubl") btnPubl: ElementRef | undefined;
+  @ViewChild("btnExpe") btnExpe: ElementRef | undefined;
 
   constructor(
     private renderer: Renderer2,
@@ -35,6 +37,12 @@ export class DataSheetComponent {
       case 3:
         this.renderer.addClass(this.btnIdiomas?.nativeElement, "btn-outline-success");
         break;
+      case 4:
+        this.renderer.addClass(this.btnPubl?.nativeElement, "btn-outline-success");
+        break;
+      case 5:
+        this.renderer.addClass(this.btnExpe?.nativeElement, "btn-outline-success");
+        break;
     }
     this.pagina = pag;
   }
@@ -44,6 +52,8 @@ export class DataSheetComponent {
     this.renderer.removeClass(this.btnCertificaciones?.nativeElement, "btn-outline-success");
     this.renderer.removeClass(this.btnCursos?.nativeElement, "btn-outline-success");
     this.renderer.removeClass(this.btnIdiomas?.nativeElement, "btn-outline-success");
+    this.renderer.removeClass(this.btnPubl?.nativeElement, "btn-outline-success");
+    this.renderer.removeClass(this.btnExpe?.nativeElement, "btn-outline-success");
   }
 
 }

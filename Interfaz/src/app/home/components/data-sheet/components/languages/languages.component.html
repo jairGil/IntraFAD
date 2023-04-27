@@ -31,11 +31,7 @@
           </div>
       </div>
       <div class="form-group col-md-3">
-        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="nombre">
-          <option class="dropdown-item" value="Licenciatura">
-            Técnico
-          </option>
-        </select>
+        <input type="text" class="form-control" name="tipo" placeholder="Ej: Inglés" formControlName="nombre">
         <div class="mt-2 mb-2">
           <div *ngIf="nombre?.invalid && (nombre?.dirty || nombre?.touched)"
             class="alert alert-danger" role="alert">
@@ -46,11 +42,7 @@
         </div>
       </div>
       <div class="form-group col-md-3">
-        <select class="form-control" name="tipo" placeholder="Tipo" formControlName="nivel">
-          <option class="dropdown-item" value="Licenciatura">
-            Técnico
-          </option>
-        </select>
+        <input type="text" class="form-control" name="tipo" placeholder="Ej: C1" formControlName="nivel">
         <div class="mt-2 mb-2">
           <div *ngIf="nivel?.invalid && (nivel?.dirty || nivel?.touched)"
             class="alert alert-danger" role="alert">

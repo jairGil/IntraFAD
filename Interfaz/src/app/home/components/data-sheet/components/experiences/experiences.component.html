@@ -1,0 +1,132 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+    <label for="new_pub" class="title"><b>Nueva publicación</b></label>
+    <form (submit)="enviarDatos()" [formGroup]="expForm">
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="formato" class="col-form-label is-required">Puesto</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="empresa" class="col-form-label is-required">Empresa</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="fecha_ingreso" class="col-form-label is-required">Fecha de ingreso</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="fecha_egreso" class="col-form-label is-required">Fecha de egreso</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <input type="text" class="form-control" name="puesto" placeholder="Puesto"
+            formControlName="puesto">
+            <div class="mt-2 mb-2">
+              <div *ngIf="puesto?.invalid && (puesto?.dirty || puesto?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="puesto?.errors?.['required']">
+                    El campo <b>Puesto</b> es obligatorio.
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" name="empresa" placeholder="Empresa"
+              formControlName="empresa">
+              <div class="mt-2 mb-2">
+                <div *ngIf="empresa?.invalid && (empresa?.dirty || empresa?.touched)"
+                  class="alert alert-danger" role="alert">
+                  <div *ngIf="empresa?.errors?.['required']">
+                      El campo <b>Empresa</b> es obligatorio.
+                  </div>
+                </div>
+              </div>
+          </div>
+        <div class="form-group col-md-3">
+          <input type="date" class="form-control" name="fecha_ingreso" placeholder="Fecha de ingreso"
+            formControlName="fecha_ingreso">
+            <div class="mt-2 mb-2">
+              <div *ngIf="fecha_ingreso?.invalid && (fecha_ingreso?.dirty || fecha_ingreso?.touched)"
+                class="alert alert-danger" role="alert">
+                <div *ngIf="fecha_ingreso?.errors?.['required']">
+                  El campo <b>Fecha de ingreso</b> es obligatorio.
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <input type="date" class="form-control" name="fecha_egreso" placeholder="Fecha de egreso"
+              formControlName="fecha_egreso">
+              <div class="mt-2 mb-2">
+                <div *ngIf="fecha_egreso?.invalid && (fecha_egreso?.dirty || fecha_egreso?.touched)"
+                  class="alert alert-danger" role="alert">
+                  <div *ngIf="fecha_egreso?.errors?.['required']">
+                    El campo <b>Fecha de egreso</b> es obligatorio.
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="funciones" class="col-form-label is-required">Funciones desempeñadas</label>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="observaciones" class="col-form-label">Observaciones</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-6">
+            <textarea class="form-control" name="funciones" placeholder="Funciones desempeñadas"
+            formControlName="funciones"></textarea>
+        </div>
+        <div class="form-group col-md-6">
+          <textarea class="form-control" name="observaciones" placeholder="Observaciones"
+            formControlName="observaciones"></textarea>
+        </div>
+      </div>
+  
+      <hr class="hr">
+      <div class="form-row mt-3 justify-content-end">
+        <div class="form-group col-md-3">
+          <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+        </div>
+        <div class="form-group col-md-3">
+          <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!expForm.valid">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+  
+  <div *ngIf="modo_agregar == false">
+    <label for="pubs" class="title"><b>Mis experienciaes laborales</b></label>
+    <table class="table content-center">
+      <thead>
+        <tr>
+          <th>Puesto</th>
+          <th>Empresa</th>
+          <th>Fecha de ingreso</th>
+          <th>Fecha de egreso</th>
+          <th>Funciones desempeñadas</th>
+          <th>Observaciones</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let experiencia of this.experiencias">
+          <td>{{ experiencia.puesto }}</td>
+          <td>{{ experiencia.empresa }}   </td>
+          <td>{{ experiencia.fecha_ingreso.slice(0,10) }}</td>
+          <td>{{ experiencia.fecha_egreso.slice(0,10) }}</td>
+          <td>{{ experiencia.funciones }}</td>
+          <td>{{ experiencia.observaciones ? experiencia.observaciones : "-" }}</td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="deleteExperience(experiencia._id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

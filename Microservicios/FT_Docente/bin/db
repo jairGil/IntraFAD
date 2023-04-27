@@ -8,6 +8,7 @@ const Curso         = require("../models/curso");
 const Certificacion = require("../models/certificacion");
 const Idioma        = require("../models/idioma");
 const Publicacion   = require("../models/publicacion");
+const Experiencia   = require("../models/experiencia");
 
 
 const dbhelper = {}
@@ -373,7 +374,7 @@ dbhelper.findPublicacionByIdDocente = async (id_docente) => {
   await Publicacion.find({ id_docente: id_docente }).then(
     (publicaciones) => {
       if (publicaciones) {
-        resultFind = { action: "Buscar publicaciones", value: true, code: 200, msg: "Publicaciones obtenidas", publicaiones: publicaciones }
+        resultFind = { action: "Buscar publicaciones", value: true, code: 200, msg: "Publicaciones obtenidas", publicaciones: publicaciones }
       } else {
         resultFind = util.setResult(resultFind, true, 200, "Sin publicaciones");
       }
@@ -393,6 +394,74 @@ dbhelper.deletePublicacionById = async (id_publicacion) => {
       resultFind = util.setResult(resultFind, true, 200, "Publicación eliminada");
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar la publicación");
+    });
+
+  return resultFind;
+}
+
+/********************************************************************************/
+
+/******************************** Experiencia *******************************/
+// Guardar experiencia profesional
+dbhelper.saveExperiencia = async (experiencia) => {
+  let resultSave = { action: "Guardar experiencia profesional", value: false, code: 500, msg: "No inicializado" };
+  const auxExperiencia = new Experiencia(experiencia);
+
+  await auxExperiencia.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Experiencia profesional guardada exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar la experiencia profesional");
+    });
+    
+  return resultSave;
+}
+
+// Buscar experiencia profesional
+dbhelper.findExperiencia = async (experiencia) => {
+  let resultFind = { action: "Buscar experiencia", value: false, code: 500, msg: "No inicializado" };
+
+  try {
+    const exp = await Publicacion.findOne(experiencia);
+    if (exp) {
+      resultFind = util.setResult(resultFind, true, 200, "Experiencia registrada en la BD");
+    } else {
+      resultFind = util.setResult(resultFind, false, 404, "Experiencia no registrada");
+    }
+  } catch (error) {
+    resultFind = util.setResult(resultFind, false, 500, error.message + " - Error en la petición");
+  }
+
+  return resultFind;
+}
+
+// Buscar experiencias profesionales por id del docente
+dbhelper.findExperienciaByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar experiencias profesionales", value: false, code: 500, msg: "No inicializado" };
+
+  await Experiencia.find({ id_docente: id_docente }).then(
+    (experiencias) => {
+      if (experiencias) {
+        resultFind = { action: "Buscar experiencias profesionales", value: true, code: 200, msg: "Experiencias profesionales obtenidas", experiencias: experiencias }
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin experiencias profesionales");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Eliminar una experiencia profesional
+dbhelper.deleteExperienciaById = async (id_exp) => {
+  let resultFind = { action: "Eliminar experiencia profesional", value: false, code: 500, msg: "No inicializado" };
+
+  await Experiencia.findByIdAndDelete(id_exp).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Experiencia profesional eliminada");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar la experiencia profesional");
     });
 
   return resultFind;

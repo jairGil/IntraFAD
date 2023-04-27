@@ -10,6 +10,8 @@ import { AcademicDataComponent } from './components/data-sheet/components/academ
 import { CoursesComponent } from './components/data-sheet/components/courses/courses.component';
 import { LanguagesComponent } from './components/data-sheet/components/languages/languages.component';
 import { CertificationsComponent } from './components/data-sheet/components/certifications/certifications.component';
+import { PublicationsComponent } from './components/data-sheet/components/publications/publications.component';
+import { ExperiencesComponent } from './components/data-sheet/components/experiences/experiences.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { CertificationsComponent } from './components/data-sheet/components/cert
     AcademicDataComponent,
     CoursesComponent,
     LanguagesComponent,
-    CertificationsComponent
+    CertificationsComponent,
+    PublicationsComponent,
+    ExperiencesComponent
   ],
   imports: [
     CommonModule,
