@@ -1,4 +1,4 @@
-export interface Languaje {
+export interface Language {
     nombre: string;
     nivel: string;
     fecha_fin: Date;

@@ -69,6 +69,7 @@ export class PersonalDataComponent {
     this.direccion = this.dataDocente.direccion.split(', ');
     this.dpForm = FormUtils.buildForm();
     this.dpForm = FormUtils.setDataDocente(this.dpForm, this.dataDocente);
+    this.loading = false;
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Languaje } from 'src/app/home/models/languaje.model';
+import { Language } from 'src/app/home/models/language.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { LanguagesService } from 'src/app/home/services/languages.service';
 import { environment } from 'src/environments/environment.development';
@@ -77,7 +77,7 @@ export class LanguagesComponent {
   enviarDatos() {
     // this.uploadDocument('idiomas', 'constancia_F');
 
-    let idioma: Languaje = {
+    let idioma: Language = {
       nombre: this.idioForm.get('nombre')?.value!,
       nivel: this.idioForm.get('nivel')?.value!,
       fecha_fin: new Date(this.idioForm.get('fecha_fin')?.value!),
