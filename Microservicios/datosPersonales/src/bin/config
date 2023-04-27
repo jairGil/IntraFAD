@@ -13,12 +13,21 @@ const uriDB = `mongodb+srv://${dbuser}:${dbpass}@intrafad.rpczxmh.mongodb.net/te
 const config = {
     port: process.env.PORT || 3000,
     db: {
+<<<<<<< HEAD
         uri: uriDB,
         // uri: process.env.URIDB,
     },
     routes: {
         // files: "/data/",
         files: "D:/Documentos/SevicioSocial/Proyectos/IntraFAD/Microservicios/archivos/controller/uploads/"
+=======
+        uri: process.env.URIDB || uriDB,
+        // uri: process.env.URIDB,
+    },
+    routes: {
+        files: process.env.DATA || "/data/"
+        //files: "D:/Documentos/SevicioSocial/Proyectos/IntraFAD/Microservicios/archivos/controller/uploads/"
+>>>>>>> 4ce7f7c0f537dbf1c298e01eb775f5ce30f839ee
     }
 }
 

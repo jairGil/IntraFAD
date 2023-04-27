@@ -1,51 +1,25 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthGuard } from './auth.guard';
-import { TokenInterceptorService } from './services/token-interceptor.service';
+import { TokenInterceptorService } from './core/services/token-interceptor.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HomeModule } from './home/home.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { RegisterComponent } from './components/register/register.component';
-import { HomeComponent } from './components/home/home.component';
-import { DatosPersonalesComponent } from './components/home/datos-personales/datos-personales.component';
-import { ExitoComponent } from './components/register/exito/exito.component';
-import { LoginInstitucionalComponent } from './components/login/institucional/institucional.component';
-import { LoginNoInstitucionalComponent } from './components/login/no-institucional/no-institucional.component';
-import { DatosAcademicosComponent } from './components/home/datos-academicos/datos-academicos.component';
-import { FichaTecnicaComponent } from './components/home/ficha-tecnica/ficha-tecnica.component';
-import { CursosComponent } from './components/home/cursos/cursos.component';
-import { CertificacionesComponent } from './components/home/certificaciones/certificaciones.component';
-import { IdiomasComponent } from './components/home/idiomas/idiomas.component';
+import { HeaderComponent } from '../app/core/components/header/header.component';
+import { FooterComponent } from '../app/core/components/footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     HeaderComponent,
     FooterComponent,
-    RegisterComponent,
-    HomeComponent,
-    DatosPersonalesComponent,
-    ExitoComponent,
-    LoginInstitucionalComponent,
-    LoginNoInstitucionalComponent,
-    DatosAcademicosComponent,
-    FichaTecnicaComponent,
-    CursosComponent,
-    CertificacionesComponent,
-    IdiomasComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    HomeModule,
   ],
   providers: [
     {

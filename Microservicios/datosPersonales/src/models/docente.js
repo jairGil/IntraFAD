@@ -194,7 +194,7 @@ const docenteSchema = Schema({
     },
     rol: {
         type: String,
-        requierd: true,
+        requiered: true,
         default: "BASIC_ROLE",
         enum: ["BASIC_ROLE", "USER_ROLE", "ADMIN_ROLE", "ROOT_ROLE"]
     },
@@ -205,25 +205,25 @@ const docenteSchema = Schema({
     },
     rfc: {
         type: String,
-        requierd: true,
+        requiered: true,
         trim: true,
         default: "ABCD123456789"
     },
     doc_rfc: {
         type: String,
-        requierd: true,
+        requiered: false,
         trim: true,
         default: "no_inicializado.pdf"
     },
     curp: {
         type: String,
-        requierd: true,
+        requiered: false,
         trim: true,
         default: "ABCD123456EFGHIJK0"
     },
     doc_curp: {
         type: String,
-        requierd: true,
+        requiered: true,
         trim: true,
         default: "no_inicializado.pdf"
     },

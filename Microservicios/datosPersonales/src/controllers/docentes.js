@@ -32,11 +32,23 @@ const getDocenteByID = (req, res) => {
 
 
 const updateOneDocente = (req, res) => {
-  docenteController.updateOneDocente(req, res).then(
-    (resultUpdated) => {
-      console.log(JSON.stringify(resultUpdated));
-      res.status(resultUpdated.code).send(resultUpdated);
-    });
+  const data = req.body;
+
+   /* Actualiza el campo doc_rfc */
+   if(data.params.hasOwnProperty('doc_rfc') || data.params.hasOwnProperty('doc_curp')){
+    /* Actualiza el docente */
+    docenteService.updateDocDocente(data).then(
+      (resultUpdated) => {
+        res.status(resultUpdated.code).send(resultUpdated);
+      });
+  }else{
+    /* Actualiza el docente */
+    docenteService.updateOneDocente(data).then(
+      (resultUpdated) => {
+        res.status(resultUpdated.code).send(resultUpdated);
+      });
+  }
+  
 }
 
 

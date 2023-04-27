@@ -112,26 +112,53 @@ const findDocenteById = async (id_docente, action) => {
 
 
 // Actualizar un docente
-const updateDocente = async (docente) => {
-  docente.doc_rfc = docente.doc_rfc.replaceAll("/", "|");
-  docente.doc_curp = docente.doc_curp.replaceAll("/", "|");
+const updateDocente = async (data) => {
+  let resultUpdate = initResult("UpdateOneDocente")
+
+  let docente = data.params;
+  const idDocente = data.id.DocenteID;
+
+  //docente.doc_rfc = docente.doc_rfc.replaceAll("/", "|");
+  //docente.doc_curp = docente.doc_curp.replaceAll("/", "|");
 
   docente.curp = docente.curp.toUpperCase();
   docente.rfc = docente.rfc.toUpperCase();
 
-  console.log(JSON.stringify(docente));
-  let resultSave = { action: "Actualizar docente", value: false, code: 500, msg: "No inicializado" }
 
-  await Docente.findByIdAndUpdate(docente._id, docente, { new: true }).then(
+  await Docente.findByIdAndUpdate(idDocente, docente, { new: true }).then(
     (docente) => {
-      resultSave = { action: "Actualizar docente", value: true, code: 200, msg: "Docente actualizado", docente: docente }
+      resultUpdate = setResult(idDocente, "UpdateOneDocente", true, 200, "Docente actualizado")
+      resultUpdate.docente = docente;
     }, error => {
-      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+      resultUpdate = setResult(idDocente, "UpdateOneDocente", false, 500,error + " - Error al guardar el docente" );
     }
   );
-  return resultSave;
+
+
+  return resultUpdate;
 }
 
+
+const updateOneDocDocente = async (data) => {
+  let resultUpdate = initResult("UpdateOneDocDocente")
+
+  const docUpdate = data.params;
+  const idDocente = data.id.DocenteID;
+
+  await Docente.findByIdAndUpdate(idDocente, docUpdate).then(
+    (docente) => {
+      resultUpdate = setResult(idDocente, "UpdateOneDocDocente", true, 200, "Docente actualizado")
+      //resultUpdate.docente = docente;
+    }, error => {
+      resultUpdate = setResult(idDocente, "UpdateOneDocDocente", false, 500,error + " - Error al guardar el docente" );
+    }
+  );
+
+
+  console.log(JSON.stringify(resultUpdate))
+
+  return resultUpdate;
+}
 
 
 // Buscar docente por email
@@ -155,4 +182,4 @@ const findDocenteByEmail = async (correo_personal, action) => {
 }
 
 
-module.exports = { connectDB, saveDocente, findDocenteByInstitutionalEmail, findDocenteById, updateDocente, disconnect };
+module.exports = { connectDB, saveDocente, findDocenteByInstitutionalEmail, findDocenteById, updateDocente, updateOneDocDocente, disconnect };
