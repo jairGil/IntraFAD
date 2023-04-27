@@ -7,6 +7,7 @@ const DatoAcademico = require("../models/datoAcademico");
 const Curso         = require("../models/curso");
 const Certificacion = require("../models/certificacion");
 const Idioma        = require("../models/idioma");
+const Publicacion   = require("../models/publicacion");
 
 
 const dbhelper = {}
@@ -324,6 +325,74 @@ dbhelper.deleteIdiomaById = async (id_idioma) => {
       resultFind = util.setResult(resultFind, true, 200, "Idioma eliminado");
     }, error => {
       resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar el idioma");
+    });
+
+  return resultFind;
+}
+
+/********************************************************************************/
+
+/******************************** Publicaciones *******************************/
+// Guardar publicaciones
+dbhelper.savePublicacion = async (publicacion) => {
+  let resultSave = { action: "Guardar publicación", value: false, code: 500, msg: "No inicializado" };
+  const auxPublicacion = new Publicacion(publicacion);
+
+  await auxPublicacion.save().then(
+    () => {
+      resultSave = util.setResult(resultSave, true, 200, "Publicación guardada exitosamente.");
+    }, error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar la publicación");
+    });
+    
+  return resultSave;
+}
+
+// Buscar publicación
+dbhelper.findPublicacion = async (publicacion) => {
+  let resultFind = { action: "Buscar publicación", value: false, code: 500, msg: "No inicializado" };
+
+  try {
+    const publi = await Publicacion.findOne(publicacion);
+    if (publi) {
+      resultFind = util.setResult(resultFind, true, 200, "Publicación registrada en la BD");
+    } else {
+      resultFind = util.setResult(resultFind, false, 404, "Publicación no registrada");
+    }
+  } catch (error) {
+    resultFind = util.setResult(resultFind, false, 500, error.message + " - Error en la petición");
+  }
+
+  return resultFind;
+}
+
+// Buscar publicaciones por id del docente
+dbhelper.findPublicacionByIdDocente = async (id_docente) => {
+  let resultFind = { action: "Buscar publicaciones", value: false, code: 500, msg: "No inicializado" };
+
+  await Publicacion.find({ id_docente: id_docente }).then(
+    (publicaciones) => {
+      if (publicaciones) {
+        resultFind = { action: "Buscar publicaciones", value: true, code: 200, msg: "Publicaciones obtenidas", publicaiones: publicaciones }
+      } else {
+        resultFind = util.setResult(resultFind, true, 200, "Sin publicaciones");
+      }
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error en la petición");
+    });
+
+  return resultFind;
+}
+
+// Eliminar una publicación
+dbhelper.deletePublicacionById = async (id_publicacion) => {
+  let resultFind = { action: "Eliminar publicación", value: false, code: 500, msg: "No inicializado" };
+
+  await Publicacion.findByIdAndDelete(id_publicacion).then(
+    () => {
+      resultFind = util.setResult(resultFind, true, 200, "Publicación eliminada");
+    }, error => {
+      resultFind = util.setResult(resultFind, false, 500, error + " - Error al eliminar la publicación");
     });
 
   return resultFind;

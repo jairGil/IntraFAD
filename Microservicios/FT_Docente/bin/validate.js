@@ -224,4 +224,50 @@ validateHelper.validarIdioma = async (req) => {
   return result;
 }
 
+/*** Validaciones de publicaciones ***/
+validateHelper.validarPublicacion = async (req) => {
+
+  /*** Validación de formato ***/
+  await body("formato")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El formato de publicación debe tener por lo menos 3 letras")
+    .isAlpha().withMessage("Debe ingresar solo letras")
+    
+  
+  /*** Validación tipo ***/
+  await body("tipo")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El tipo de publicación debe tener por lo menos 3 letras")
+    .isAlpha().withMessage("Debe ingresar solo letras")
+    .escape().run(req);
+  
+  /*** Validación autores ***/
+  await body("autores")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El nombre de los autores debe tener por lo menos 3 letras")
+    .matches(/^[a-zA-Z]+\s[a-zA-Z]+(;[a-zA-Z]+\s[a-zA-Z]+)*/).withMessage("Error en el formato de entrada, debe ser: nombre1 apellido1; nombre2 apellido2; ...")
+    .escape().run(req);
+
+  /*** Validación titulo ***/
+  await body("titulo")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 3 }).withMessage("El titulo de la publicación debe tener por lo menos 3 letras")
+    .escape().run(req);
+
+  /*** Validación fecha ***/
+  await body("fecha")
+    .trim()
+    .not().isEmpty().withMessage("Elemento vacío")
+    .isLength({ min: 10 }).withMessage("Error de formato de fecha, debe contener mínimo 10 caracteres")
+    .custom(val => {
+      return moment(val, 'YYYY-MM-DD').isValid();
+    }).withMessage("Debe ingresar una fecha válida")
+    .escape().run(req);
+
+  
+}
 module.exports = validateHelper;
