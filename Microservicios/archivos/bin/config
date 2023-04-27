@@ -5,13 +5,8 @@ if(process.env.NODE_ENV !== "production"){
 const config = {
     port: process.env.PORT || 3000,
     routes: {
-<<<<<<< HEAD
-        // files: "/data/",
-        files: "D:/Documentos/SevicioSocial/Proyectos/IntraFAD/Microservicios/archivos/controller/uploads/"
-=======
-        files: process.env.URIDATA || "/data/"
-       // files: "D:/Documentos/SevicioSocial/Proyectos/Microservicios/archivos/controller/uploads/"
->>>>>>> 4ce7f7c0f537dbf1c298e01eb775f5ce30f839ee
+        // files: process.env.URIDATA || "/data/"
+       files: "D:/Documentos/SevicioSocial/Proyectos/IntraFAD/Microservicios/archivos/controller/uploads/"
     }    
 }
 
