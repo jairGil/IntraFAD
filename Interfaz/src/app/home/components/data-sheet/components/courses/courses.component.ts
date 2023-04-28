@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Course } from 'src/app/home/models/course.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { CoursesService } from 'src/app/home/services/courses.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -32,7 +33,8 @@ export class CoursesComponent {
     private authService: AuthService,
     private cursoService: CoursesService,
     private archivosService: ArchivosService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.idDocente = this.authService.decodeToken()._id;
   }
@@ -46,9 +48,11 @@ export class CoursesComponent {
     this.cursoService.getCursos(this.idDocente).subscribe({
       next: (res: any) => {
         this.cursos = res.cursos;
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -57,9 +61,11 @@ export class CoursesComponent {
     this.cursoService.deleteCurso(id).subscribe({
       next: (res: any) => {
         this.getCursos();
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -93,10 +99,12 @@ export class CoursesComponent {
         if (res.value) {
           this.getCursos();
           this.cambiarModo(2);
+          this.notificationService.showNotification(res.msg, 'alert-success');
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 

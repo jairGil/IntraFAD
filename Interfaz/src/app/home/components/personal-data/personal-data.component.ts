@@ -18,6 +18,7 @@ import { Docente, DocenteSend } from '../../models/docente.model';
 import { FormUtils } from '../../utils/FormUtils';
 import { PlanEstudio } from '../../models/plan-estudio.model';
 import { QueryUpdate } from '../../models/query-update.model';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-personal-data',
@@ -62,7 +63,8 @@ export class PersonalDataComponent {
 
   constructor(
     private personalDataService: PersonalDataService,
-    private archivosService: ArchivosService
+    private archivosService: ArchivosService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -113,11 +115,14 @@ export class PersonalDataComponent {
           this.sendDataToParent();
           this.cambiar_modo(1);
           this.loading = false;
+          this.notificationService.showNotification('Datos actualizados correctamente', 'alert-success');
         }
-        console.log(res)
+        // console.log(res)
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.loading = false;
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 

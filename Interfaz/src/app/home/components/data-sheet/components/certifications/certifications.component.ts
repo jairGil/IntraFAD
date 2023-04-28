@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Certification } from 'src/app/home/models/certification.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { CertificationsService } from 'src/app/home/services/certifications.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -30,7 +31,8 @@ export class CertificationsComponent {
     private authService: AuthService,
     private certificacionService: CertificationsService,
     private archivosService: ArchivosService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
     ) {
       this.idDocente = this.authService.decodeToken()._id;
     }
@@ -44,9 +46,11 @@ export class CertificationsComponent {
     this.certificacionService.getCertificaciones(this.idDocente).subscribe({
       next: (res: any) => {
         this.certificaciones = res.certificaciones;
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -55,9 +59,11 @@ export class CertificationsComponent {
     this.certificacionService.deleteCertificacion(id).subscribe({
       next: (res: any) => {
         this.getCert();
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -89,10 +95,12 @@ export class CertificationsComponent {
         if (res.value) {
           this.getCert();
           this.cambiarModo(2);
+          this.notificationService.showNotification(res.msg, 'alert-success');
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }

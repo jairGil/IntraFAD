@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Experience } from 'src/app/home/models/experience.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { ExperiencesService } from 'src/app/home/services/experiences.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -28,9 +29,9 @@ export class ExperiencesComponent {
 
   constructor(
     private experienceService: ExperiencesService,
-    private archivosService: ArchivosService,
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.idDocente = this.authService.decodeToken()._id;
   }
@@ -44,9 +45,11 @@ export class ExperiencesComponent {
     this.experienceService.getExperiencias(this.idDocente).subscribe({
       next: (res: any) => {
         this.experiencias = res.experiencias;
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -55,9 +58,11 @@ export class ExperiencesComponent {
     this.experienceService.deleteExperiencia(id).subscribe({
       next: (res: any) => {
         this.getExperiences();
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -90,10 +95,12 @@ export class ExperiencesComponent {
         if (res.value) {
           this.getExperiences();
           this.cambiarModo(2);
+          this.notificationService.showNotification(res.msg, 'alert-success');
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 

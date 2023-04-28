@@ -6,6 +6,7 @@ import { FileSend } from 'src/app/home/models/file-send.model';
 import { QueryUpdate } from 'src/app/home/models/query-update.model';
 import { AcademicDataService } from 'src/app/home/services/academic-data.service';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -38,7 +39,8 @@ export class AcademicDataComponent {
     private authService: AuthService,
     private daService: AcademicDataService,
     private archivosService: ArchivosService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.idDocente = this.authService.decodeToken()._id;
   }
@@ -53,10 +55,12 @@ export class AcademicDataComponent {
     this.daService.getDatosAcademicos(this.idDocente).subscribe({
       next: (res: any) => {
         this.datosAcademicos = res.datoAcademico;
-        console.log(this.datosAcademicos);
+        // console.log(this.datosAcademicos);
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
         console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -65,10 +69,12 @@ export class AcademicDataComponent {
     this.daService.deleteDatoAcademico(id).subscribe({
       next: (res: any) => {
         this.getDA();
-        console.log(res);
+        // console.log(res);
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -119,10 +125,12 @@ export class AcademicDataComponent {
           // uploaded = true;
           this.getDA();
           this.cambiarModo(2);
+          this.notificationService.showNotification(res.msg, 'alert-success');
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 

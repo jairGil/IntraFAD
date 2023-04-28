@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Language } from 'src/app/home/models/language.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { LanguagesService } from 'src/app/home/services/languages.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment.development';
 
 @Component({
@@ -31,7 +32,8 @@ export class LanguagesComponent {
     private languageService: LanguagesService,
     private archivosService: ArchivosService,
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.idDocente = this.authService.decodeToken()._id;
   }
@@ -45,9 +47,11 @@ export class LanguagesComponent {
     this.languageService.getIdiomas(this.idDocente).subscribe({
       next: (res: any) => {
         this.idiomas = res.idiomas;
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -56,9 +60,11 @@ export class LanguagesComponent {
     this.languageService.deleteIdioma(id).subscribe({
       next: (res: any) => {
         this.getLanguages();
+        this.notificationService.showNotification(res.msg, 'alert-success');
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
   }
@@ -91,10 +97,12 @@ export class LanguagesComponent {
         if (res.value) {
           this.getLanguages();
           this.cambiarModo(2);
+          this.notificationService.showNotification(res.msg, 'alert-success');
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 

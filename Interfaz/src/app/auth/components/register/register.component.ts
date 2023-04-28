@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service'
 import { Docente } from '../../models/docente.model';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -30,6 +30,7 @@ export class RegisterComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private notificationService: NotificationService,
   ) {
     this.registerForm = this.formBuilder.group({
       correo_institucional: ['', {
@@ -74,15 +75,20 @@ export class RegisterComponent {
       if (this.institucional) {
         this.authService.register(docente).subscribe({
           next: (res: any) => {
+            console.log(res)
             if (res.value) {
               this.cuentaCreada = true;
-              this.loading = false;
+              this.showNotification("Cuenta creada correctamente", 'alert-success');
             } else {
               this.error = res;
+              this.showNotification(res.msg, 'alert-danger');
             }
+            this.loading = false;
           },
           error: (err: any) => {
+            this.loading = false;
             this.error = err.error;
+            this.showNotification(err.error.msg, 'alert-danger');
           }
         });
       }
@@ -105,6 +111,16 @@ export class RegisterComponent {
     }
 
     return valid && this.contrasena!.valid && this.confirma_contrasena!.valid && this.aviso_privacidad!.valid
+  }
+
+  /**
+   * Mostrar una notificación
+   * @returns void
+   * @since 1.1.0
+   * @version 1.0.0
+  */
+  public showNotification(notification: string, classType: string): void {
+    this.notificationService.showNotification(notification, classType);
   }
 
   get correo_institucional() { return this.registerForm.get('correo_institucional'); }
