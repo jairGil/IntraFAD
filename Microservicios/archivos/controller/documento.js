@@ -58,12 +58,8 @@ documentoController.cargarDocumento = (req, res) => {
             return;
         }
 
-        if (tipoArchivo === "RFC" || tipoArchivo === "CURP") {
-            targetPath += docenteID + ext;
-            responsePath += docenteID + ext;;
-        } else {
-            targetPath += filename;
-        }
+        targetPath += docenteID + ext;
+        responsePath += docenteID + ext;
 
         //Crear directorios necesarios
         directorios.createDir(config.routes.files, docenteID, tipoArchivo);
@@ -78,6 +74,77 @@ documentoController.cargarDocumento = (req, res) => {
             utilResponse.success(resultUpload, "Documento guardado");
             resultUpload.doc = responsePath.replaceAll('/','-');
             //console.log(JSON.stringify(resultUpload));
+            res.status(resultUpload.code).send(resultUpload);
+        });
+    });
+
+    form.parse(req);
+};
+
+documentoController.cargarDocumentoFT = (req, res) => {
+    let resultUpload = {};
+    let form = new multiparty.Form({maxFilesSize:"2M"});
+    let docenteID = req._id;
+    let tipo = req.params.tipo;
+
+    utilResponse.init(resultUpload, "cargar documento");
+    
+    //Error al cargar documento
+    form.on("error", (error) => {
+        utilResponse.error(resultUpload, "El archivo excede el tamaño admitido");
+        res.status(resultUpload.code).send(error);
+    });
+
+    //Archivo recibido
+    form.on("close", () => {
+        console.log("Archivo recibido");
+    });
+
+    //Abortado
+    form.on("aborted", (error) => {
+        console.log("aborted");
+        console.log(error);
+    });
+
+
+    //Emite el progreso de cargar documento
+    form.on("progress", (bytesReceived, bytesExpected) => {
+        //console.log("bytes: " + (bytesReceived + " / " + bytesExpected));
+    });
+
+    //Guardar el archivo en el disco
+    form.on("file", (name, file) => {
+        let tipoArchivo = directorios.getTipoArchivo(tipo);
+        let filename = file.originalFilename;
+        let ext = path.extname(filename);
+        let tmpPath = file.path;
+        let targetPath = config.routes.files + docenteID + '/' + tipoArchivo + '/';
+        let responsePath = docenteID + '/' + tipoArchivo + '/';
+        let nombre = req.params.nombre;
+        let fecha = req.params.fecha;
+
+        if (!(ext === ".pdf")) {
+            utilResponse.error(resultUpload, "Tipo de archivo no soportado");
+            res.status(resultUpload.code).send(resultUpload);
+            return;
+        }
+
+        targetPath += nombre + fecha + docenteID + ext;
+        responsePath += nombre + fecha + docenteID + ext;
+
+        //Crear directorios necesarios
+        directorios.createDir(config.routes.files, docenteID, tipoArchivo);
+
+        mv(tmpPath, targetPath, async (err) => {
+            if (err) {
+                utilResponse.innerError(resultUpload, err, "Error al cambiar la ruta");
+                res.status(resultUpload.code).send(resultUpload);
+                return;
+            }
+
+            utilResponse.success(resultUpload, "Documento guardado");
+            resultUpload.doc = responsePath.replaceAll('/','-');
+            console.log("File: " + JSON.stringify(resultUpload));
             res.status(resultUpload.code).send(resultUpload);
         });
     });

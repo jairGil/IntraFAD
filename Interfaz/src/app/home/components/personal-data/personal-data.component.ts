@@ -17,6 +17,7 @@ import { Profile } from '../../models/profile.model';
 import { Docente, DocenteSend } from '../../models/docente.model';
 import { FormUtils } from '../../utils/FormUtils';
 import { PlanEstudio } from '../../models/plan-estudio.model';
+import { QueryUpdate } from '../../models/query-update.model';
 
 @Component({
   selector: 'app-personal-data',
@@ -60,7 +61,6 @@ export class PersonalDataComponent {
   private planesEstudio: PlanEstudio[] = [];
 
   constructor(
-    private authService: AuthService,
     private personalDataService: PersonalDataService,
     private archivosService: ArchivosService
   ) { }
@@ -235,7 +235,7 @@ export class PersonalDataComponent {
         next: (res: any) => {
           //Si se subiío correctamente el documento se actualiza la base de datos
           if(res.code === 200){
-            const updateQuery = {
+            const updateQuery: QueryUpdate = {
               id:{ DocenteID: this.dataDocente._id }, 
               params: { [`doc_${tipo}`]: res.doc}
             }; 

@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { environment } from 'src/environments/environment.development';
+import { FileSend } from '../models/file-send.model';
 
 @Injectable({
   providedIn: 'root',
@@ -89,14 +90,17 @@ export class ArchivosService {
     return this.http.put<any>(this.URL_DOC + 'upload-document/' + tipo, doc);
   }
 
-  uploadDoc(tipo: string, formData: FormData): Observable<HttpEvent<any>> {
-    const req = new HttpRequest<FormData>(
-      'POST',
-      `${this.URL_DOC}upload-document/${tipo}`,
-      formData
-    );
-    let respuesta = this.http.request(req);
-    return respuesta;
+  /**
+   * Subir documentos de la Ficha Técnica Docente
+   * @param formData Formulario con los documentos
+   * @returns Observable<HttpEvent<any>>
+   * @since 1.1.0
+   * @version 1.0.0
+   * @public
+   */
+  public setFTDoc(formData: FormData, fileData: FileSend): Observable<HttpEvent<any>> {
+    let url = this.URL_DOC + 'upload-ft-doc/' + fileData.type + '/' + fileData.name + '/' + fileData.date;
+    return this.http.put<any>(url, formData);
   }
   
   /**
