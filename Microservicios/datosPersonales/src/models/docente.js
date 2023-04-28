@@ -247,7 +247,7 @@ const docenteSchema = Schema({
             "Administrativo de confianza",
             "Administrativo sindicalizado",
             ],
-        default: ""
+        default: "Profesor de asignatura"
     },
     contratoDefinitivo: {
         type: Boolean,

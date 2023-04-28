@@ -60,6 +60,7 @@ export class ArchivosService {
       responseType: "blob" as 'json',
     }
     const body = { idDocente: id }
+    console.log("DOC: " + dir)
     return this.http.get<any>(this.URL_DOC + 'get-document/' + dir, options);
   }
 
