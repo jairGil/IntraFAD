@@ -17,6 +17,8 @@ import { Profile } from '../../models/profile.model';
 import { Docente, DocenteSend } from '../../models/docente.model';
 import { FormUtils } from '../../utils/FormUtils';
 import { PlanEstudio } from '../../models/plan-estudio.model';
+import { QueryUpdate } from '../../models/query-update.model';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-personal-data',
@@ -60,15 +62,16 @@ export class PersonalDataComponent {
   private planesEstudio: PlanEstudio[] = [];
 
   constructor(
-    private authService: AuthService,
     private personalDataService: PersonalDataService,
-    private archivosService: ArchivosService
+    private archivosService: ArchivosService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit() {
     this.direccion = this.dataDocente.direccion.split(', ');
     this.dpForm = FormUtils.buildForm();
     this.dpForm = FormUtils.setDataDocente(this.dpForm, this.dataDocente);
+    this.loading = false;
   }
 
   /**
@@ -112,11 +115,14 @@ export class PersonalDataComponent {
           this.sendDataToParent();
           this.cambiar_modo(1);
           this.loading = false;
+          this.notificationService.showNotification('Datos actualizados correctamente', 'alert-success');
         }
-        console.log(res)
+        // console.log(res)
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
+        this.loading = false;
+        this.notificationService.showNotification(err.error.msg, 'alert-danger');
       }
     });
 
@@ -236,7 +242,7 @@ export class PersonalDataComponent {
         next: (res: any) => {
           //Si se subiío correctamente el documento se actualiza la base de datos
           if(res.code === 200){
-            const updateQuery = {
+            const updateQuery: QueryUpdate = {
               id:{ DocenteID: this.dataDocente._id }, 
               params: { [`doc_${tipo}`]: res.doc}
             }; 

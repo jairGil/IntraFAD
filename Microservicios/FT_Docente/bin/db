@@ -96,19 +96,19 @@ dbhelper.findDatoAcademicoByIdDocente = async (id_docente) => {
   return resultFind;
 }
 
-/* Actualizar un dato academico
-dbhelper.updateDatoAcademico = async (dato) => {
+// Actualizar un dato academico
+dbhelper.updateDatoAcademicoById = async (id, datoAcademico) => {
   let resultSave = { action: "Actualizar dato academico", value: false, code: 500, msg: "No inicializado" };
 
-  await DatoAcademico.findByIdAndUpdate(dato._id, dato).then(
-    (datoAcademico) => {
+  await DatoAcademico.findByIdAndUpdate(id, datoAcademico).then(
+    (datoAcad) => {
       resultSave = util.setResult(resultSave, true, 200, "Dato academico actualizado");
-      resultSave.datoAcademico = datoAcademico;
+      resultSave.datoAcademico = datoAcad;
     }, error => {
-      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el docente");
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
     });
   return resultSave;
-} */
+} 
 
 // Eliminar un dato académico
 dbhelper.deleteDatoAcademicoById = async (id_datoacad) => {

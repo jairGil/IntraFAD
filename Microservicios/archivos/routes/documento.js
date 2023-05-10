@@ -10,6 +10,9 @@ const documentoController = require("../controller/documento");
 /* *** RUTA PARA SUBIR DOCUMENTO *** */ 
 router.put('/upload-document/:tipo/', authService.verify, documentoController.cargarDocumento);
 
+/* *** RUTA PARA SUBIR DOCUMENTO DE FICHA TECNICA *** */ 
+router.put('/upload-ft-doc/:tipo/:nombre/:fecha', authService.verify, documentoController.cargarDocumentoFT);
+
 /* *** RUTA PARA OBTENER DOCUMENTO *** */ 
 router.get('/get-document/:doc', authService.verify, async (req, res, next) => {
   await documentoController.getDoc(req, res).then(

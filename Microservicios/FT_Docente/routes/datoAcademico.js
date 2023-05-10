@@ -10,7 +10,7 @@ router.get("/", (req, res, next) => {
 });
 
 /* POST add datoAcademico. */
-router.post("/add_datoacad", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const result = await validateHelper.validarDatoAcademico(req);
   console.log(result);
   if (!result.isEmpty()) {
@@ -25,7 +25,7 @@ router.post("/add_datoacad", async (req, res, next) => {
 });
 
 /* GET datoAcademico by id_docente. */
-router.get("/get_datoacad/:id_docente", async (req, res, next) => {
+router.get("/:id_docente", async (req, res, next) => {
   await DatoAcademicoController.get(req, res).then(
     (result) => {
       console.log(result);
@@ -34,11 +34,21 @@ router.get("/get_datoacad/:id_docente", async (req, res, next) => {
 });
 
 /* DELETE datoAcademico by id. */
-router.delete("/delete_datoacad/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   await DatoAcademicoController.delete(req, res).then(
     (result) => {
       console.log(result);
       res.status(result.code).send(result);
+    });
+});
+
+/* PUT update datoAcademico by id. */
+router.put("/", async (req, res, next) => {
+  console.log("Body PUT " + JSON.stringify(req.body));
+  await DatoAcademicoController.update(req, res).then(
+    (resultSave) => {
+      console.log(resultSave);
+      res.status(resultSave.code).send(resultSave);
     });
 });
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,8 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService,
   ) {
     this.loginForm = this.formBuilder.group({
       correo_institucional: ['', {
@@ -83,16 +85,20 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
           if(res.value) {
+            this.loading = false;
             this.authService.setToken(res.token);
             this.router.navigate(['/home']);
+            this.showNotification("Bienvenido", 'alert-success');
           } else {
+            this.loading = false;
             this.error = res;
+            this.showNotification(res.msg, 'alert-danger');
           }
-          this.loading = false;
         },
         error: (err: any) => {
-          this.error = err.error;
           this.loading = false;
+          this.error = err.error;
+          this.showNotification(err.error.msg, 'alert-danger');
         }
       });
     } else {
@@ -110,6 +116,16 @@ export class LoginComponent {
       //   }
       // });
     }
+  }
+
+  /**
+   * Mostrar una notificación
+   * @returns void
+   * @since 1.1.0
+   * @version 1.0.0
+  */
+  public showNotification(notification: string, classType: string): void {
+    this.notificationService.showNotification(notification, classType);
   }
   
   get correo_institucional() { return this.loginForm.get('correo_institucional'); }

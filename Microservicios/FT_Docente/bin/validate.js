@@ -28,13 +28,13 @@ validateHelper.validarDatoAcademico = async (req) => {
     .escape().run(req);
 
   /*** Validación Documento de grado academico ***/
-  await body("doc_grado_acad")
-    .trim()
-    .not().isEmpty().withMessage("Elemento vacío")
-    .custom(val => {
-      return validator.validaPDF(val)
-    }).withMessage("Debe ingresar un archivo en formato PDF")
-    .escape().run(req);
+  // await body("doc_grado_acad")
+  //   .trim()
+  //   .not().isEmpty().withMessage("Elemento vacío")
+  //   .custom(val => {
+  //     return validator.validaPDF(val)
+  //   }).withMessage("Debe ingresar un archivo en formato PDF")
+  //   .escape().run(req);
 
   /*** Validación Institucion emisora ***/
   await body("institucion_emisora")
@@ -61,13 +61,13 @@ validateHelper.validarDatoAcademico = async (req) => {
     .escape().run(req);
 
   /*** Validación Documento de cedula profesional ***/
-  await body("doc_ced_prof")
-    .trim()
-    .not().isEmpty().withMessage("Elemento vacío")
-    .custom(val => {
-      return validator.validaPDF(val)
-    }).withMessage("Debe ingresar un archivo en formato PDF")
-    .escape().run(req);
+  // await body("doc_ced_prof")
+  //   .trim()
+  //   .not().isEmpty().withMessage("Elemento vacío")
+  //   .custom(val => {
+  //     return validator.validaPDF(val)
+  //   }).withMessage("Debe ingresar un archivo en formato PDF")
+  //   .escape().run(req);
 
   const result = validationResult(req);
   return result;

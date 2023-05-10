@@ -71,5 +71,25 @@ datoAcademicoController.delete = async (req, res) => {
   return result;
 }
 
+/* UPDATE datoAcademico by id. */
+datoAcademicoController.update = async (req, res) => {
+  let result = { action: "Actualizar dato academico", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.body.id;
+  const datoAcademico = req.body.params;
+
+  result = await dbhelper.updateDatoAcademicoById(id, datoAcademico);
+
+  console.log(await dbhelper.disconnect());
+
+  return result;
+}
+
 
 module.exports = datoAcademicoController;
