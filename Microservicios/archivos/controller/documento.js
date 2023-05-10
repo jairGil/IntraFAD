@@ -92,7 +92,8 @@ documentoController.getDoc = async (req, res) => {
 
     dir = dir.replaceAll('-','/');
 
-    const pathFile = process.env.URIDATA + dir;
+    // const pathFile = process.env.URIDATA + dir;
+    const pathFile = config.routes.files + dir;
 
     let result = { doc: "" };
     

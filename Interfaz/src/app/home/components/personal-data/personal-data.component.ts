@@ -229,6 +229,8 @@ export class PersonalDataComponent {
 
     if (fieldValue !== null && fieldValue !== undefined) {
       formData.append(tipo, fieldValue);
+      this.loading = true;
+      this.msg = 'Subiendo documentos...';
       //Llama da al microservicio para subir el archivo
       this.archivosService.setDoc(tipo, formData).subscribe({
         next: (res: any) => {
@@ -240,15 +242,20 @@ export class PersonalDataComponent {
             }; 
             
             //Actualizar en base de datos
-            
+            this.msg = 'Actualizando datos...';
 
-            console.log("DOC: " + res.doc)
             this.personalDataService.updatePersonalData(updateQuery).subscribe({
               next: (res: any) => {
                 console.log(res);
+                if(res.code == 200) {
+                  this.sendDataToParent();
+                  this.cambiar_modo(1);
+                  this.loading = false;
+                }
               },
               error: (err: any) => {
                 console.log(err);
+                this.loading = false;
               }
             });
             
