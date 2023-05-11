@@ -44,10 +44,10 @@
 
 .notification {
     position: fixed;
-    top: 120px;
-    right: 40%;
+    top: 130px;
+    right: 15px;
     height: 55px;
-    width: 20%;
+    max-width: 200px;
     text-align: center;
     text-overflow: ellipsis;
 }
