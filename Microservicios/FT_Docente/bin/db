@@ -133,8 +133,9 @@ dbhelper.saveCurso = async (curso) => {
   const auxCurso = new Curso(curso);
 
   await auxCurso.save().then(
-    () => {
-      resultSave = util.setResult(resultSave, true, 200, "Curso guardado exitosamente.");
+    (cur) => {
+      // resultSave = util.setResult(resultSave, true, 200, "Curso guardado exitosamente.");
+      resultSave = { action: "Guardar curso", value: true, code: 200, msg: "Curso guardado exitosamente.", idFT: cur._id };
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el curso");
     });
@@ -299,8 +300,9 @@ dbhelper.saveIdioma = async (idioma) => {
   const auxIdioma = new Idioma(idioma);
 
   await auxIdioma.save().then(
-    () => {
-      resultSave = util.setResult(resultSave, true, 200, "Idioma guardado exitosamente.");
+    (idio) => {
+      // resultSave = util.setResult(resultSave, true, 200, "Idioma guardado exitosamente.");
+      resultSave = { action: "Guardar idioma", value: true, code: 200, msg: "Idioma guardado exitosamente", idFT: idio._id};
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el idioma");
     });
