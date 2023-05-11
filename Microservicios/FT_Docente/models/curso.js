@@ -24,7 +24,7 @@ const cursoSchema = Schema({
         type: String,
         required: true
     },
-    constancia: {
+    doc_constancia: {
         type: String,
         required: true
     },

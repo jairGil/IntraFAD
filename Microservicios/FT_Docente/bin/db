@@ -103,7 +103,6 @@ dbhelper.updateDatoAcademicoById = async (id, datoAcademico) => {
   await DatoAcademico.findByIdAndUpdate(id, datoAcademico).then(
     (datoAcad) => {
       resultSave = util.setResult(resultSave, true, 200, "Dato academico actualizado");
-      resultSave.datoAcademico = datoAcad;
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el dato academico");
     });
@@ -194,6 +193,20 @@ dbhelper.deleteCursoById = async (id_curso) => {
   return resultFind;
 }
 
+// Actualizar un curso
+dbhelper.updateCursoById = async (id, curso) => {
+  let resultSave = { action: "Actualizar curso", value: false, code: 500, msg: "No inicializado" };
+
+  await Curso.findByIdAndUpdate(id, curso).then(
+    (curso) => {
+      resultSave = util.setResult(resultSave, true, 200, "Curso actualizado");
+    },
+    error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el curso");
+    }
+  );
+}
+
 /********************************************************************************/
 
 
@@ -204,8 +217,8 @@ dbhelper.saveCertificacion = async (certificacion) => {
   const auxCertificacion = new Certificacion(certificacion);
 
   await auxCertificacion.save().then(
-    () => {
-      resultSave = util.setResult(resultSave, true, 200, "Certificación guardado exitosamente.");
+    (cert) => {
+      resultSave = { action: "Guardar certificación", value: true, code: 200, msg: "Certificación guardada exitosamente", idFT: cert._id};
     }, error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el certificación");
     });
@@ -261,6 +274,20 @@ dbhelper.deleteCertificacionById = async (id_cert) => {
     }
   );
   return resultFind;
+}
+
+// Actualizar una certificación
+dbhelper.updateCertificacionById = async (id, certificacion) => {
+  let resultSave = { action: "Actualizar certificación", value: false, code: 500, msg: "No inicializado" };
+
+  await Certificacion.findByIdAndUpdate(id, certificacion).then(
+    (certificacion) => {
+      resultSave = util.setResult(resultSave, true, 200, "Certificación actualizada");
+    },
+    error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar la certificación");
+    }
+  );
 }
 
 /********************************************************************************/
@@ -329,6 +356,20 @@ dbhelper.deleteIdiomaById = async (id_idioma) => {
     });
 
   return resultFind;
+}
+
+// Actualizar un idioma
+dbhelper.updateIdiomaById = async (id, idioma) => {
+  let resultSave = { action: "Actualizar idioma", value: false, code: 500, msg: "No inicializado" };
+
+  await Idioma.findByIdAndUpdate(id, idioma).then(
+    (idioma) => {
+      resultSave = util.setResult(resultSave, true, 200, "Idioma actualizado");
+    },
+    error => {
+      resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el idioma");
+    }
+  );
 }
 
 /********************************************************************************/

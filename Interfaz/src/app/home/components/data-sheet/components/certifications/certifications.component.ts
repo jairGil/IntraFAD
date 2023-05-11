@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Certification } from 'src/app/home/models/certification.model';
+import { FileSend } from 'src/app/home/models/file-send.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { CertificationsService } from 'src/app/home/services/certifications.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -18,7 +20,9 @@ export class CertificationsComponent {
   public modo_agregar = false;
   public certificaciones: any;
   public docCert: boolean = false;
-  public certName!: String;
+  public certName: String | null = null;
+  public loading: boolean = false;
+  public msg: string = '';
 
   certForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -79,30 +83,41 @@ export class CertificationsComponent {
     }
   }
 
-  enviarDatos() {
+  public async enviarDatos() {
     // this.uploadDocument('certificacion', 'constancia_f');
 
-    let certificacion: Certification = {
+    let certification: Certification = {
       nombre: this.certForm.get('nombre')?.value!,
       institucion: this.certForm.get('institucion')?.value!,
       fecha: new Date(this.certForm.get('fecha')?.value!),
-      constancia: "No_inicializado.pdf",
       id_docente: this.idDocente
     }
 
-    this.certificacionService.addCertificacion(certificacion).subscribe({
-      next: (res: any) => {
-        if (res.value) {
-          this.getCert();
-          this.cambiarModo(2);
-          this.notificationService.showNotification(res.msg, 'alert-success');
+    try {
+      const res = await firstValueFrom(this.certificacionService.addCertificacion(certification));
+      if (res.code === 200) {
+
+        if (this.certName != null) {
+          // Datos del archivo
+          const fileData: FileSend = {
+            type: 'certificacion',
+            name: this.certForm.get('institucion')?.value! + '_' + this.certForm.get('nombre')?.value!,
+            date: new Date(this.certForm.get('fecha')?.value!).toISOString().slice(0, 10).replace(/-/g, "_"),
+          }
+          // Subir el archivo
+          await this.updateAcademicDataDoc(fileData, 'constancia', res.idFT);
         }
-      },
-      error: (err: any) => {
-        // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+
+        this.getCert();
+        this.cambiarModo(2);
+        this.notificationService.showNotification(res.msg, 'alert-success');
       }
-    });
+    } catch (err: any) {
+      let error = "Ha ocurrido un error";
+      this.notificationService.showNotification(error, 'alert-danger');
+    }
+
+    this.certName = null;
   }
 
   onCertificacionSelect(event: any) {
@@ -114,11 +129,26 @@ export class CertificationsComponent {
     }
   }
 
-  uploadDocument(tipo: string, campo: string) {
-    const formData = new FormData();
+  private async updateAcademicDataDoc(fileData: FileSend, campo: string, idFT: string): Promise<void> {
+    const fieldValue = this.certForm.get(campo)?.value;
 
-    formData.append(tipo, this.certForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, formData).subscribe({
+    if (!fieldValue) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(fileData.type, fieldValue);
+
+    this.loading = true;
+    this.msg = 'Subiendo documentos...';
+
+    const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, idFT);
+
+    if (!updateQuery) {
+      return;
+    }
+
+    this.certificacionService.updateCertificacion(updateQuery).subscribe({
       next: (res: any) => {
         console.log(res);
       },
@@ -126,6 +156,17 @@ export class CertificationsComponent {
         console.log(err);
       }
     });
+  }
+
+  public showDoc(dir: String): void {
+    this.archivosService.getIDDoc(dir)
+      .subscribe(
+        data => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        }
+      )
   }
 
   get nombre() { return this.certForm.get('nombre'); }

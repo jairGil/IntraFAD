@@ -10,7 +10,7 @@ router.get("/", (req, res, next) => {
 });
 
 /* POST add curso. */
-router.post("/add_idioma", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const result = await validateHelper.validarIdioma(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
@@ -24,7 +24,7 @@ router.post("/add_idioma", async (req, res, next) => {
 });
 
 /* GET idioma by id_docente. */
-router.get("/get_idiomas/:id_docente", async (req, res, next) => {
+router.get("/:id_docente", async (req, res, next) => {
   await IdiomaController.get(req, res).then(
     (result) => {
       console.log(result);
@@ -33,8 +33,17 @@ router.get("/get_idiomas/:id_docente", async (req, res, next) => {
 });
 
 /* DELETE idioma by id. */
-router.delete("/delete_idioma/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   await IdiomaController.delete(req, res).then(
+    (result) => {
+      console.log(result);
+      res.status(result.code).send(result);
+    });
+});
+
+/* UPDATE idioma by id. */
+router.put("/", async (req, res, next) => {
+  await IdiomaController.update(req, res).then(
     (result) => {
       console.log(result);
       res.status(result.code).send(result);

@@ -129,8 +129,8 @@ documentoController.cargarDocumentoFT = (req, res) => {
             return;
         }
 
-        targetPath += nombre + fecha + docenteID + ext;
-        responsePath += nombre + fecha + docenteID + ext;
+        targetPath += fecha + "_" + nombre + ext;
+        responsePath += fecha + "_" + nombre + ext;
 
         //Crear directorios necesarios
         directorios.createDir(config.routes.files, docenteID, tipoArchivo);

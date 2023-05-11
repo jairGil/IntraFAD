@@ -105,7 +105,7 @@
     <tbody>
       <tr *ngFor="let certificacion of this.certificaciones">
         <td>
-          <a href="{{ URL_DOC + this.certificacion.constancia }}" target="_blank">
+          <a href="javascript: void(0);"  (click)="showDoc(this.certificacion.doc_constancia)">
             {{ certificacion.nombre }}
             <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>

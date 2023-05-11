@@ -116,7 +116,8 @@ const updateDocente = async (data) => {
   let resultUpdate = initResult("UpdateOneDocente")
 
   let docente = data.params;
-  const idDocente = data.id.DocenteID;
+  const idDocente = data.id;
+  console.log("docente: " + JSON.stringify(docente))
 
   //docente.doc_rfc = docente.doc_rfc.replaceAll("/", "|");
   //docente.doc_curp = docente.doc_curp.replaceAll("/", "|");

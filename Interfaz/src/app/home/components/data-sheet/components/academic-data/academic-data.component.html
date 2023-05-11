@@ -209,7 +209,7 @@
     <tbody>
       <tr *ngFor="let daDocente of this.datosAcademicos">
         <td>
-          <a href="{{ URL_DOC + this.daDocente.doc_grado_acad }}" target="_blank">
+          <a href="javascript: void(0);"  (click)="showDoc(this.daDocente.doc_grado_acad)">
             {{ daDocente.grado_academico }}
             <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>
@@ -218,7 +218,7 @@
         <td>{{ daDocente.institucion_emisora }}</td>
         <td>{{ daDocente.fecha_obtencion.slice(0,10) }}</td>
         <td>
-          <a href="{{ URL_DOC + this.daDocente.doc_ced_prof }}" target="_blank">
+          <a href="javascript: void(0);"  (click)="showDoc(this.daDocente.doc_ced_prof)">
             {{ daDocente.cedula_profesional }}
             <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>

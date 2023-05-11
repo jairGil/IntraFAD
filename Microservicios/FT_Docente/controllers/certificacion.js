@@ -32,7 +32,7 @@ certificacionController.add = async (req, res) => {
     console.log(await dbhelper.disconnect());
   }
 
-  return resultSave;p
+  return resultSave;
 }
 
 /* GET certificaciones by id_docente. */
@@ -64,6 +64,24 @@ certificacionController.delete = async (req, res) => {
 
   const id = req.params.id;
   result = await dbhelper.deleteCertificacionById(id);
+  console.log(await dbhelper.disconnect());
+
+  return result;
+}
+
+/* UPDATE certificacion by id. */
+certificacionController.update = async (req, res) => {
+  let result = { action: "Actualizar certificacion", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.body.id;
+  const params = req.body.params;
+  result = await dbhelper.updateCertificacionById(id, params);
   console.log(await dbhelper.disconnect());
 
   return result;

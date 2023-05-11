@@ -44,7 +44,6 @@ router.delete("/:id", async (req, res, next) => {
 
 /* PUT update datoAcademico by id. */
 router.put("/", async (req, res, next) => {
-  console.log("Body PUT " + JSON.stringify(req.body));
   await DatoAcademicoController.update(req, res).then(
     (resultSave) => {
       console.log(resultSave);

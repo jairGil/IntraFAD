@@ -5,7 +5,7 @@ const fs = require('fs');
 const tipos = new Map();
 tipos.set("rfc", "RFC");
 tipos.set("curp", "CURP");
-tipos.set("gradoAcad", "GradoAcadémico");
+tipos.set("gradoAcad", "GradoAcademico");
 tipos.set("cedulaProf", "CedulaProfesional");
 tipos.set("certificacion", "Certificaciones");
 tipos.set("cursos", "Cursos");

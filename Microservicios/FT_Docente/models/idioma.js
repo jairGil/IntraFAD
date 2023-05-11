@@ -20,7 +20,7 @@ const idiomaSchema = Schema({
         type: Date,
         required: true
     },
-    certificado: {
+    doc_certificado: {
         type: String,
         required: true
     },

@@ -14,18 +14,18 @@ export class CoursesService {
   ) { }
 
   getCursos(id_docente: string) {
-    return this.http.get<any>(this.URL + 'get_cursos/' + id_docente);
+    return this.http.get<any>(this.URL + id_docente);
   }
 
   addCurso(curso: any) {
-    return this.http.post<any>(this.URL + 'add_curso', curso);
+    return this.http.post<any>(this.URL, curso);
   }
 
   updateCurso(curso: any) {
-    return this.http.put<any>(this.URL + 'update_curso', curso);
+    return this.http.put<any>(this.URL, curso);
   }
 
   deleteCurso(id_curso: string) {
-    return this.http.delete<any>(this.URL + 'delete_curso/' + id_curso);
+    return this.http.delete<any>(this.URL + id_curso);
   }
 }

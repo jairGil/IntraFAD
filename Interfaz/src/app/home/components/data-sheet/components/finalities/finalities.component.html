@@ -1,0 +1,134 @@
+<div *ngIf="modo_agregar == true; else boton_ini">
+    <label for="new_defi" class="title"><b>Nueva definitividad</b></label>
+    <form (submit)="enviarDatos()" [formGroup]="defiForm">
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="formato" class="col-form-label is-required">Licenciatura</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="tipo" class="col-form-label is-required">Plan</label>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="autores" class="col-form-label is-required">Materia</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group col-md-3">
+        	<select class="form-control" name="licenciatura" placeholder="Licenciatura" formControlName="licenciatura">
+            <option class="dropdown-item" value="test">
+              test
+            </option>
+          </select>
+          <div class="mt-2 mb-2">
+            <div *ngIf="licenciatura?.invalid && (licenciatura?.dirty || licenciatura?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="licenciatura?.errors?.['required']">
+                El campo <b>Licenciatura</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <select class="form-control" name="plan" placeholder="Plan" formControlName="plan">
+            <option class="dropdown-item" value="test">
+              test
+            </option>
+          </select>
+          <div class="mt-2 mb-2">
+            <div *ngIf="plan?.invalid && (plan?.dirty || plan?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="plan?.errors?.['required']">
+                El campo <b>Plan</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+				<div class="form-group col-md-3">
+          <select class="form-control" name="materia" placeholder="Materia" formControlName="materia">
+            <option class="dropdown-item" value="test">
+              test
+            </option>
+          </select>
+          <div class="mt-2 mb-2">
+            <div *ngIf="materia?.invalid && (materia?.dirty || materia?.touched)"
+              class="alert alert-danger" role="alert">
+              <div *ngIf="materia?.errors?.['required']">
+                El campo <b>Materia</b> es obligatorio.
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="doc_def" class="col-form-label is-required">Documento</label>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-grup col-md-3">
+					<div class="btn-primary btn-file">
+						<label class="lbl-file" for="doc_def">Cargar PDF</label>
+						<input type="file" class="form-control d-none" id="doc_def" (change)="onDefinitividadSelect($event)"
+							accept=".pdf" />
+					</div>
+				</div>
+				<div class="col-md">
+					<div *ngIf="this.docDefi; else noPDF1">
+						<img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
+						<span> {{ this.defiName }}</span>
+					</div>
+					<ng-template #noPDF1>
+						<img src="../../../../assets/img/no-pdf.png" alt="" class="pdf-icon">
+						<span> No se ha seleccionado ningún archivo</span>
+					</ng-template>
+				</div>
+      </div>
+  
+      <hr class="hr">
+      <div class="form-row mt-3 justify-content-end">
+        <div class="form-group col-md-3">
+          <button class="btn btn-danger btn-salir" (click)="cambiarModo(2)">Cancelar</button>
+        </div>
+        <div class="form-group col-md-3">
+          <button class="btn btn-primary" type="submit" (click)="cambiarModo(1)" [disabled]="!defiForm.valid">Guardar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-template #boton_ini><button class="btn btn-primary" (click)="cambiarModo(1)">Agregar</button></ng-template>
+  
+  <div *ngIf="modo_agregar == false">
+    <label for="defs" class="title"><b>Definitividades</b></label>
+    <table class="table content-center">
+      <thead>
+        <tr>
+          <th>Licenciatura</th>
+          <th>Plan</th>
+          <th>Materia</th>
+          <th>PDF</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let definitividad of this.definitividades">
+					<td>{{ definitividad.licenciatura }}</td>
+          <td>{{ definitividad.plan }}   </td>
+          <td>{{ definitividad.materia }}</td>
+					<td>
+						<a href="{{ URL_DOC + this.definitividad.doc_def }}" target="_blank">
+							Documento
+							<img src="../../../../../../assets/img/file-link.svg" alt="">
+						</a>
+					</td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="deleteFinality(definitividad._id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

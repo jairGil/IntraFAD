@@ -36,8 +36,14 @@ export class PersonalDataService {
     return this.http.put<any>(this.URL, docente);
   }
 
-  /** */
-  updatePersonalData(updateData: any) {
+  /** 
+   * Actualizar los datos personales de un docente
+   * @param updateData Datos a actualizar
+   * @returns Observable<any>
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  updatePersonalData(updateData: any): Observable<any> {
     return this.http.put<any>(this.URL, updateData);
   }
 }

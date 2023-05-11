@@ -10,7 +10,7 @@ router.get("/", (req, res, next) => {
 });
 
 /* POST add curso. */
-router.post("/add_curso", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const result = await validateHelper.validarCurso(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
@@ -24,7 +24,7 @@ router.post("/add_curso", async (req, res, next) => {
 });
 
 /* GET curso by id_docente. */
-router.get("/get_cursos/:id_docente", async (req, res, next) => {
+router.get("/:id_docente", async (req, res, next) => {
   await CursoController.get(req, res).then(
     (result) => {
       console.log(result);
@@ -33,8 +33,17 @@ router.get("/get_cursos/:id_docente", async (req, res, next) => {
 });
 
 /* DELETE curso by id. */
-router.delete("/delete_curso/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   await CursoController.delete(req, res).then(
+    (result) => {
+      console.log(result);
+      res.status(result.code).send(result);
+    });
+});
+
+/* UPDATE curso by id. */
+router.put("/", async (req, res, next) => {
+  await CursoController.update(req, res).then(
     (result) => {
       console.log(result);
       res.status(result.code).send(result);

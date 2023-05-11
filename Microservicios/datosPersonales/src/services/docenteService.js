@@ -80,7 +80,7 @@ const updateOneDocente = async (data) => {
 
 
     if (!resultUpdated.value)
-        return setResult(data.id.DocenteID, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
+        return setResult(data.id, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
 
   /* TOKEN */
   //resultSave.token = jwt.createToken(resultSave.docente);
@@ -104,7 +104,7 @@ const updateDocDocente = async (data) => {
 
 
     if (!resultUpdated.value)
-        return setResult(data.id.DocenteID, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
+        return setResult(data.id, "UpdateOne", false, 500, "No se pudieron actualizar los datos personales")
 
   /* TOKEN */
   //resultSave.token = jwt.createToken(resultSave.docente);

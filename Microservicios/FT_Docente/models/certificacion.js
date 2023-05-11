@@ -16,9 +16,8 @@ const certificacionSchema = Schema({
         type: Date,
         required: true
     },
-    constancia: {
+    doc_constancia: {
         type: String,
-        required: true
     },
     id_docente: {
         type: String,

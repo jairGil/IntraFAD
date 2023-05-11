@@ -92,7 +92,9 @@ export class HomeComponent {
 
         this.loadingData = 2;
       },
-      error: (err: any) => console.log(err)
+      error: (err: any) => {
+        this.loadingData = 3;
+      }
     });
   }
 

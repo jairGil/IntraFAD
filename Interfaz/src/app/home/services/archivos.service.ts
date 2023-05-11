@@ -9,6 +9,7 @@ import { Observable, map, firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { environment } from 'src/environments/environment.development';
 import { FileSend } from '../models/file-send.model';
+import { QueryUpdate } from '../models/query-update.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,12 +56,10 @@ export class ArchivosService {
    * @param id ID del docente
    * @returns Objeto Blob del documento
    */
-  getIDDoc(dir: String, id: String): Observable<Blob>{
+  getIDDoc(dir: String): Observable<Blob>{
     const options = {
       responseType: "blob" as 'json',
     }
-    const body = { idDocente: id }
-    console.log("DOC: " + dir)
     return this.http.get<any>(this.URL_DOC + 'get-document/' + dir, options);
   }
 
@@ -99,7 +98,7 @@ export class ArchivosService {
    * @version 1.0.0
    * @public
    */
-  public setFTDoc(formData: FormData, fileData: FileSend): Observable<HttpEvent<any>> {
+  public setFTDoc(formData: FormData, fileData: FileSend) {
     let url = this.URL_DOC + 'upload-ft-doc/' + fileData.type + '/' + fileData.name + '/' + fileData.date;
     return this.http.put<any>(url, formData);
   }
@@ -143,5 +142,73 @@ export class ArchivosService {
         reader.readAsDataURL(image);
       }
     });
+  }
+
+  /** Subir archivos al servidor
+   * @param fileData Datos del archivo a subir
+   * @param fieldValue Campo del formulario que se va a actualizar
+   * @param id ID de la ficha técnica
+   * @since 1.0.1
+   * @version 1.0.0
+   */
+  public async uploadDocument(fileData: FileSend, fieldValue: string, id: string | String): Promise<QueryUpdate | null> {
+    const formData = new FormData();
+    const paramName = this.getDocType(fileData.type);
+    let res: any;
+  
+    formData.append(fileData.type, fieldValue);
+  
+    try {
+      if (fileData.type === 'rfc' || fileData.type === 'curp') {
+        res = await firstValueFrom(this.setDoc(fileData.type, formData));
+      } else {
+        res = await firstValueFrom(this.setFTDoc(formData, fileData));
+      }
+  
+      if (res.code === 200) {
+        return {
+          id: id,
+          params: { [`doc_${paramName}`]: res.doc }
+        };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    return null;
+  }
+
+  /**
+   * Obtener el tipo de documento correspondiente a un campo
+   * @param fieldType Campo del formulario
+   * @returns string
+   * @since 1.0.1
+   * @version 1.0.0
+   */
+  getDocType(fieldType: string): string {
+    let docType: string = "";
+
+    switch (fieldType) {
+      case 'rfc':
+        docType = 'rfc';
+        break;
+      case 'curp':
+        docType = 'curp';
+        break;
+      case 'gradoAcad':
+        docType = 'grado_acad';
+        break;
+      case 'cedulaProf':
+        docType = 'ced_prof';
+        break;
+      case 'certificacion' || 'cursos':
+        docType = 'constancia';
+        break;
+      case 'idioma':
+        docType = 'certificado';
+        break;
+    }
+
+    return docType;
   }
 }

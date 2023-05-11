@@ -6,6 +6,7 @@
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnLang>Idiomas</button>
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(4)" #btnPubl>Publicaciones</button>
   <button type="button" class="btn btn-transparent" (click)="cambia_pagina(5)" #btnExpe>Experiencia profesional no docente</button>
+  <button type="button" class="btn btn-transparent" (click)="cambia_pagina(6)" #btnDefi>Definitividades</button>
   <!--button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnTime>Horario</button-->
   <!--button type="button" class="btn btn-transparent" (click)="cambia_pagina(3)" #btnHist>Historico de UAs impartidas en la FAD</button-->
 </div>
@@ -18,5 +19,6 @@
     <app-languages *ngIf="pagina == 3"></app-languages>
     <app-publications *ngIf="pagina == 4"></app-publications>
     <app-experiences *ngIf="pagina == 5"></app-experiences>
+    <app-finalities *ngIf="pagina == 6"></app-finalities>
   </div>
 </div>

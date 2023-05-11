@@ -10,7 +10,7 @@ router.get("/", (req, res, next) => {
 });
 
 /* POST add certificacion. */
-router.post("/add_cert", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   const result = await validateHelper.validarCertificacion(req);
   if (!result.isEmpty()) {
     res.status(400).send(result);
@@ -24,7 +24,7 @@ router.post("/add_cert", async (req, res, next) => {
 });
 
 /* GET certificacion by id_docente. */
-router.get("/get_certs/:id_docente", async (req, res, next) => {
+router.get("/:id_docente", async (req, res, next) => {
   await CertificacionController.get(req, res).then(
     (result) => {
       console.log(result);
@@ -33,8 +33,17 @@ router.get("/get_certs/:id_docente", async (req, res, next) => {
 });
 
 /* DELETE certificacion by id. */
-router.delete("/delete_cert/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   await CertificacionController.delete(req, res).then(
+    (result) => {
+      console.log(result);
+      res.status(result.code).send(result);
+    });
+});
+
+/* UPDATE certificacion by id. */
+router.put("/", async (req, res, next) => {
+  await CertificacionController.update(req, res).then(
     (result) => {
       console.log(result);
       res.status(result.code).send(result);

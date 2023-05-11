@@ -71,5 +71,23 @@ cursoController.delete = async (req, res) => {
   return result;
 }
 
+/* UPDATE certificacion by id. */
+cursoController.update = async (req, res) => {
+  let result = { action: "Actualizar Curso", value: false, code: 500, msg: "Error al conectar con la base de datos" };
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return result;
+  }
+
+  const id = req.body.id;
+  const params = req.body.params;
+  result = await dbhelper.updateCursoById(id, params);
+  console.log(await dbhelper.disconnect());
+
+  return result;
+}
+
 
 module.exports = cursoController;

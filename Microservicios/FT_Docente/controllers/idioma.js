@@ -68,5 +68,22 @@ idiomaController.delete = async (req, res) => {
   return resultDelete;
 }
 
+// Actualizar un idioma
+idiomaController.update = async (req, res) => {
+  let resultUpdate = { action: "Actualizar idioma", value: false, code: 500, msg: "Error al conectar con la base de datos" }
+  const connected = await dbhelper.connect();
+  console.log(connected);
+
+  if (!connected.value) {
+    return resultUpdate;
+  }
+
+  const id = req.body.id;
+  const params = req.body.params;
+  resultUpdate = await dbhelper.updateIdioma(id, params);
+  console.log(await dbhelper.disconnect());
+
+  return resultUpdate;
+}
 
 module.exports = idiomaController;

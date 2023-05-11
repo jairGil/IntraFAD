@@ -356,7 +356,7 @@
           <ng-template #RFCini>
             <div *ngIf="this.dpForm.get('doc_rfc')?.value != this.dataDocente.doc_rfc; else RFCinilbl" class="col-md-4">
               <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-              <span>{{ this.rfcFilename }}</span>
+              <span> {{ this.rfcFilename }}</span>
             </div>
             <ng-template #RFCinilbl>
               <div class="col-md-2">
@@ -405,7 +405,7 @@
             <div *ngIf="this.dpForm.get('doc_curp')?.value != this.dataDocente.doc_curp; else CURPinilbl"
               class="col-md-4">
               <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
-              <span>{{ this.curpFilename }}</span>
+              <span> {{ this.curpFilename }}</span>
             </div>
             <ng-template #CURPinilbl>
               <div class="col-md-2">

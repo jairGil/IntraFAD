@@ -12,6 +12,7 @@ import { LanguagesComponent } from './components/data-sheet/components/languages
 import { CertificationsComponent } from './components/data-sheet/components/certifications/certifications.component';
 import { PublicationsComponent } from './components/data-sheet/components/publications/publications.component';
 import { ExperiencesComponent } from './components/data-sheet/components/experiences/experiences.component';
+import { FinalitiesComponent } from './components/data-sheet/components/finalities/finalities.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ExperiencesComponent } from './components/data-sheet/components/experie
     LanguagesComponent,
     CertificationsComponent,
     PublicationsComponent,
-    ExperiencesComponent
+    ExperiencesComponent,
+    FinalitiesComponent
   ],
   imports: [
     CommonModule,

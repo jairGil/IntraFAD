@@ -11,5 +11,6 @@ export const environment = {
     URL_ACAD: IP_HOST + ':3002/api/datos_academicos/',
     URL_PUBL: IP_HOST + ':3002/api/publicaciones/',
     URL_EXPE: IP_HOST + ':3002/api/experiencias/',
+    URL_FINA: IP_HOST + ':3002/api/definitividades/',
     // URL_FT: IP_HOST + ':2000/api/facultad/',
 };
