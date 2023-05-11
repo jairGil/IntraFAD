@@ -201,7 +201,10 @@ export class ArchivosService {
       case 'cedulaProf':
         docType = 'ced_prof';
         break;
-      case 'certificacion' || 'cursos':
+      case 'certificacion':
+        docType = 'constancia';
+        break;
+      case 'cursos':
         docType = 'constancia';
         break;
       case 'idioma':

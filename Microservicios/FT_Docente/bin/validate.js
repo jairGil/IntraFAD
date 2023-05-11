@@ -160,13 +160,13 @@ validateHelper.validarCurso = async (req) => {
     .escape().run(req);
 
   /*** Validación constancia ***/
-  await body("doc_constancia")
-    .trim()
-    .not().isEmpty().withMessage("Elemento vacío")
-    .custom(val => {
-      return validator.validaPDF(val)
-    }).withMessage("Debe ingresar un archivo en formato PDF")
-    .escape().run(req);
+  // await body("doc_constancia")
+  //   .trim()
+  //   .not().isEmpty().withMessage("Elemento vacío")
+  //   .custom(val => {
+  //     return validator.validaPDF(val)
+  //   }).withMessage("Debe ingresar un archivo en formato PDF")
+  //   .escape().run(req);
     
     const result = validationResult(req);
     return result;
@@ -207,13 +207,13 @@ validateHelper.validarIdioma = async (req) => {
     .escape().run(req);
     
   /*** Validación constancia ***/
-  await body("doc_certificado")
-    .trim()
-    .not().isEmpty().withMessage("Elemento vacío")
-    .custom(val => {
-      return validator.validaPDF(val)
-    }).withMessage("Debe ingresar un archivo en formato PDF")
-    .escape().run(req);
+  // await body("doc_certificado")
+  //   .trim()
+  //   .not().isEmpty().withMessage("Elemento vacío")
+  //   .custom(val => {
+  //     return validator.validaPDF(val)
+  //   }).withMessage("Debe ingresar un archivo en formato PDF")
+  //   .escape().run(req);
 
   const result = validationResult(req);
   return result;

@@ -54,7 +54,7 @@ cursoController.get = async (req, res) => {
   return result;
 }
 
-/* DELETE certificacion by id. */
+/* DELETE curso by id. */
 cursoController.delete = async (req, res) => {
   let result = { action: "Eliminar Curso", value: false, code: 500, msg: "Error al conectar con la base de datos" };
   const connected = await dbhelper.connect();
@@ -71,7 +71,7 @@ cursoController.delete = async (req, res) => {
   return result;
 }
 
-/* UPDATE certificacion by id. */
+/* UPDATE curso by id. */
 cursoController.update = async (req, res) => {
   let result = { action: "Actualizar Curso", value: false, code: 500, msg: "Error al conectar con la base de datos" };
   const connected = await dbhelper.connect();
@@ -80,7 +80,7 @@ cursoController.update = async (req, res) => {
   if (!connected.value) {
     return result;
   }
-
+  
   const id = req.body.id;
   const params = req.body.params;
   result = await dbhelper.updateCursoById(id, params);

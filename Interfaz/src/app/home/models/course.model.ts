@@ -4,6 +4,5 @@ export interface Course {
     fecha_fin: Date;
     institucion: string;
     duracion: number;
-    constancia: string;
     id_docente: string;
 }

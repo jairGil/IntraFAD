@@ -121,7 +121,7 @@
       <tr *ngFor="let idioma of this.idiomas">
         <td>{{ idioma.nombre }}</td>
         <td>
-          <a href="{{ URL_DOC + this.idioma.certificado }}" target="_blank">
+          <a href="javascript: void(0);"  (click)="showDoc(this.idioma.doc_certificado)">
             {{ idioma.nivel }}
             <img src="../../../../../../assets/img/file-link.svg" alt="Abrir documento">
           </a>

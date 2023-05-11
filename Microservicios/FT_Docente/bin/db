@@ -199,13 +199,14 @@ dbhelper.updateCursoById = async (id, curso) => {
   let resultSave = { action: "Actualizar curso", value: false, code: 500, msg: "No inicializado" };
 
   await Curso.findByIdAndUpdate(id, curso).then(
-    (curso) => {
+    (cur) => {
       resultSave = util.setResult(resultSave, true, 200, "Curso actualizado");
     },
     error => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el curso");
     }
   );
+  return resultSave;
 }
 
 /********************************************************************************/
@@ -289,6 +290,8 @@ dbhelper.updateCertificacionById = async (id, certificacion) => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar la certificación");
     }
   );
+
+  return resultSave;
 }
 
 /********************************************************************************/
@@ -372,6 +375,8 @@ dbhelper.updateIdiomaById = async (id, idioma) => {
       resultSave = util.setResult(resultSave, false, 500, error + " - Error al guardar el idioma");
     }
   );
+
+  return resultSave;
 }
 
 /********************************************************************************/

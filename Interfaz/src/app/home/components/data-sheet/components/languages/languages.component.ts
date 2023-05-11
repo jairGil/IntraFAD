@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { FileSend } from 'src/app/home/models/file-send.model';
 import { Language } from 'src/app/home/models/language.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { LanguagesService } from 'src/app/home/services/languages.service';
@@ -18,7 +20,10 @@ export class LanguagesComponent {
   public modo_agregar = false;
   public idiomas: any;
   public docIdioma: boolean = false;
-  public docName: string = '';
+  public docName: string | null = null;
+
+  public loading: boolean = false;
+  public msg: string = '';
 
   idioForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -80,7 +85,7 @@ export class LanguagesComponent {
     }
   }
 
-  enviarDatos() {
+  public async enviarDatos() {
     // this.uploadDocument('idiomas', 'constancia_F');
 
     let idioma: Language = {
@@ -88,23 +93,46 @@ export class LanguagesComponent {
       nivel: this.idioForm.get('nivel')?.value!,
       fecha_fin: new Date(this.idioForm.get('fecha_fin')?.value!),
       institucion: this.idioForm.get('institucion')?.value!,
-      certificado: "no_inicializado.pdf",
+      // certificado: "no_inicializado.pdf",
       id_docente: this.idDocente
     }
 
-    this.languageService.addIdioma(idioma).subscribe({
-      next: (res: any) => {
-        if (res.value) {
-          this.getLanguages();
-          this.cambiarModo(2);
-          this.notificationService.showNotification(res.msg, 'alert-success');
+    try {
+      const res = await firstValueFrom(this.languageService.addIdioma(idioma));
+
+      if (res.code === 200) {
+        if (this.docName != null) {
+          // Datos del archivo
+          const fileData: FileSend = {
+            type: 'idioma',
+            name: this.idioForm.get('institucion')?.value! + '_' + this.idioForm.get('nivel')?.value! + '_' + this.idioForm.get('nombre')?.value!,
+            date: new Date(this.idioForm.get('fecha_fin')?.value!).toISOString().slice(0, 10).replace(/-/g, "_"),
+          }
+          // Subir el archivo
+          await this.updateAcademicDataDoc(fileData, 'certificado', res.idFT);
         }
-      },
-      error: (err: any) => {
-        // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+      
+        this.getLanguages();
+        this.cambiarModo(2);
+        this.notificationService.showNotification(res.msg, 'alert-success');
       }
-    });
+    } catch (err) {
+      let error = "Ha ocurrido un error al enviar los datos";
+      this.notificationService.showNotification(error, 'alert-danger');
+    }
+    // this.languageService.addIdioma(idioma).subscribe({
+    //   next: (res: any) => {
+    //     if (res.value) {
+    //       this.getLanguages();
+    //       this.cambiarModo(2);
+    //       this.notificationService.showNotification(res.msg, 'alert-success');
+    //     }
+    //   },
+    //   error: (err: any) => {
+    //     // console.log(err);
+    //     this.notificationService.showNotification(err.error.msg, 'alert-danger');
+    //   }
+    // });
 
   }
 
@@ -117,11 +145,26 @@ export class LanguagesComponent {
     }
   }
 
-  uploadDocument(tipo: string, campo: string) {
-    const formData = new FormData();
+  private async updateAcademicDataDoc(fileData: FileSend, campo: string, idFT: string): Promise<void> {
+    const fieldValue = this.idioForm.get(campo)?.value;
 
-    formData.append(tipo, this.idioForm.get(campo)?.value!);
-    this.archivosService.setDoc(tipo, formData).subscribe({
+    if (!fieldValue) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(fileData.type, fieldValue);
+
+    this.loading = true;
+    this.msg = 'Subiendo documentos...';
+
+    const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, idFT);
+
+    if (!updateQuery) {
+      return;
+    }
+
+    this.languageService.updateIdioma(updateQuery).subscribe({
       next: (res: any) => {
         console.log(res);
       },
@@ -129,6 +172,17 @@ export class LanguagesComponent {
         console.log(err);
       }
     });
+  }
+
+  public showDoc(dir: String): void {
+    this.archivosService.getIDDoc(dir)
+      .subscribe(
+        data => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        }
+      )
   }
 
   get nombre() { return this.idioForm.get('nombre'); }

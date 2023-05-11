@@ -80,7 +80,7 @@ idiomaController.update = async (req, res) => {
 
   const id = req.body.id;
   const params = req.body.params;
-  resultUpdate = await dbhelper.updateIdioma(id, params);
+  resultUpdate = await dbhelper.updateIdiomaById(id, params);
   console.log(await dbhelper.disconnect());
 
   return resultUpdate;

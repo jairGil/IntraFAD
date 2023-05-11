@@ -22,7 +22,6 @@ const idiomaSchema = Schema({
     },
     doc_certificado: {
         type: String,
-        required: true
     },
     id_docente: {
         type: String,
