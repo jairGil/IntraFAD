@@ -1,8 +1,8 @@
 # Ruta de la carpeta de cada servidor de Express
-$server1 = "D:\Documentos\SevicioSocial\Proyectos\IntraFAD\Microservicios\archivos"
-$server2 = "D:\Documentos\SevicioSocial\Proyectos\IntraFAD\Microservicios\datosPersonales"
-$server3 = "D:\Documentos\SevicioSocial\Proyectos\IntraFAD\Microservicios\FT_Docente"
-$server4 = "D:\Documentos\SevicioSocial\Proyectos\IntraFAD\Interfaz"
+$server1 = "./Microservicios/archivos"
+$server2 = "./Microservicios/datosPersonales"
+$server3 = "./Microservicios/FT_Docente"
+$server4 = "./Interfaz"
 
 $command = "npm run dev"
 

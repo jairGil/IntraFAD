@@ -52,11 +52,11 @@ export class LanguagesComponent {
     this.languageService.getIdiomas(this.idDocente).subscribe({
       next: (res: any) => {
         this.idiomas = res.idiomas;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -65,11 +65,11 @@ export class LanguagesComponent {
     this.languageService.deleteIdioma(id).subscribe({
       next: (res: any) => {
         this.getLanguages();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -111,29 +111,15 @@ export class LanguagesComponent {
           // Subir el archivo
           await this.updateAcademicDataDoc(fileData, 'certificado', res.idFT);
         }
-      
-        this.getLanguages();
-        this.cambiarModo(2);
-        this.notificationService.showNotification(res.msg, 'alert-success');
       }
+      
+      this.getLanguages();
+      this.cambiarModo(2);
+      this.notificationService.showNotification(res.msg, res.code);
     } catch (err) {
       let error = "Ha ocurrido un error al enviar los datos";
-      this.notificationService.showNotification(error, 'alert-danger');
+      this.notificationService.showNotification(error, 500);
     }
-    // this.languageService.addIdioma(idioma).subscribe({
-    //   next: (res: any) => {
-    //     if (res.value) {
-    //       this.getLanguages();
-    //       this.cambiarModo(2);
-    //       this.notificationService.showNotification(res.msg, 'alert-success');
-    //     }
-    //   },
-    //   error: (err: any) => {
-    //     // console.log(err);
-    //     this.notificationService.showNotification(err.error.msg, 'alert-danger');
-    //   }
-    // });
-
   }
 
   onFileSelect(event: any) {

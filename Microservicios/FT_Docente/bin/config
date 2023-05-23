@@ -2,11 +2,12 @@
 const dbuser = "jgild";
 const dbname = "IntraFAD";
 const dbpass = "v0EbhL2LprsKYUP1";
-const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
+// const uriDB = "mongodb+srv://" + dbuser + ":" + dbpass + "@intrafad.rpczxmh.mongodb.net/test";
+const uriDB = "mongodb://mongoAdmin:AdminFAD@192.168.1.17:3002/";
 
 
 const config = {
-    port: 3002,
+    port: 5000,
     db: {
         user: dbuser,
         name: dbname,

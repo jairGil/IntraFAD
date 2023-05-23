@@ -47,11 +47,11 @@ export class PublicationsComponent {
     this.publicationService.getPublicaciones(this.idDocente).subscribe({
       next: (res: any) => {
         this.publicaciones = res.publicaciones;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -60,11 +60,11 @@ export class PublicationsComponent {
     this.publicationService.deletePublicacion(id).subscribe({
       next: (res: any) => {
         this.getPublications();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -95,15 +95,13 @@ export class PublicationsComponent {
 
     this.publicationService.addPublicacion(publicacion).subscribe({
       next: (res: any) => {
-        if (res.value) {
-          this.getPublications();
-          this.cambiarModo(2);
-          this.notificationService.showNotification(res.msg, 'alert-success');
-        }
+        this.getPublications();
+        this.cambiarModo(2);
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
 

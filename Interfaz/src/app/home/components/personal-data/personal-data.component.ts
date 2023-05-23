@@ -116,12 +116,12 @@ export class PersonalDataComponent {
         this.sendDataToParent();
         this.cambiar_modo(1);
         this.loading = false;
-        this.notificationService.showNotification('Datos actualizados correctamente', 'alert-success');
+        this.notificationService.showNotification('Datos actualizados correctamente', res.code);
       }
     } catch (err: any) {
       console.log(err);
       this.loading = false;
-      this.notificationService.showNotification(err.error.msg, 'alert-danger');
+      this.notificationService.showNotification(err.error.msg, 500);
     }
 
     //Subimos los documentos rfc y curp
@@ -252,14 +252,14 @@ export class PersonalDataComponent {
 
   this.personalDataService.updatePersonalData(updateQuery).subscribe({
     next: (res: any) => {
-      if (res.code === 200) {
-        this.sendDataToParent();
-        this.cambiar_modo(1);
-        this.loading = false;
-      }
+      this.sendDataToParent();
+      this.cambiar_modo(1);
+      this.loading = false;
+      this.notificationService.showNotification(res.msg, res.code);
     },
     error: (err: any) => {
       this.loading = false;
+      this.notificationService.showNotification(err.error.msg, 500);
     }
   });
 }

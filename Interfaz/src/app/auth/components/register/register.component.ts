@@ -78,17 +78,17 @@ export class RegisterComponent {
             console.log(res)
             if (res.value) {
               this.cuentaCreada = true;
-              this.showNotification("Cuenta creada correctamente", 'alert-success');
+              this.showNotification("Cuenta creada correctamente", res.code);
             } else {
               this.error = res;
-              this.showNotification(res.msg, 'alert-danger');
+              this.showNotification(res.msg, res.code);
             }
             this.loading = false;
           },
           error: (err: any) => {
             this.loading = false;
             this.error = err.error;
-            this.showNotification(err.error.msg, 'alert-danger');
+            this.showNotification(err.error.msg, 500);
           }
         });
       }
@@ -119,8 +119,8 @@ export class RegisterComponent {
    * @since 1.1.0
    * @version 1.0.0
   */
-  public showNotification(notification: string, classType: string): void {
-    this.notificationService.showNotification(notification, classType);
+  public showNotification(message: string, code: number): void {
+    this.notificationService.showNotification(message, code);
   }
 
   get correo_institucional() { return this.registerForm.get('correo_institucional'); }

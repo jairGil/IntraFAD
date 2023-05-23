@@ -53,11 +53,11 @@ export class CoursesComponent {
     this.cursoService.getCursos(this.idDocente).subscribe({
       next: (res: any) => {
         this.cursos = res.cursos;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -66,11 +66,11 @@ export class CoursesComponent {
     this.cursoService.deleteCurso(id).subscribe({
       next: (res: any) => {
         this.getCursos();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -113,14 +113,14 @@ export class CoursesComponent {
           // Subir el archivo
           await this.updateAcademicDataDoc(fileData, 'constancia', res.idFT);
         }
-        
-        this.getCursos();
-        this.cambiarModo(2);
-        this.notificationService.showNotification(res.msg, 'alert-success');
       }
+      this.getCursos();
+      this.cambiarModo(2);
+      this.notificationService.showNotification(res.msg, res.code);
+      
     } catch (err) {
       let error = "Ha ocurrido un error al enviar los datos";
-      this.notificationService.showNotification(error, 'alert-danger');
+      this.notificationService.showNotification(error, 500);
     }
 
     this.curName = null;

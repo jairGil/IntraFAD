@@ -11,7 +11,7 @@ export class NotificationService {
 
   constructor() { }
 
-  showNotification(notification: string, classType: string) {
-    this.notificationSource.next({notification, classType});
+  public showNotification(message: string, code: number) {
+    this.notificationSource.next({message: message, code: code});
   }
 }

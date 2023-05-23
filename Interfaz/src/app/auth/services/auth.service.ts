@@ -49,7 +49,8 @@ export class AuthService {
    * @version 1.0.1
    */
   public loggedIn(): boolean {
-    return !!this.cookieService.get('token');
+    if (!this.cookieService.check('token')) return false;
+    return true;
   }
 
   /**

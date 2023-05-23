@@ -46,11 +46,11 @@ export class FinalitiesComponent {
     this.finalityService.getDefinitividades(this.idDocente).subscribe({
       next: (res: any) => {
         this.definitividades = res.definitividades;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -59,11 +59,11 @@ export class FinalitiesComponent {
     this.finalityService.deleteDefinitividad(id).subscribe({
       next: (res: any) => {
         this.getFinalities();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -90,15 +90,13 @@ export class FinalitiesComponent {
 
     this.finalityService.addDefinitividad(definitividad).subscribe({
       next: (res: any) => {
-        if (res.value) {
-          this.getFinalities();
-          this.cambiarModo(2);
-          this.notificationService.showNotification(res.msg, 'alert-success');
-        }
+        this.getFinalities();
+        this.cambiarModo(2);
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
 

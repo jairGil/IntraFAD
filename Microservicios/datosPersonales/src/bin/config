@@ -18,7 +18,7 @@ const config = {
         // uri: uriDB,
     },
     routes: {
-         files: process.env.DATA || "/data/"
+        files: process.env.DATA || "/data/"
         // files: "D:/Documentos/SevicioSocial/Proyectos/IntraFAD/Microservicios/archivos/controller/uploads/"
     }
 }

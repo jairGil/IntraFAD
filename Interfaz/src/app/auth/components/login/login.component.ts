@@ -88,17 +88,17 @@ export class LoginComponent {
             this.loading = false;
             this.authService.setToken(res.token);
             this.router.navigate(['/home']);
-            this.showNotification("Bienvenido", 'alert-success');
+            this.showNotification("Bienvenido", res.code);
           } else {
             this.loading = false;
             this.error = res;
-            this.showNotification(res.msg, 'alert-danger');
+            this.showNotification(res.msg, res.code);
           }
         },
         error: (err: any) => {
           this.loading = false;
           this.error = err.error;
-          this.showNotification(err.error.msg, 'alert-danger');
+          this.showNotification(err.error.msg, 500);
         }
       });
     } else {
@@ -124,8 +124,8 @@ export class LoginComponent {
    * @since 1.1.0
    * @version 1.0.0
   */
-  public showNotification(notification: string, classType: string): void {
-    this.notificationService.showNotification(notification, classType);
+  public showNotification(message: string, code: number): void {
+    this.notificationService.showNotification(message, code);
   }
   
   get correo_institucional() { return this.loginForm.get('correo_institucional'); }

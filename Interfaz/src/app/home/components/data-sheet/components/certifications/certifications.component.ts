@@ -50,11 +50,11 @@ export class CertificationsComponent {
     this.certificacionService.getCertificaciones(this.idDocente).subscribe({
       next: (res: any) => {
         this.certificaciones = res.certificaciones;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -63,11 +63,11 @@ export class CertificationsComponent {
     this.certificacionService.deleteCertificacion(id).subscribe({
       next: (res: any) => {
         this.getCert();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -96,7 +96,6 @@ export class CertificationsComponent {
     try {
       const res = await firstValueFrom(this.certificacionService.addCertificacion(certification));
       if (res.code === 200) {
-
         if (this.certName != null) {
           // Datos del archivo
           const fileData: FileSend = {
@@ -107,14 +106,13 @@ export class CertificationsComponent {
           // Subir el archivo
           await this.updateAcademicDataDoc(fileData, 'constancia', res.idFT);
         }
-
-        this.getCert();
-        this.cambiarModo(2);
-        this.notificationService.showNotification(res.msg, 'alert-success');
       }
+
+      this.getCert();
+      this.cambiarModo(2);
+      this.notificationService.showNotification(res.msg, res.code);
     } catch (err: any) {
-      let error = "Ha ocurrido un error";
-      this.notificationService.showNotification(error, 'alert-danger');
+      this.notificationService.showNotification(err.error, 500);
     }
 
     this.certName = null;

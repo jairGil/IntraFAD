@@ -59,10 +59,12 @@ export class AcademicDataComponent {
 
       if (res.code === 200) {
         this.datosAcademicos = res.datoAcademico;
-        this.notificationService.showNotification(res.msg, 'alert-success');
       }
+      this.loading = false;
+      this.notificationService.showNotification(res.msg, res.code);
     } catch(err: any) {
-      this.notificationService.showNotification(err.error.msg, 'alert-danger');
+      this.loading = false;
+      this.notificationService.showNotification(err.error.msg, 500);
     }
 
     this.loading = false;
@@ -74,11 +76,11 @@ export class AcademicDataComponent {
       next: (res: any) => {
         this.getDA();
         this.loading = false;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         this.loading = false;
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -118,6 +120,8 @@ export class AcademicDataComponent {
     };
 
     let idFT = null;
+    this.loading = true;
+    this.msg = 'Enviando datos...';
   
     try {
       const res = await firstValueFrom(this.daService.addDatoAcademico(academicData));
@@ -134,10 +138,12 @@ export class AcademicDataComponent {
   
         await this.getDA();
         this.cambiarModo(2);
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.loading = false;
+        this.notificationService.showNotification(res.msg, res.code);
       }
     } catch (err: any) {
-      this.notificationService.showNotification(err.error.msg, 'alert-danger');
+      this.loading = false;
+      this.notificationService.showNotification(err.error.msg, 500);
     }
   
     this.gaFilename = null;

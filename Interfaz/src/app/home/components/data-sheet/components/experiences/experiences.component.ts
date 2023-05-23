@@ -45,11 +45,11 @@ export class ExperiencesComponent {
     this.experienceService.getExperiencias(this.idDocente).subscribe({
       next: (res: any) => {
         this.experiencias = res.experiencias;
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -58,11 +58,11 @@ export class ExperiencesComponent {
     this.experienceService.deleteExperiencia(id).subscribe({
       next: (res: any) => {
         this.getExperiences();
-        this.notificationService.showNotification(res.msg, 'alert-success');
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
@@ -92,15 +92,13 @@ export class ExperiencesComponent {
 
     this.experienceService.addExperiencia(experiencia).subscribe({
       next: (res: any) => {
-        if (res.value) {
-          this.getExperiences();
-          this.cambiarModo(2);
-          this.notificationService.showNotification(res.msg, 'alert-success');
-        }
+        this.getExperiences();
+        this.cambiarModo(2);
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
         // console.log(err);
-        this.notificationService.showNotification(err.error.msg, 'alert-danger');
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
 
