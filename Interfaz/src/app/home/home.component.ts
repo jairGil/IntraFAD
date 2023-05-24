@@ -5,6 +5,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { Docente } from './models/docente.model';
 import { ArchivosService } from './services/archivos.service';
 import { FormUtils } from './utils/FormUtils';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,8 @@ export class HomeComponent {
     private renderer: Renderer2,
     private personalDataService: PersonalDataService,
     private authService: AuthService,
-    private archivosService: ArchivosService
+    private archivosService: ArchivosService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -91,9 +93,11 @@ export class HomeComponent {
         }
 
         this.loadingData = 2;
+        this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        this.loadingData = 3;
+        this.loadingData = 2;
+        this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }

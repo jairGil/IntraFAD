@@ -33,7 +33,7 @@ const getDocenteByID = (req, res) => {
 
 const updateOneDocente = (req, res) => {
   const data = req.body;
-
+  console.log("DATA",data)
    /* Actualiza el campo doc_rfc */
    if(data.params.hasOwnProperty('doc_rfc') || data.params.hasOwnProperty('doc_curp')){
     /* Actualiza el docente */

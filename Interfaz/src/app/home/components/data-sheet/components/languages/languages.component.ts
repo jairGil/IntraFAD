@@ -7,7 +7,6 @@ import { Language } from 'src/app/home/models/language.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { LanguagesService } from 'src/app/home/services/languages.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-languages',
@@ -16,14 +15,9 @@ import { environment } from 'src/environments/environment.development';
 })
 export class LanguagesComponent {
   private idDocente: any;
-  public URL_DOC = environment.URL_DOC;
   public modo_agregar = false;
   public idiomas: any;
-  public docIdioma: boolean = false;
   public docName: string | null = null;
-
-  public loading: boolean = false;
-  public msg: string = '';
 
   idioForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -35,7 +29,7 @@ export class LanguagesComponent {
 
   constructor(
     private languageService: LanguagesService,
-    private archivosService: ArchivosService,
+    public archivosService: ArchivosService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
@@ -48,33 +42,113 @@ export class LanguagesComponent {
     this.modo_agregar = false;
   }
 
-  getLanguages() {
+  /**
+   * Obtiene los idiomas del docente
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  private getLanguages(): void {
     this.languageService.getIdiomas(this.idDocente).subscribe({
       next: (res: any) => {
         this.idiomas = res.idiomas;
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  deleteLanguage(id: string) {
+  /**
+   * Elimina un idioma del docente
+   * @param id Id del idioma
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public deleteLanguage(id: string): void {
     this.languageService.deleteIdioma(id).subscribe({
       next: (res: any) => {
         this.getLanguages();
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  cambiarModo(modo: number) {
+  /**
+   * Enviar los datos del formulario
+   * @since 1.0.0
+   * @version 1.0.1
+   * @returns void
+   */
+  public async enviarDatos(): Promise<void> {
+    const nombre = this.idioForm.get('nombre')?.value!;
+    const nivel = this.idioForm.get('nivel')?.value!;
+    const fecha_fin = new Date(this.idioForm.get('fecha_fin')?.value!);
+    const institucion = this.idioForm.get('institucion')?.value!;
+
+    let idioma: Language = {
+      nombre: nombre,
+      nivel: nivel,
+      fecha_fin: fecha_fin,
+      institucion: institucion,
+      id_docente: this.idDocente
+    }
+
+    try {
+      const res = await firstValueFrom(this.languageService.addIdioma(idioma));
+
+      if (res.code === 200) {
+        const service = this.languageService
+        const fileData = this.createFileSend('idioma', institucion, nivel, nombre, fecha_fin);
+        const fieldValue = this.idioForm.get('certificado')?.value!;
+        const idFT = res.idFT;
+        await this.archivosService.updateDocInService(service, fileData, fieldValue, idFT);
+      }
+      
+      this.notificationService.showNotification(res.msg, res.code);
+    } catch (err) {
+      let error = "Ha ocurrido un error al enviar los datos";
+      this.notificationService.showNotification(error, 500);
+    }
+
+    this.getLanguages();
+    this.cambiarModo(2);
+    this.docName = null;
+    this.idioForm.reset();
+  }
+
+  /**
+   * Crear el objeto para enviar el archivo
+   * @param type Tipo de archivo
+   * @param institucion Institucion emisora
+   * @param nivel Tipo de curso
+   * @param nombre Nombre del curso
+   * @param fechaObtencion Fecha de obtencion del curso
+   * @returns (FileSend) Objeto para enviar el archivo
+   */
+  private createFileSend(type: string, institucion: string, nivel: string, nombre: string, fechaObtencion: Date): FileSend {
+    const fileName = `${institucion}_${nivel}_${nombre}`;
+    const dateStr = fechaObtencion.toISOString().slice(0, 10).replace(/-/g, '_');
+    return {
+      type: type,
+      name: fileName,
+      date: dateStr,
+    };
+  }
+
+  /**
+   * Cambia el modo de la vista
+   * @param modo Modo de la vista
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public cambiarModo(modo: number): void {
     switch (modo) {
       case 1:
         this.modo_agregar = true;
@@ -85,90 +159,19 @@ export class LanguagesComponent {
     }
   }
 
-  public async enviarDatos() {
-    // this.uploadDocument('idiomas', 'constancia_F');
-
-    let idioma: Language = {
-      nombre: this.idioForm.get('nombre')?.value!,
-      nivel: this.idioForm.get('nivel')?.value!,
-      fecha_fin: new Date(this.idioForm.get('fecha_fin')?.value!),
-      institucion: this.idioForm.get('institucion')?.value!,
-      // certificado: "no_inicializado.pdf",
-      id_docente: this.idDocente
-    }
-
-    try {
-      const res = await firstValueFrom(this.languageService.addIdioma(idioma));
-
-      if (res.code === 200) {
-        if (this.docName != null) {
-          // Datos del archivo
-          const fileData: FileSend = {
-            type: 'idioma',
-            name: this.idioForm.get('institucion')?.value! + '_' + this.idioForm.get('nivel')?.value! + '_' + this.idioForm.get('nombre')?.value!,
-            date: new Date(this.idioForm.get('fecha_fin')?.value!).toISOString().slice(0, 10).replace(/-/g, "_"),
-          }
-          // Subir el archivo
-          await this.updateAcademicDataDoc(fileData, 'certificado', res.idFT);
-        }
-      }
-      
-      this.getLanguages();
-      this.cambiarModo(2);
-      this.notificationService.showNotification(res.msg, res.code);
-    } catch (err) {
-      let error = "Ha ocurrido un error al enviar los datos";
-      this.notificationService.showNotification(error, 500);
-    }
-  }
-
-  onFileSelect(event: any) {
+  /**
+   * Obtener el archivo seleccionado
+   * @param event Evento del input file
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public onFileSelect(event: any): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.idioForm.get('certificado')?.setValue(file);
-      this.docIdioma = true;
       this.docName = file.name;
     }
-  }
-
-  private async updateAcademicDataDoc(fileData: FileSend, campo: string, idFT: string): Promise<void> {
-    const fieldValue = this.idioForm.get(campo)?.value;
-
-    if (!fieldValue) {
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append(fileData.type, fieldValue);
-
-    this.loading = true;
-    this.msg = 'Subiendo documentos...';
-
-    const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, idFT);
-
-    if (!updateQuery) {
-      return;
-    }
-
-    this.languageService.updateIdioma(updateQuery).subscribe({
-      next: (res: any) => {
-        console.log(res);
-      },
-      error: (err: any) => {
-        console.log(err);
-      }
-    });
-  }
-
-  public showDoc(dir: String): void {
-    this.archivosService.getIDDoc(dir)
-      .subscribe(
-        data => {
-          const file = new Blob([data], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        }
-      )
   }
 
   get nombre() { return this.idioForm.get('nombre'); }

@@ -21,7 +21,7 @@ export class LanguagesService {
     return this.http.post<any>(this.URL, idioma);
   }
 
-  updateIdioma(idioma: any) {
+  update(idioma: any) {
     return this.http.put<any>(this.URL, idioma);
   }
 

@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Publication } from 'src/app/home/models/publication.model';
-import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { PublicationsService } from 'src/app/home/services/publications.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-publications',
@@ -14,7 +12,6 @@ import { environment } from 'src/environments/environment.development';
 })
 export class PublicationsComponent {
   private idDocente: any;
-  public URL_DOC = environment.URL_DOC;
   public modo_agregar = false;
   public publicaciones: any;
 
@@ -30,7 +27,6 @@ export class PublicationsComponent {
 
   constructor(
     private publicationService: PublicationsService,
-    private archivosService: ArchivosService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
@@ -43,45 +39,50 @@ export class PublicationsComponent {
     this.modo_agregar = false;
   }
 
-  getPublications() {
+  /**
+   * Obtiene las publicaciones del docente
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  private getPublications(): void {
     this.publicationService.getPublicaciones(this.idDocente).subscribe({
       next: (res: any) => {
         this.publicaciones = res.publicaciones;
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  deletePublication(id: string) {
+  /**
+   * Elimina una publicacion del docente
+   * @param id id de la publicacion
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public deletePublication(id: string): void {
     this.publicationService.deletePublicacion(id).subscribe({
       next: (res: any) => {
         this.getPublications();
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  cambiarModo(modo: number) {
-    switch (modo) {
-      case 1:
-        this.modo_agregar = true;
-        break;
-      case 2:
-        this.modo_agregar = false;
-        break;
-    }
-  }
-
-  enviarDatos() {
-
+  /**
+   * Envia los datos de la publicacion al servicio
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public enviarDatos(): void {
     let publicacion: Publication = {
       formato: this.pubForm.get('formato')?.value!,
       tipo: this.pubForm.get('tipo')?.value!,
@@ -95,16 +96,34 @@ export class PublicationsComponent {
 
     this.publicationService.addPublicacion(publicacion).subscribe({
       next: (res: any) => {
-        this.getPublications();
-        this.cambiarModo(2);
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
 
+    this.getPublications();
+    this.cambiarModo(2);
+    this.pubForm.reset();
+  }
+
+  /**
+   * Cambia el modo de la vista
+   * @param modo 1: modo agregar, 2: modo ver
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  public cambiarModo(modo: number): void {
+    switch (modo) {
+      case 1:
+        this.modo_agregar = true;
+        break;
+      case 2:
+        this.modo_agregar = false;
+        break;
+    }
   }
 
   get formato() { return this.pubForm.get('formato'); }

@@ -21,7 +21,7 @@ export class CoursesService {
     return this.http.post<any>(this.URL, curso);
   }
 
-  updateCurso(curso: any) {
+  update(curso: any) {
     return this.http.put<any>(this.URL, curso);
   }
 

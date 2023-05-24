@@ -44,7 +44,7 @@ export class AcademicDataService {
    * @since 1.0.0
    * @version 1.0.0
    */
-  updateDatoAcademico(query: QueryUpdate): Observable<any> {
+  update(query: QueryUpdate): Observable<any> {
     return this.http.put<any>(this.URL, query);
   }
 

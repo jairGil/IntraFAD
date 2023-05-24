@@ -144,12 +144,11 @@ const updateOneDocDocente = async (data) => {
   let resultUpdate = initResult("UpdateOneDocDocente")
 
   const docUpdate = data.params;
-  const idDocente = data.id.DocenteID;
+  const idDocente = data.id;
 
   await Docente.findByIdAndUpdate(idDocente, docUpdate).then(
     (docente) => {
       resultUpdate = setResult(idDocente, "UpdateOneDocDocente", true, 200, "Docente actualizado")
-      //resultUpdate.docente = docente;
     }, error => {
       resultUpdate = setResult(idDocente, "UpdateOneDocDocente", false, 500,error + " - Error al guardar el docente" );
     }

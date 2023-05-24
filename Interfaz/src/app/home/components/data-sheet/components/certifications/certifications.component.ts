@@ -7,7 +7,6 @@ import { FileSend } from 'src/app/home/models/file-send.model';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { CertificationsService } from 'src/app/home/services/certifications.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-certifications',
@@ -16,13 +15,9 @@ import { environment } from 'src/environments/environment.development';
 })
 export class CertificationsComponent {
   private idDocente: any;
-  public URL_DOC = environment.URL_DOC;
   public modo_agregar = false;
   public certificaciones: any;
-  public docCert: boolean = false;
   public certName: String | null = null;
-  public loading: boolean = false;
-  public msg: string = '';
 
   certForm = this.formBuilder.group({
     nombre: ['', Validators.required],
@@ -34,7 +29,7 @@ export class CertificationsComponent {
   constructor(
     private authService: AuthService,
     private certificacionService: CertificationsService,
-    private archivosService: ArchivosService,
+    public archivosService: ArchivosService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
     ) {
@@ -46,33 +41,110 @@ export class CertificationsComponent {
     this.modo_agregar = false;
   }
 
-  getCert() {
+  /**
+   * Obtiene las certificaciones del docente
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  private getCert(): void {
     this.certificacionService.getCertificaciones(this.idDocente).subscribe({
       next: (res: any) => {
         this.certificaciones = res.certificaciones;
         this.notificationService.showNotification(res.msg, res.code);
-      },
+      }, 
       error: (err: any) => {
-        // console.log(err);
+        console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  deleteCert(id: string) {
+  /**
+   * Eliminar una certificación
+   * @param id ID de la certificación a eliminar
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public deleteCert(id: string): void {
     this.certificacionService.deleteCertificacion(id).subscribe({
       next: (res: any) => {
         this.getCert();
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
+  
+  /**
+   * Envia los datos de la certificación al servidor
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public async enviarDatos(): Promise<void> {
+    const institucion = this.certForm.get('institucion')?.value!;
+    const nombre = this.certForm.get('nombre')?.value!;
+    const fecha = new Date(this.certForm.get('fecha')?.value!);
 
-  cambiarModo(modo: number) {
+    let certification: Certification = {
+      nombre: nombre,
+      institucion: institucion,
+      fecha: new Date(fecha),
+      id_docente: this.idDocente
+    }
+
+    try {
+      const res = await firstValueFrom(this.certificacionService.addCertificacion(certification));
+      if (res.code === 200) {
+        const service = this.certificacionService;
+        const certFile = this.createFileSend('certificacion', institucion, nombre, fecha);
+        const fieldValue = this.certForm.get('constancia')?.value!;
+        const idFT = res.idFT;
+        await this.archivosService.updateDocInService(service, certFile, fieldValue, idFT);
+      }
+      this.notificationService.showNotification(res.msg, res.code);
+    } catch (err: any) {
+      this.notificationService.showNotification(err.error, 500);
+    }
+
+    this.getCert();
+    this.cambiarModo(2);
+    this.certName = null;
+    this.certForm.reset();
+  }
+
+  /**
+   * Crea un objeto de tipo FileSend
+   * @param type Tipo de archivo
+   * @param institucion Institución de la certificación
+   * @param nombre Nombre de la certificación
+   * @param fecha Fecha de la certificación
+   * @returns Objeto de tipo FileSend
+   * @since 1.0.1
+   * @version 1.0.0
+   */
+  private createFileSend(type: string, institucion: string, nombre: string, fecha: Date): FileSend {
+    const fileName = `${institucion}_${nombre}`;
+    const dateStr = fecha.toISOString().slice(0, 10).replace(/-/g, '_');
+    return {
+      type: type,
+      name: fileName,
+      date: dateStr,
+    };
+  }
+
+  /**
+   * Cambia el modo de la vista
+   * @param modo Modo de la vista
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public cambiarModo(modo: number) {
     switch (modo) {
       case 1:
         this.modo_agregar = true;
@@ -83,88 +155,19 @@ export class CertificationsComponent {
     }
   }
 
-  public async enviarDatos() {
-    // this.uploadDocument('certificacion', 'constancia_f');
-
-    let certification: Certification = {
-      nombre: this.certForm.get('nombre')?.value!,
-      institucion: this.certForm.get('institucion')?.value!,
-      fecha: new Date(this.certForm.get('fecha')?.value!),
-      id_docente: this.idDocente
-    }
-
-    try {
-      const res = await firstValueFrom(this.certificacionService.addCertificacion(certification));
-      if (res.code === 200) {
-        if (this.certName != null) {
-          // Datos del archivo
-          const fileData: FileSend = {
-            type: 'certificacion',
-            name: this.certForm.get('institucion')?.value! + '_' + this.certForm.get('nombre')?.value!,
-            date: new Date(this.certForm.get('fecha')?.value!).toISOString().slice(0, 10).replace(/-/g, "_"),
-          }
-          // Subir el archivo
-          await this.updateAcademicDataDoc(fileData, 'constancia', res.idFT);
-        }
-      }
-
-      this.getCert();
-      this.cambiarModo(2);
-      this.notificationService.showNotification(res.msg, res.code);
-    } catch (err: any) {
-      this.notificationService.showNotification(err.error, 500);
-    }
-
-    this.certName = null;
-  }
-
-  onCertificacionSelect(event: any) {
+  /**
+   * Obtener el nombre del archivo seleccionado
+   * @param event Evento de selección de archivo
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public onCertificacionSelect(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.certForm.get('constancia')?.setValue(file);
-      this.docCert = true;
       this.certName = file.name;
     }
-  }
-
-  private async updateAcademicDataDoc(fileData: FileSend, campo: string, idFT: string): Promise<void> {
-    const fieldValue = this.certForm.get(campo)?.value;
-
-    if (!fieldValue) {
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append(fileData.type, fieldValue);
-
-    this.loading = true;
-    this.msg = 'Subiendo documentos...';
-
-    const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, idFT);
-
-    if (!updateQuery) {
-      return;
-    }
-
-    this.certificacionService.updateCertificacion(updateQuery).subscribe({
-      next: (res: any) => {
-        console.log(res);
-      },
-      error: (err: any) => {
-        console.log(err);
-      }
-    });
-  }
-
-  public showDoc(dir: String): void {
-    this.archivosService.getIDDoc(dir)
-      .subscribe(
-        data => {
-          const file = new Blob([data], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        }
-      )
   }
 
   get nombre() { return this.certForm.get('nombre'); }

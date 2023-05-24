@@ -22,7 +22,7 @@ export class CertificationsService {
     return this.http.post<any>(this.URL, certificacion);
   }
 
-  updateCertificacion(query: QueryUpdate) {
+  update(query: QueryUpdate) {
     return this.http.put<any>(this.URL, query);
   }
 

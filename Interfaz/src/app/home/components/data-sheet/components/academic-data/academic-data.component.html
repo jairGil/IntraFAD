@@ -111,7 +111,7 @@
       </div>
       <div class="col-md">
         <!-- <input id="nombre_rfc" type="text" class="form-control plain" disabled/> -->
-        <div *ngIf="this.docGradAcad; else noPDF1">
+        <div *ngIf="this.gaFilename; else noPDF1">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon">
           <span> {{this.gaFilename}}</span>
         </div>
@@ -167,7 +167,7 @@
         </div>
       </div>
       <div class="col-md">
-        <div *ngIf="this.docCedProf; else noPDF1">
+        <div *ngIf="this.cpFilename; else noPDF1">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon" placeholder="">
           <span> {{this.cpFilename}}</span>
         </div>
@@ -209,7 +209,7 @@
     <tbody>
       <tr *ngFor="let daDocente of this.datosAcademicos">
         <td>
-          <a href="javascript: void(0);"  (click)="showDoc(this.daDocente.doc_grado_acad)">
+          <a href="javascript: void(0);"  (click)="this.archivosService.showDoc(this.daDocente.doc_grado_acad)">
             {{ daDocente.grado_academico }}
             <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>
@@ -218,7 +218,7 @@
         <td>{{ daDocente.institucion_emisora }}</td>
         <td>{{ daDocente.fecha_obtencion.slice(0,10) }}</td>
         <td>
-          <a href="javascript: void(0);"  (click)="showDoc(this.daDocente.doc_ced_prof)">
+          <a href="javascript: void(0);"  (click)="this.archivosService.showDoc(this.daDocente.doc_ced_prof)">
             {{ daDocente.cedula_profesional }}
             <img src="../../../../../../assets/img/file-link.svg" alt="">
           </a>

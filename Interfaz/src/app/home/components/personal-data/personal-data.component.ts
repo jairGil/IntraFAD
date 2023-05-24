@@ -3,13 +3,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, firstValueFrom } from 'rxjs';
 
-/** ENVIRONMENT */
-import { environment } from 'src/environments/environment.development';
-
 /** SERVICES */
 import { ArchivosService } from '../../services/archivos.service';
 import { PersonalDataService } from '../../services/personal-data.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
 import { StaticDataService } from '../../services/static-data.service';
 
 /** MODELS */ 
@@ -37,9 +33,6 @@ export class PersonalDataComponent {
   public listaEstados = StaticDataService.LISTA_ESTADOS;
   public listaEmpleos = StaticDataService.LISTA_EMPLEOS;
   public listaPlanesEstudio = StaticDataService.LISTA_PLANES_ESTUDIO;
-  
-  public URL_IMG = environment.URL_IMG;
-  public URL_DOC = environment.URL_DOC;
 
   currentFile?: File;
   fileInfos?: Observable<any>;
@@ -64,7 +57,7 @@ export class PersonalDataComponent {
 
   constructor(
     private personalDataService: PersonalDataService,
-    private archivosService: ArchivosService,
+    public archivosService: ArchivosService,
     private notificationService: NotificationService,
   ) { }
 
@@ -72,6 +65,20 @@ export class PersonalDataComponent {
     this.direccion = this.dataDocente.direccion.split(', ');
     this.dpForm = FormUtils.buildForm();
     this.dpForm = FormUtils.setDataDocente(this.dpForm, this.dataDocente);
+    this.loading = false;
+  }
+
+  /**
+   * Obtener los datos de un docente por su id
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public async getDocente(): Promise<void> {
+    this.loading = true;
+    const docente = await firstValueFrom(this.personalDataService.getDocente(this.dataDocente._id));
+    console.log(docente);
+    this.dataDocente = docente;
     this.loading = false;
   }
 
@@ -114,25 +121,40 @@ export class PersonalDataComponent {
       const res = await firstValueFrom(this.personalDataService.updatePersonalData(updateQuery));
       if (res.code == 200) {
         this.sendDataToParent();
-        this.cambiar_modo(1);
-        this.loading = false;
-        this.notificationService.showNotification('Datos actualizados correctamente', res.code);
       }
+      this.notificationService.showNotification(res.msg, res.code);
     } catch (err: any) {
-      console.log(err);
       this.loading = false;
       this.notificationService.showNotification(err.error.msg, 500);
     }
 
+    const service = this.personalDataService;
+    const id = this.dataDocente._id.toString();
     //Subimos los documentos rfc y curp
-    await Promise.all([
-      this.rfcFilename != null && this.updatePersonalDataDoc({ type: 'rfc' }, 'doc_rfc'),
-      this.curpFilename != null && this.updatePersonalDataDoc({ type: 'curp' }, 'doc_curp')
-    ]);
+    if (this.rfcFilename != null) {
+      const fileData: FileSend = {
+        type: 'rfc',
+      };
+      const fieldValue = this.dpForm.get('doc_rfc')?.value!;
+      await this.archivosService.updateDocInService(service, fileData, fieldValue, id);
+    }
+
+    if (this.curpFilename != null) {
+      // this.updatePersonalDataDoc({ type: 'curp' }, 'doc_curp');
+      const fileData: FileSend = {
+        type: 'curp',
+      };
+      const fieldValue = this.dpForm.get('doc_curp')?.value!;
+      await this.archivosService.updateDocInService(service, fileData, fieldValue, id);
+    }
     
     //Se limpian los campos de los documentos
     this.rfcFilename = null;
     this.curpFilename = null;
+    this.loading = false;
+
+    this.getDocente();
+    this.cambiar_modo(1);
   }
 
   /**
@@ -220,68 +242,6 @@ export class PersonalDataComponent {
       }
     });
   }
-
-  /**
-   * Envio de documentos al servidor
-   * @returns string
-   * @param fileData (string) - Tipo de documento a subir
-   * @param campo (string) - Campo del formulario
-   * @since 1.0.0
-   * @version 1.0.0
-   * @private
-   */
-  private async updatePersonalDataDoc(fileData: FileSend, campo: string): Promise<void> {
-  const fieldValue = this.dpForm.get(campo)?.value;
-
-  if (!fieldValue) {
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append(fileData.type, fieldValue);
-
-  this.loading = true;
-  this.msg = 'Subiendo documentos...';
-
-  const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, this.dataDocente._id);
-
-  if (!updateQuery) {
-    this.loading = false;
-    return;
-  }
-
-  this.personalDataService.updatePersonalData(updateQuery).subscribe({
-    next: (res: any) => {
-      this.sendDataToParent();
-      this.cambiar_modo(1);
-      this.loading = false;
-      this.notificationService.showNotification(res.msg, res.code);
-    },
-    error: (err: any) => {
-      this.loading = false;
-      this.notificationService.showNotification(err.error.msg, 500);
-    }
-  });
-}
-
-  /**
-   * Obtener el documento del servidor
-   * @param dir (string) - Direccion del documento
-   * @returns void
-   * @since 1.1.0
-   * @version 1.1.0
-  */
-  public showDoc(dir: String): void {
-    this.archivosService.getIDDoc(dir)
-      .subscribe(
-        data => {
-          const file = new Blob([data], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        }
-      )
-  }
-
 
   /**
    * Intercambiar el modo edicion y visualizacion

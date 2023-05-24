@@ -144,6 +144,25 @@ export class ArchivosService {
     });
   }
 
+  /**
+   * Mostrar documento en una nueva pestaña
+   * @param dir Dirección del documento en el servidor
+   * @since 1.0.1
+   * @version 1.0.0
+   * @public
+   * @returns void
+   */
+  public showDoc(dir: String): void {
+    this.getIDDoc(dir)
+      .subscribe(
+        data => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        }
+      )
+  }
+
   /** Subir archivos al servidor
    * @param fileData Datos del archivo a subir
    * @param fieldValue Campo del formulario que se va a actualizar
@@ -176,6 +195,35 @@ export class ArchivosService {
     }
 
     return null;
+  }
+
+  /**
+   * Actualizar datos de la ficha técnica
+   * @param service Método de actualización de la ficha técnica
+   * @param fileData Datos del archivo a subir
+   * @param fieldValue Campo del formulario que se va a actualizar
+   * @param idFT ID de la ficha técnica
+   * @since 1.0.1
+   * @version 1.0.0
+   * @public
+   * @async	
+   * @returns void
+   */
+  public async updateDocInService(service: any, fileData: FileSend, fieldValue: string, idFT: string): Promise<void> {
+    if (!fieldValue) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(fileData.type, fieldValue);
+
+    const updateQuery = await this.uploadDocument(fileData, fieldValue, idFT);
+
+    if (!updateQuery) {
+      return;
+    }
+
+    await firstValueFrom(service.update(updateQuery));
   }
 
   /**

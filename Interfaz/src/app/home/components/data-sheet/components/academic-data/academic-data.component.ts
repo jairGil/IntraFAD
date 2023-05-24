@@ -4,11 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AcademicData } from 'src/app/home/models/academic-data.model.';
 import { FileSend } from 'src/app/home/models/file-send.model';
-import { QueryUpdate } from 'src/app/home/models/query-update.model';
 import { AcademicDataService } from 'src/app/home/services/academic-data.service';
 import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-academic-data',
@@ -17,15 +15,10 @@ import { environment } from 'src/environments/environment.development';
 })
 export class AcademicDataComponent {
   private idDocente: any;
-  public URL_DOC = environment.URL_DOC;
   public modo_agregar = false;
   public datosAcademicos: any;
-  public docGradAcad: boolean = false;
-  public docCedProf: boolean = false;
-  public gaFilename: any = "-";
-  public cpFilename: any = "-";
-  public loading: boolean = false;
-  public msg: string = '';
+  public gaFilename: any = null;
+  public cpFilename: any = null;
 
   daForm = this.formBuilder.group({
     grado_academico: ['', Validators.required],
@@ -40,7 +33,7 @@ export class AcademicDataComponent {
   constructor(
     private authService: AuthService,
     private daService: AcademicDataService,
-    private archivosService: ArchivosService,
+    public archivosService: ArchivosService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
   ) {
@@ -52,48 +45,40 @@ export class AcademicDataComponent {
     this.modo_agregar = false;
   }
 
-  public async getDA(): Promise<void> {
-    this.loading = true;
+  /**
+   * Obtener los datos academicos del docente
+   * @since 1.0.0
+   * @version 1.0.0
+   * @return void
+   */
+  private async getDA(): Promise<void> {
     try {
       let res = await firstValueFrom(this.daService.getDatosAcademicos(this.idDocente));
 
-      if (res.code === 200) {
-        this.datosAcademicos = res.datoAcademico;
-      }
-      this.loading = false;
+      this.datosAcademicos = res.datoAcademico;
       this.notificationService.showNotification(res.msg, res.code);
     } catch(err: any) {
-      this.loading = false;
       this.notificationService.showNotification(err.error.msg, 500);
     }
-
-    this.loading = false;
   }
 
-  deleteDA(id: string) {
-    this.loading = true;
+  /**
+   * Eliminar un dato academico
+   * @param id Identificador del dato academico
+   * @since 1.0.0
+   * @version 1.0.0
+   * @return void
+   */
+  public deleteDA(id: string): void {
     this.daService.deleteDatoAcademico(id).subscribe({
       next: (res: any) => {
         this.getDA();
-        this.loading = false;
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        this.loading = false;
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
-  }
-
-  cambiarModo(modo: number) {
-    switch (modo) {
-      case 1:
-        this.modo_agregar = true;
-        break;
-      case 2:
-        this.modo_agregar = false;
-        break;
-    }
   }
 
   /**
@@ -118,38 +103,43 @@ export class AcademicDataComponent {
       id_docente: this.idDocente,
       validado: false,
     };
-
-    let idFT = null;
-    this.loading = true;
-    this.msg = 'Enviando datos...';
   
     try {
       const res = await firstValueFrom(this.daService.addDatoAcademico(academicData));
       if (res.code === 200) { 
+        const service = this.daService;
         const gradoAcadFile = this.createFileSend('gradoAcad', gradoAcad, gradoObtenido, fechaObtencion);
+        const gaFieldValue = this.daForm.get('doc_grado_acad')?.value!;
         const cedProfFile = this.createFileSend('cedulaProf', gradoAcad, gradoObtenido, fechaObtencion);
-        
-        idFT = res.idFT;
+        const cpFieldValue = this.daForm.get('doc_ced_prof')?.value!;
+        const idFT = res.idFT;
 
-        await Promise.allSettled([
-          this.gaFilename != null && this.updateAcademicDataDoc(gradoAcadFile, 'doc_grado_acad', idFT),
-          this.cpFilename != null && this.updateAcademicDataDoc(cedProfFile, 'doc_ced_prof', idFT),
-        ]);
-  
-        await this.getDA();
-        this.cambiarModo(2);
-        this.loading = false;
-        this.notificationService.showNotification(res.msg, res.code);
+        await this.archivosService.updateDocInService(service , gradoAcadFile, gaFieldValue, idFT);
+        await this.archivosService.updateDocInService(service , cedProfFile, cpFieldValue, idFT);
       }
+
+      this.notificationService.showNotification(res.msg, res.code);
     } catch (err: any) {
-      this.loading = false;
       this.notificationService.showNotification(err.error.msg, 500);
     }
   
+    await this.getDA();
+    this.cambiarModo(2);
     this.gaFilename = null;
     this.cpFilename = null;
+    this.daForm.reset();
   }
   
+  /**
+   * Crear un objeto de tipo FileSend
+   * @param type Tipo de archivo
+   * @param gradoAcad Grado academico
+   * @param gradoObtenido Gradp obtenido
+   * @param fechaObtencion Fecha de obtencion
+   * @returns Datos del archivo en formato FileSend
+   * @since 1.0.1
+   * @version 1.0.0
+   */
   private createFileSend(type: string, gradoAcad: string, gradoObtenido: string, fechaObtencion: Date): FileSend {
     const fileName = `${gradoAcad}_${gradoObtenido}`;
     const dateStr = fechaObtencion.toISOString().slice(0, 10).replace(/-/g, '_');
@@ -160,69 +150,52 @@ export class AcademicDataComponent {
     };
   }
 
-  onGradoAcadSelect(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.daForm.get('doc_grado_acad')?.setValue(file);
-      this.docGradAcad = true;
-      this.gaFilename = file.name;
-    }
-  }
-
-  onCedProfSelect(event: any) {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.daForm.get('doc_ced_prof')?.setValue(file);
-      this.docCedProf = true;
-      this.cpFilename = file.name;
+  /**
+   * Cambiar el modo del formulario
+   * @param modo Modo del formulario
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public cambiarModo(modo: number): void {
+    switch (modo) {
+      case 1:
+        this.modo_agregar = true;
+        break;
+      case 2:
+        this.modo_agregar = false;
+        break;
     }
   }
 
   /**
-   * Actualiza el documento de un dato academico
-   * @param fileData Datos del archivo a subir
-   * @param campo Campo del formulario en el que se encuentra el documento
-   * @since 1.0.1
+   * Obtener el nombre del archivo seleccionado
+   * @param event Evento de seleccion de archivo
+   * @returns void
+   * @since 1.0.0
    * @version 1.0.0
    */
-  private async updateAcademicDataDoc(fileData: FileSend, campo: string, idFT: string): Promise<void> {
-    const fieldValue = this.daForm.get(campo)?.value;
-
-    if (!fieldValue) {
-      return;
+  public onGradoAcadSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.daForm.get('doc_grado_acad')?.setValue(file);
+      this.gaFilename = file.name;
     }
-
-    const formData = new FormData();
-    formData.append(fileData.type, fieldValue);
-
-    this.loading = true;
-    this.msg = 'Subiendo documentos...';
-
-    const updateQuery = await this.archivosService.uploadDocument(fileData, fieldValue, idFT);
-
-    if (!updateQuery) {
-      return;
-    }
-
-    this.daService.updateDatoAcademico(updateQuery).subscribe({
-      next: (res: any) => {
-        console.log(res);
-      },
-      error: (err: any) => {
-        console.log(err);
-      }
-    });
   }
 
-  public showDoc(dir: String): void {
-    this.archivosService.getIDDoc(dir)
-      .subscribe(
-        data => {
-          const file = new Blob([data], { type: 'application/pdf' });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        }
-      )
+  /**
+   * Obtener el nombre del archivo seleccionado
+   * @param event Evento de seleccion de archivo
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public onCedProfSelect(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.daForm.get('doc_ced_prof')?.setValue(file);
+      this.cpFilename = file.name;
+    }
   }
 
   get grado_academico() { return this.daForm.get('grado_academico'); }

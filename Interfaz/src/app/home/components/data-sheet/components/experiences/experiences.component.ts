@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Experience } from 'src/app/home/models/experience.model';
-import { ArchivosService } from 'src/app/home/services/archivos.service';
 import { ExperiencesService } from 'src/app/home/services/experiences.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-experiences',
@@ -14,7 +12,6 @@ import { environment } from 'src/environments/environment.development';
 })
 export class ExperiencesComponent {
   private idDocente: any;
-  public URL_DOC = environment.URL_DOC;
   public modo_agregar = false;
   public experiencias: any;
 
@@ -41,45 +38,50 @@ export class ExperiencesComponent {
     this.modo_agregar = false;
   }
 
-  getExperiences() {
+  /**
+   * Obtiene las experiencias del docente
+   * @since 1.0.0
+   * @version 1.0.0
+   * @returns void
+   */
+  private getExperiences(): void {
     this.experienceService.getExperiencias(this.idDocente).subscribe({
       next: (res: any) => {
         this.experiencias = res.experiencias;
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  deleteExperience(id: string) {
+  /**
+   * Elimina una experiencia del docente
+   * @param id ID de la experiencia a eliminar
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public deleteExperience(id: string): void {
     this.experienceService.deleteExperiencia(id).subscribe({
       next: (res: any) => {
         this.getExperiences();
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
   }
 
-  cambiarModo(modo: number) {
-    switch (modo) {
-      case 1:
-        this.modo_agregar = true;
-        break;
-      case 2:
-        this.modo_agregar = false;
-        break;
-    }
-  }
-
-  enviarDatos() {
-
+  /**
+   * Envía los datos de la experiencia a agregar
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public enviarDatos(): void {
     let experiencia: Experience = {
       puesto: this.expForm.get('puesto')?.value!,
       empresa: this.expForm.get('empresa')?.value!,
@@ -92,16 +94,34 @@ export class ExperiencesComponent {
 
     this.experienceService.addExperiencia(experiencia).subscribe({
       next: (res: any) => {
-        this.getExperiences();
-        this.cambiarModo(2);
         this.notificationService.showNotification(res.msg, res.code);
       },
       error: (err: any) => {
-        // console.log(err);
         this.notificationService.showNotification(err.error.msg, 500);
       }
     });
 
+    this.getExperiences();
+    this.cambiarModo(2);
+    this.expForm.reset();
+  }
+  
+  /**
+   * Cambia el modo de la vista
+   * @param modo Modo de la vista
+   * @returns void
+   * @since 1.0.0
+   * @version 1.0.0
+   */
+  public cambiarModo(modo: number): void {
+    switch (modo) {
+      case 1:
+        this.modo_agregar = true;
+        break;
+      case 2:
+        this.modo_agregar = false;
+        break;
+    }
   }
 
   get puesto() { return this.expForm.get('puesto'); }

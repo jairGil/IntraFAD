@@ -21,7 +21,7 @@ export class PersonalDataService {
    * @since 1.0.0
    * @version 1.1.0
    */
-  public getDocente(id_docente: String): Observable<any> {
+  public getDocente(id_docente: String): Observable<Docente> {
     return this.http.get<any>(this.URL + id_docente);
   }
 
@@ -32,7 +32,7 @@ export class PersonalDataService {
    * @since 1.0.0
    * @version 1.0.0
    */
-  public updateDocente(docente: Docente): Observable<any> {
+  public update(docente: Docente): Observable<any> {
     return this.http.put<any>(this.URL, docente);
   }
 

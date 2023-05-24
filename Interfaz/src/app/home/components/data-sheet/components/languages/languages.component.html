@@ -81,7 +81,7 @@
         </div>
       </div>
       <div class="col-md">
-        <div *ngIf="this.docIdioma; else noPDF">
+        <div *ngIf="this.docName; else noPDF">
           <img src="../../../../assets/img/pdf.png" alt="" class="pdf-icon" placeholder="">
           <span> {{ this.docName }}</span>
         </div>
@@ -121,7 +121,7 @@
       <tr *ngFor="let idioma of this.idiomas">
         <td>{{ idioma.nombre }}</td>
         <td>
-          <a href="javascript: void(0);"  (click)="showDoc(this.idioma.doc_certificado)">
+          <a href="javascript: void(0);"  (click)="this.archivosService.showDoc(this.idioma.doc_certificado)">
             {{ idioma.nivel }}
             <img src="../../../../../../assets/img/file-link.svg" alt="Abrir documento">
           </a>
